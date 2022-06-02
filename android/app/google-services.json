@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "903687953768",
+    "project_id": "fir-ihhdepom",
+    "storage_bucket": "fir-ihhdepom.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:903687953768:android:0a33ead0910f5fcdee8add",
+        "android_client_info": {
+          "package_name": "com.example.ihharadepo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "903687953768-2olemqdmefgb6v6ste26sf8htvaln2rp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAq8eTyqo557jkfXTkEIEVQmWyZCHJzJn8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "903687953768-2olemqdmefgb6v6ste26sf8htvaln2rp.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "903687953768-d1qgup1id4lvo3vvgih6prl2ti3m1grg.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.bugunneyesem"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
