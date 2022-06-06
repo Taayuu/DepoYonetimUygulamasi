@@ -15,6 +15,7 @@ class AuthWidget extends StatelessWidget {
       return snapshot.hasData
           ? HomePage(
               Qr: '',
+              currentIndexs: 0,
             )
           : const SignInPage();
     }

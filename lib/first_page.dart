@@ -8,33 +8,11 @@ class FirstPage extends StatefulWidget {
   State<FirstPage> createState() => _FirstPageState();
 }
 
-class Item {
-  Item({
-    required this.expandedValue,
-    required this.headerValue,
-    this.isExpanded = true,
-  });
-
-  String expandedValue;
-  String headerValue;
-  bool isExpanded;
-}
-
-List<Item> generateItems(int numberOfItems) {
-  return List<Item>.generate(numberOfItems, (int indexx) {
-    return Item(
-      headerValue: 'Panel $indexx sad',
-      expandedValue: 'This is item number $indexx',
-    );
-  });
-}
-
 class _FirstPageState extends State<FirstPage> {
   @override
   Widget build(BuildContext context) {
     CollectionReference materialsRef =
         FirebaseFirestore.instance.collection('Users');
-    final List<Item> _data = generateItems(1);
     return SafeArea(
       child: Scaffold(
         backgroundColor: Color(0xffFFEBC1),
@@ -45,7 +23,8 @@ class _FirstPageState extends State<FirstPage> {
             ),
             Container(
               child: StreamBuilder<QuerySnapshot>(
-                stream: materialsRef.snapshots(),
+                stream: materialsRef
+                    .where("Emanetler", isNotEqualTo: []).snapshots(),
                 builder: (context, snp) {
                   if (snp.hasError) {
                     return Center(

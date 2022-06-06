@@ -27,10 +27,14 @@ class _MaterialsPageState extends State<MaterialsPage> {
     var malzemeSinifi;
     var malzemeRafi;
     var malzemeKonum;
+    var malzemeStok;
+    var malzemeImage;
+    String filterWord = "";
     CollectionReference materialsRef = _firestore.collection('Materials');
     return Scaffold(
       backgroundColor: Color(0xffFFEBC1),
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: Color(0xffFFEBC1),
         title: Text(
           "Malzemeler",
@@ -51,9 +55,15 @@ class _MaterialsPageState extends State<MaterialsPage> {
                               malzemeSinifi: '',
                               malzemeEkleGuncelleButtonText: 'Ekle',
                               malzemeKonum: '',
+                              malzemeStok: 0,
+                              malzemeImage: '',
                             )));
               },
-              icon: Icon(Icons.add, color: Colors.black))
+              icon: Icon(
+                Icons.add_circle_outline,
+                color: Colors.black,
+                size: 29,
+              ))
         ],
       ),
       body: SafeArea(
@@ -64,9 +74,8 @@ class _MaterialsPageState extends State<MaterialsPage> {
               SizedBox(
                 height: 10,
               ),
-              Center(),
               StreamBuilder<QuerySnapshot>(
-                stream: materialsRef.snapshots(),
+                stream: materialsRef.orderBy("Malzeme Adı").snapshots(),
                 builder: (context, snp) {
                   if (snp.hasError) {
                     return Center(
@@ -90,6 +99,8 @@ class _MaterialsPageState extends State<MaterialsPage> {
                                   malzemeSinifi = gelenVeri["Malzeme Sınıfı"];
                                   malzemeQr = gelenVeri["Qr Kod"];
                                   malzemeKonum = gelenVeri["Konum"];
+                                  malzemeStok = gelenVeri["Stok"];
+                                  malzemeImage = gelenVeri["Resim"];
                                 });
                               });
                             }
@@ -109,12 +120,12 @@ class _MaterialsPageState extends State<MaterialsPage> {
                                           label: "Düzenle",
                                           backgroundColor: Colors.green,
                                           icon: Icons.edit,
-                                          onPressed: (context) async {
+                                          onPressed: (contextx) async {
                                             await yaziGetir();
                                             Navigator.push(
-                                                context,
+                                                contextx,
                                                 MaterialPageRoute(
-                                                    builder: (context) =>
+                                                    builder: (contextx) =>
                                                         AddMaterialsPage(
                                                           Qr: malzemeQr,
                                                           malzemeAdi:
@@ -127,6 +138,10 @@ class _MaterialsPageState extends State<MaterialsPage> {
                                                               'Güncelle',
                                                           malzemeKonum:
                                                               malzemeKonum,
+                                                          malzemeStok:
+                                                              malzemeStok,
+                                                          malzemeImage:
+                                                              malzemeImage,
                                                         )));
                                           }),
                                       SlidableAction(
@@ -171,16 +186,23 @@ class _MaterialsPageState extends State<MaterialsPage> {
                                           })
                                     ]),
                                 child: ListTile(
+                                  leading: ClipOval(
+                                    child: Image.network(
+                                      "${malzemeler[index]['Resim']}",
+                                      width: 80,
+                                      height: 80,
+                                      fit: BoxFit.contain,
+                                    ),
+                                  ),
                                   title: Text(
                                     '${malzemeler[index]['Malzeme Adı']}',
                                     style: TextStyle(fontSize: 19),
                                   ),
                                   subtitle: Text(
                                     '''
-                              Malzeme Sınıfı:${malzemeler[index]["${"Malzeme Sınıfı"}"]}
-                              Malzeme Rafı:${malzemeler[index]["${"Malzeme Rafı"}"]}
-                              Malzeme Konumu:${malzemeler[index]["${"Konum"}"]}
-                                    ''',
+Malzeme Sınıfı:${malzemeler[index]["${"Malzeme Sınıfı"}"]}
+Malzeme Rafı:${malzemeler[index]["${"Malzeme Rafı"}"]}
+Malzeme Konumu:${malzemeler[index]["${"Konum"}"]},''',
                                     style: TextStyle(fontSize: 15),
                                   ),
                                 ),

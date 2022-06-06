@@ -32,13 +32,18 @@ class _RegisterPageState extends State<RegisterPage> {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(15),
               child: TextField(
+                textCapitalization: TextCapitalization.words,
                 controller: k_Adi,
                 decoration: InputDecoration(
-                    prefixIcon: Icon(Icons.person),
-                    fillColor: Colors.white,
-                    filled: true,
-                    border: InputBorder.none,
-                    hintText: "Kullanıcı Adı"),
+                  prefixIcon: Icon(Icons.person),
+                  fillColor: Colors.white,
+                  filled: true,
+                  border: InputBorder.none,
+                  hintText: "Kullanıcı Adı",
+                  enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20),
+                      borderSide: BorderSide(color: Colors.black, width: 2)),
+                ),
               ),
             ),
           ),
@@ -51,11 +56,15 @@ class _RegisterPageState extends State<RegisterPage> {
                   emailStr = emailMtn;
                 },
                 decoration: InputDecoration(
-                    prefixIcon: Icon(Icons.mail),
-                    fillColor: Colors.white,
-                    filled: true,
-                    border: InputBorder.none,
-                    hintText: "E-Posta"),
+                  prefixIcon: Icon(Icons.mail),
+                  fillColor: Colors.white,
+                  filled: true,
+                  border: InputBorder.none,
+                  hintText: "E-Posta",
+                  enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20),
+                      borderSide: BorderSide(color: Colors.black, width: 2)),
+                ),
               ),
             ),
           ),
@@ -69,11 +78,15 @@ class _RegisterPageState extends State<RegisterPage> {
                 },
                 obscureText: true,
                 decoration: InputDecoration(
-                    prefixIcon: Icon(Icons.key),
-                    fillColor: Colors.white,
-                    filled: true,
-                    border: InputBorder.none,
-                    hintText: "Şifre"),
+                  prefixIcon: Icon(Icons.key),
+                  fillColor: Colors.white,
+                  filled: true,
+                  border: InputBorder.none,
+                  hintText: "Şifre",
+                  enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20),
+                      borderSide: BorderSide(color: Colors.black, width: 2)),
+                ),
               ),
             ),
           ),
@@ -148,6 +161,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               "Üye Olma Tarihi": DateTime.now(),
                               "Emanetler": "",
                               "Id": Auth.currentUser!.uid,
+                              "Durum": 0,
                             });
                             emailStr = "";
                             passwordStr = "";

@@ -86,6 +86,7 @@ class _ScanQrAddState extends State<ScanQrAdd> {
                 future: controller?.getCameraInfo(),
                 builder: (context, snapshot) {
                   if (snapshot.data != null) {
+                    ressemble();
                     return Icon(Icons.switch_camera);
                   } else {
                     return Container();
@@ -130,8 +131,10 @@ class _ScanQrAddState extends State<ScanQrAdd> {
                                 malzemeAdi: '',
                                 malzemeRafi: '',
                                 malzemeSinifi: '',
-                                malzemeEkleGuncelleButtonText: 'Ekle/Güncelle',
+                                malzemeEkleGuncelleButtonText: 'Ekle',
                                 malzemeKonum: '',
+                                malzemeStok: 0,
+                                malzemeImage: '',
                               )));
                 }
               })

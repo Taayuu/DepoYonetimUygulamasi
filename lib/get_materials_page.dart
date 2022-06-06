@@ -1,9 +1,12 @@
+// ignore_for_file: deprecated_member_use, unused_local_variable, prefer_typing_uninitialized_variables, duplicate_ignore, non_constant_identifier_names, unused_field
+
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
-import 'package:login/profile_page.dart';
 import 'package:login/scan_qr_get.dart';
 
 import 'home_page.dart';
@@ -31,20 +34,17 @@ class _GetMaterialsState extends State<GetMaterials> {
   FirebaseAuth Auth = FirebaseAuth.instance;
   @override
   Widget build(BuildContext context) {
-    var sira;
+    int stok = 0;
     var malzemeAdi;
     final docRef = FirebaseFirestore.instance
         .collection("Users")
         .doc(Auth.currentUser!.email);
-    var k_adi;
+    var kAdi;
     FirebaseFirestore.instance.collection('Users');
     docRef.snapshots().listen((event) {
-      k_adi = event.data()!["Kullanıcı Adı"];
+      kAdi = event.data()!["Kullanıcı Adı"];
     });
-    FirebaseFirestore.instance.collection('Users');
-    docRef.snapshots().listen((event) {
-      sira = event.data()!["sira"];
-    });
+
     Query qmaterials = FirebaseFirestore.instance
         .collection("Materials")
         .where("Qr Kod", isEqualTo: widget.Qr);
@@ -56,13 +56,13 @@ class _GetMaterialsState extends State<GetMaterials> {
 
     List<DocumentSnapshot>? malzemeler;
     return Scaffold(
-      backgroundColor: Color(0xffFFEBC1),
+      backgroundColor: const Color(0xffFFEBC1),
       body: SafeArea(
           child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             Padding(
@@ -74,18 +74,20 @@ class _GetMaterialsState extends State<GetMaterials> {
                   child: RaisedButton(
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
-                        side: BorderSide(color: Colors.black, width: 2)),
+                        side: const BorderSide(color: Colors.black, width: 2)),
                     color: Colors.white,
                     elevation: 500,
                     onPressed: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => ScanQrGet()));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const ScanQrGet()));
                     },
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Column(
                         mainAxisSize: MainAxisSize.max,
-                        children: [
+                        children: const [
                           Icon(
                             Icons.qr_code_scanner_sharp,
                             color: Colors.black,
@@ -106,7 +108,7 @@ class _GetMaterialsState extends State<GetMaterials> {
               stream: qmaterials.snapshots(),
               builder: (context, snp) {
                 if (snp.hasError) {
-                  return Center(
+                  return const Center(
                     child: Text("Bir Hata Oluştu Tekrar Deneyiniz"),
                   );
                 } else {
@@ -119,17 +121,29 @@ class _GetMaterialsState extends State<GetMaterials> {
                           return Card(
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(20),
-                                side:
-                                    BorderSide(color: Colors.black, width: 2)),
+                                side: const BorderSide(
+                                    color: Colors.black, width: 2)),
                             color: Colors.white,
                             child: ListTile(
+                              leading: ClipOval(
+                                child: Image.network(
+                                  "${malzemeler![index]['Resim']}",
+                                  width: 100,
+                                  height: 100,
+                                  fit: BoxFit.contain,
+                                ),
+                              ),
                               title: Text(
                                 '${malzemeler?[index]['Malzeme Adı']}',
-                                style: TextStyle(fontSize: 26),
+                                style: const TextStyle(fontSize: 19),
                               ),
                               subtitle: Text(
-                                '${malzemeler?[index].data()}',
-                                style: TextStyle(fontSize: 20),
+                                '''
+Qr Kod:${malzemeler![index]["Qr Kod"]}
+Malzeme Sınıfı:${malzemeler![index]["Malzeme Sınıfı"]}
+Malzeme Rafı:${malzemeler![index]["Malzeme Rafı"]}
+Malzeme Konumu:${malzemeler![index]["Konum"]}''',
+                                style: const TextStyle(fontSize: 15),
                               ),
                             ),
                           );
@@ -137,7 +151,7 @@ class _GetMaterialsState extends State<GetMaterials> {
                       ),
                     );
                   } else {
-                    return Center(
+                    return const Center(
                       child: CircularProgressIndicator(),
                     );
                   }
@@ -152,51 +166,73 @@ class _GetMaterialsState extends State<GetMaterials> {
                   borderRadius: BorderRadius.circular(15),
                   child: MaterialButton(
                     onPressed: () async {
-                      try {
-                        FirebaseFirestore.instance
+                      await FirebaseFirestore.instance
+                          .collection('Materials')
+                          .doc(malzemeler?[0]['Malzeme Adı'])
+                          .get()
+                          .then((gelenVeri) {
+                        stok = gelenVeri["Stok"];
+                      });
+
+                      if (stok > 0) {
+                        await FirebaseFirestore.instance
                             .collection('Users')
                             .doc(Auth.currentUser!.email)
                             .update({
                           "Emanetler": FieldValue.arrayUnion(
-                              [malzemeler?[0]["Malzeme Adı"]])
+                              [malzemeler![0]["Malzeme Adı"]])
                         });
-                      } catch (Exception) {}
 
-                      FirebaseFirestore.instance.collection('Users');
-                      docRef.snapshots().listen(
-                        (event) {
-                          k_adi = event.data()!["Kullanıcı Adı"];
-                        },
-                        onError: (error) => print("Listen failed: $error"),
-                      );
+                        FirebaseFirestore.instance.collection('Users');
+                        docRef.snapshots().listen(
+                          (event) {
+                            kAdi = event.data()!["Kullanıcı Adı"];
+                          },
+                          // ignore: avoid_print
+                          onError: (error) => print("Listen failed: $error"),
+                        );
 
-                      FirebaseFirestore.instance
-                          .collection('Materials')
-                          .doc(malzemeler?[0]['Malzeme Adı'])
-                          .update({"Konum": k_adi});
+                        await FirebaseFirestore.instance
+                            .collection('Materials')
+                            .doc(malzemeler?[0]['Malzeme Adı'])
+                            .update({"Konum": kAdi});
 
-                      await FirebaseFirestore.instance
-                          .collection('Deposit')
-                          .doc(Auth.currentUser!.email)
-                          .collection("Emanetlerim")
-                          .doc(Auth.currentUser!.email)
-                          .set({
-                        "Emanet Adı": "${malzemeler?[0]["Malzeme Adı"]}",
-                        "Emanet Alma Tarihi":
-                            "${DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now())}",
-                        "Emanet Alan": "${k_adi}"
-                      });
+                        await FirebaseFirestore.instance
+                            .collection('Materials')
+                            .doc(malzemeler?[0]['Malzeme Adı'])
+                            .update({"Stok": stok - 1});
 
-                      FirebaseFirestore.instance
-                          .collection('Users')
-                          .doc(Auth.currentUser!.email)
-                          .update({"sira": sira + 1});
-                      Fluttertoast.showToast(
-                          msg: "Malzeme Başarıyla Teslim Alındı.");
+                        await FirebaseFirestore.instance
+                            .collection('Deposit')
+                            .doc(Auth.currentUser!.email)
+                            .collection("Emanetlerim")
+                            .doc(Auth.currentUser!.email)
+                            .set({
+                          "Emanet Adı": "${malzemeler?[0]["Malzeme Adı"]}",
+                          "Emanet Alma Tarihi":
+                              DateFormat('yyyy-MM-dd HH:mm:ss')
+                                  .format(DateTime.now()),
+                          "Emanet Alan": "$kAdi"
+                        });
+                        Fluttertoast.showToast(
+                            msg: "Malzeme Başarıyla Teslim Alındı.");
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const GetMaterials(
+                                    Qr: "",
+                                    teslimal: false,
+                                    teslimet: false,
+                                    gerigel: true)));
+                      } else {
+                        Fluttertoast.showToast(
+                            msg: "Bu malzeme için yeterli stok yok.");
+                      }
                     },
-                    color: Color(0xffd41217),
-                    padding: EdgeInsets.symmetric(vertical: 20, horizontal: 25),
-                    child: Text(
+                    color: const Color(0xffd41217),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 20, horizontal: 25),
+                    child: const Text(
                       'Malzemeyi Teslim Al',
                       style: TextStyle(fontSize: 13, color: Colors.white),
                     ),
@@ -211,8 +247,16 @@ class _GetMaterialsState extends State<GetMaterials> {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(15),
                   child: MaterialButton(
-                    onPressed: () {
-                      FirebaseFirestore.instance
+                    onPressed: () async {
+                      await FirebaseFirestore.instance
+                          .collection('Materials')
+                          .doc(malzemeler?[0]['Malzeme Adı'])
+                          .get()
+                          .then((gelenVeri) {
+                        stok = gelenVeri["Stok"];
+                      });
+
+                      await FirebaseFirestore.instance
                           .collection('Users')
                           .doc(Auth.currentUser!.email)
                           .update({
@@ -220,38 +264,43 @@ class _GetMaterialsState extends State<GetMaterials> {
                             [malzemeler?[0]["Malzeme Adı"]])
                       });
 
-                      FirebaseFirestore.instance
+                      await FirebaseFirestore.instance
                           .collection('Materials')
                           .doc(malzemeler?[0]['Malzeme Adı'])
                           .update({"Konum": "Depo"});
 
-                      FirebaseFirestore.instance
+                      await FirebaseFirestore.instance
+                          .collection('Materials')
+                          .doc(malzemeler?[0]['Malzeme Adı'])
+                          .update({"Stok": stok + 1});
+
+                      await FirebaseFirestore.instance
                           .collection('Deposit')
                           .doc(Auth.currentUser!.email)
                           .collection("Emanetlerim")
                           .doc(Auth.currentUser!.email)
                           .update({
-                        "Teslim Tarihi":
-                            "${DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now())}",
+                        "Teslim Tarihi": DateFormat('yyyy-MM-dd HH:mm:ss')
+                            .format(DateTime.now()),
                       });
                       depRef.snapshots().listen((event) {
                         malzemeAdi = event.data()!["Emanet Adı"];
                       });
-
                       Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ProfilePage(
-                            malzeme: malzemeAdi,
-                          ),
-                        ),
-                      );
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const GetMaterials(
+                                  Qr: "",
+                                  teslimal: false,
+                                  teslimet: false,
+                                  gerigel: true)));
                       Fluttertoast.showToast(
                           msg: "Malzeme Başarıyla Teslim Edildi.");
                     },
-                    color: Color(0xffd41217),
-                    padding: EdgeInsets.symmetric(vertical: 20, horizontal: 25),
-                    child: Text(
+                    color: const Color(0xffd41217),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 20, horizontal: 25),
+                    child: const Text(
                       'Malzemeyi Teslim Et',
                       style: TextStyle(fontSize: 13, color: Colors.white),
                     ),
@@ -266,20 +315,39 @@ class _GetMaterialsState extends State<GetMaterials> {
                 child: Padding(
                   padding: const EdgeInsets.all(5),
                   child: FloatingActionButton(
-                      child: Icon(Icons.arrow_back, size: 35),
-                      backgroundColor: Color(0xffd41217),
+                      child: const Icon(Icons.arrow_back, size: 35),
+                      backgroundColor: const Color(0xffd41217),
                       onPressed: () {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
                                 builder: (context) => HomePage(
                                       currentIndexs: 1,
-                                      Qr: widget.Qr,
+                                      Qr: "",
                                     )));
                       }),
                 ),
               ),
             ),
+            FloatingActionButton(
+                child: const Icon(Icons.add, size: 35),
+                backgroundColor: const Color(0xffd41217),
+                onPressed: () async {
+                  /*await FirebaseFirestore.instance
+                      .collection("Deneme")
+                      .doc("deneme")
+                      .get()
+                      .then((value) {
+                    value[0];
+                    Fluttertoast.showToast(msg: value[0]);
+                  });*/
+                  Map<String, int> data = {"Çekiç": 23, "Kalem": 5};
+                  await FirebaseFirestore.instance
+                      .collection("Deneme")
+                      .doc("deneme")
+                      .collection(Auth.currentUser!.uid)
+                      .add(data);
+                }),
           ],
         ),
       )),

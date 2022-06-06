@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:login/forgot_password.dart';
 import 'package:login/register_page.dart';
 import 'package:provider/provider.dart';
 
@@ -149,23 +150,11 @@ class SignInPage extends StatelessWidget {
                                           style: TextStyle(color: Colors.black),
                                         ),
                                         onPressed: () {
-                                          _scaffoldKey.currentState
-                                              ?.showSnackBar(SnackBar(
-                                                  backgroundColor: Colors.black,
-                                                  content: Row(
-                                                    children: const <Widget>[
-                                                      Text(
-                                                        "Unutmasaydın ",
-                                                        style: TextStyle(
-                                                            color:
-                                                                Colors.white),
-                                                      ),
-                                                      Icon(
-                                                        Icons.tag_faces_sharp,
-                                                        color: Colors.white,
-                                                      ),
-                                                    ],
-                                                  )));
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      ForgotPassword()));
                                         }),
                                   ),
                                 ],

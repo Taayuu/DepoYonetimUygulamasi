@@ -67,7 +67,7 @@ class _HomePageState extends State<HomePage> {
         selectedIndex: _currentIndexs,
         onDestinationSelected: _onItemTapped,
         destinations: const [
-          NavigationDestination(icon: Icon(Icons.home), label: "Ana Menü"),
+          NavigationDestination(icon: Icon(Icons.home), label: "Ana Sayfa"),
           NavigationDestination(icon: Icon(Icons.swap_horiz), label: "Emanet"),
           NavigationDestination(icon: Icon(Icons.list), label: "Malzemeler"),
           NavigationDestination(icon: Icon(Icons.person), label: "Profil"),

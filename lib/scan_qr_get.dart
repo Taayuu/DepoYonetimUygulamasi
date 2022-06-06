@@ -2,7 +2,7 @@ import 'dart:io';
 
 //import 'package:firebase_core/firebase_core.dart'; *firebase
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:login/get_materials_page.dart';
@@ -20,6 +20,7 @@ class _ScanQrGetState extends State<ScanQrGet> {
   TextEditingController barControl = TextEditingController();
   Barcode? barcode;
   QRViewController? controller;
+  FirebaseAuth Auth = FirebaseAuth.instance;
 
   @override
   void dispose() {
@@ -27,7 +28,6 @@ class _ScanQrGetState extends State<ScanQrGet> {
     super.dispose();
   }
 
-  @override
   void ressemble() async {
     super.reassemble();
 
@@ -36,6 +36,9 @@ class _ScanQrGetState extends State<ScanQrGet> {
     }
     controller!.resumeCamera();
   }
+
+  String k_adi = "";
+  String malzemeAdi = "";
 
   @override
   Widget build(BuildContext context) {
@@ -89,6 +92,7 @@ class _ScanQrGetState extends State<ScanQrGet> {
                 future: controller?.getCameraInfo(),
                 builder: (context, snapshot) {
                   if (snapshot.data != null) {
+                    ressemble();
                     return Icon(Icons.switch_camera);
                   } else {
                     return Container();
@@ -123,22 +127,54 @@ class _ScanQrGetState extends State<ScanQrGet> {
         children: <Widget>[
           RaisedButton(
               child: Text("Onayla"),
-              onPressed: () {
+              onPressed: () async {
                 if (barControl.text != "Qr Kodu Tarat!") {
-                  FirebaseFirestore.instance
+                  await FirebaseFirestore.instance
                       .collection("Materials")
                       .where("Qr Kod", isEqualTo: barcode!.code.toString())
                       .get()
-                      .then((QuerySnapshot qMaterials) {
-                    if (qMaterials.docs.isNotEmpty) {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => GetMaterials(
-                                  Qr: barcode!.code.toString(),
-                                  teslimet: true,
-                                  gerigel: true,
-                                  teslimal: true)));
+                      .then((QuerySnapshot kMaterials) async {
+                    if (kMaterials.docs.isNotEmpty) {
+                      await FirebaseFirestore.instance
+                          .collection("Users")
+                          .doc(Auth.currentUser!.email)
+                          .get()
+                          .then((value) {
+                        k_adi = value["Kullanıcı Adı"];
+                      });
+                      await FirebaseFirestore.instance
+                          .collection("Materials")
+                          .doc(kMaterials.docs[0]["Malzeme Adı"])
+                          .get()
+                          .then((veri) {
+                        malzemeAdi = veri["Malzeme Adı"];
+                      });
+                      await FirebaseFirestore.instance
+                          .collection("Materials")
+                          .where("Malzeme Adı", isEqualTo: malzemeAdi)
+                          .where("Konum", isEqualTo: k_adi)
+                          .get()
+                          .then((QuerySnapshot gelenVeri) {
+                        if (gelenVeri.docs.isNotEmpty) {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => GetMaterials(
+                                      Qr: barcode!.code.toString(),
+                                      teslimet: true,
+                                      gerigel: true,
+                                      teslimal: true)));
+                        } else {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => GetMaterials(
+                                      Qr: barcode!.code.toString(),
+                                      teslimet: false,
+                                      gerigel: true,
+                                      teslimal: true)));
+                        }
+                      });
                     } else {
                       Fluttertoast.showToast(
                           msg: "Bu Qr Koduna Ait Ürün Bulunamadı.",
