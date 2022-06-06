@@ -333,14 +333,6 @@ Malzeme Konumu:${malzemeler![index]["Konum"]}''',
                 child: const Icon(Icons.add, size: 35),
                 backgroundColor: const Color(0xffd41217),
                 onPressed: () async {
-                  /*await FirebaseFirestore.instance
-                      .collection("Deneme")
-                      .doc("deneme")
-                      .get()
-                      .then((value) {
-                    value[0];
-                    Fluttertoast.showToast(msg: value[0]);
-                  });*/
                   Map<String, int> data = {"Çekiç": 23, "Kalem": 5};
                   await FirebaseFirestore.instance
                       .collection("Deneme")
