@@ -35,7 +35,6 @@ class _GetMaterialsState extends State<GetMaterials> {
   @override
   Widget build(BuildContext context) {
     int stok = 0;
-    var anan;
     var malzemeAdi;
     final docRef = FirebaseFirestore.instance
         .collection("Users")
