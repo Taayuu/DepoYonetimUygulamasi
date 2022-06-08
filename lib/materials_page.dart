@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:core';
 import 'dart:ffi';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -19,6 +18,8 @@ class MaterialsPage extends StatefulWidget {
 
 class _MaterialsPageState extends State<MaterialsPage> {
   final _firestore = FirebaseFirestore.instance;
+
+  var delegate;
 
   @override
   Widget build(BuildContext context) {
@@ -42,28 +43,38 @@ class _MaterialsPageState extends State<MaterialsPage> {
         ),
         centerTitle: true,
         elevation: 0,
+        leading: IconButton(
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => AddMaterialsPage(
+                            Qr: '',
+                            malzemeAdi: '',
+                            malzemeRafi: '',
+                            malzemeSinifi: '',
+                            malzemeEkleGuncelleButtonText: 'Ekle',
+                            malzemeKonum: '',
+                            malzemeStok: 0,
+                            malzemeImage: '',
+                          )));
+            },
+            icon: Icon(
+              Icons.add_circle_outline,
+              color: Colors.black,
+              size: 29,
+            )),
         actions: <Widget>[
           IconButton(
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => AddMaterialsPage(
-                              Qr: '',
-                              malzemeAdi: '',
-                              malzemeRafi: '',
-                              malzemeSinifi: '',
-                              malzemeEkleGuncelleButtonText: 'Ekle',
-                              malzemeKonum: '',
-                              malzemeStok: 0,
-                              malzemeImage: '',
-                            )));
-              },
-              icon: Icon(
-                Icons.add_circle_outline,
-                color: Colors.black,
-                size: 29,
-              ))
+            onPressed: () {
+              showSearch(context: context, delegate: CustomSearch());
+            },
+            icon: Icon(
+              Icons.search,
+              color: Colors.black,
+              size: 29,
+            ),
+          ),
         ],
       ),
       body: SafeArea(
@@ -224,5 +235,71 @@ Malzeme Konumu:${malzemeler[index]["${"Konum"}"]},''',
         ),
       ),
     );
+  }
+}
+
+class CustomSearch extends SearchDelegate {
+  List<String> allData = [
+    "İstanbul",
+    "Ankara",
+    "İzmir",
+    "Eskişehir",
+    "Adana",
+    "Konya"
+  ];
+  @override
+  List<Widget>? buildActions(BuildContext context) {
+    return [
+      IconButton(
+          onPressed: () {
+            query = "";
+          },
+          icon: Icon(Icons.clear))
+    ];
+  }
+
+  @override
+  Widget? buildLeading(BuildContext context) {
+    return IconButton(
+        onPressed: () {
+          close(context, null);
+        },
+        icon: Icon(Icons.arrow_back));
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    List<String> matchQuery = [];
+    for (var item in allData) {
+      if (item.toLowerCase().contains(query.toLowerCase())) {
+        matchQuery.add(item);
+      }
+    }
+    return ListView.builder(
+        itemCount: matchQuery.length,
+        itemBuilder: (context, index) {
+          var result = matchQuery[index];
+          return ListTile(
+            title: Text(result),
+          );
+        });
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    List<String> matchQuery = [];
+    for (var item in allData) {
+      if (item.toLowerCase().contains(query.toLowerCase())) {
+        matchQuery.add(item);
+      }
+    }
+    return ListView.builder(
+        itemCount: matchQuery.length,
+        itemBuilder: (context, index) {
+          var result = matchQuery[index];
+          return ListTile(
+            title: Text(result),
+          );
+        });
   }
 }
