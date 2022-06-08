@@ -27,7 +27,7 @@ class ForgotPassword extends StatelessWidget {
                   fillColor: Colors.white,
                   filled: true,
                   border: InputBorder.none,
-                  hintText: "Email",
+                  hintText: "E-Posta",
                   enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20),
                       borderSide: BorderSide(color: Colors.black, width: 2)),
@@ -79,7 +79,7 @@ class ForgotPassword extends StatelessWidget {
                           Auth.sendPasswordResetEmail(email: emailStr);
                           Navigator.of(context).pop();
                           Fluttertoast.showToast(
-                              msg: "Sıfırlama linki mail adresine gönderildi.");
+                              msg: "Sıfırlama linki mail adresine gönderildi");
                         }),
                   ),
                 ),

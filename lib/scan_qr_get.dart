@@ -177,7 +177,7 @@ class _ScanQrGetState extends State<ScanQrGet> {
                       });
                     } else {
                       Fluttertoast.showToast(
-                          msg: "Bu Qr Koduna Ait Ürün Bulunamadı.",
+                          msg: "Bu Qr Koduna Ait Ürün Bulunamadı",
                           backgroundColor: Colors.white,
                           textColor: Colors.black);
                     }

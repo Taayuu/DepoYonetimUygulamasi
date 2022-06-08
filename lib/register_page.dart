@@ -90,21 +90,6 @@ class _RegisterPageState extends State<RegisterPage> {
               ),
             ),
           ),
-          /*  Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(15),
-                  child: TextField(
-                    obscureText: true,
-                    decoration: InputDecoration(
-                        prefixIcon: Icon(Icons.key),
-                        fillColor: Colors.white,
-                        filled: true,
-                        border: InputBorder.none,
-                        hintText: "Şifre Tekrar"),
-                  ),
-                ),
-              ),*/
           SizedBox(
             height: 35,
           ),

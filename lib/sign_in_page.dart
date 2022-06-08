@@ -127,7 +127,7 @@ class SignInPage extends StatelessWidget {
                                                   email: emailStr,
                                                   password: passwordStr);
                                           Fluttertoast.showToast(
-                                              msg: "Giriş Yapıldı.");
+                                              msg: "Giriş Yapıldı");
                                           emailStr = "";
                                           passwordStr = "";
                                         },
@@ -135,7 +135,7 @@ class SignInPage extends StatelessWidget {
                                         padding: const EdgeInsets.symmetric(
                                             vertical: 16, horizontal: 20),
                                         child: const Text(
-                                          'Üye Girişi',
+                                          'Giriş',
                                           style: TextStyle(
                                               fontSize: 13,
                                               color: Colors.white),

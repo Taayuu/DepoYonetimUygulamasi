@@ -89,7 +89,7 @@ class _HomePageState extends State<HomePage> {
                   context: context,
                   builder: (builder) => AlertDialog(
                     title: Text("Güvenli Çıkış"),
-                    content: Text("Çıkmak İstediğinize Emin misiniz?"),
+                    content: Text("Çıkmak İstediğinize Emin Misiniz?"),
                     actions: <Widget>[
                       FlatButton(
                         onPressed: () {

@@ -227,24 +227,6 @@ class _AddMaterialsPageState extends State<AddMaterialsPage> {
                               hintText: "URL giriniz",
                               hintStyle: TextStyle(color: Colors.grey[700])),
                           style: TextStyle(color: Colors.blue)),
-                      /* Flexible(
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 233),
-                              child: IconButton(
-                                onPressed: () async {
-                                  await kameradanYukle();
-                                },
-                                icon: Icon(
-                                  Icons.photo_camera,
-                                  size: 30,
-                                  color: Colors.grey[600],
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),*/
                       SizedBox(height: 10),
                       ClipRRect(
                         borderRadius: BorderRadius.circular(15),
@@ -337,13 +319,13 @@ class _AddMaterialsPageState extends State<AddMaterialsPage> {
                                             materialStockController.clear();
                                             Fluttertoast.showToast(
                                                 msg:
-                                                    "Malzeme Başarıyla Eklendi.");
+                                                    "Malzeme Başarıyla Eklendi");
                                           } else {
                                             FocusManager.instance.primaryFocus
                                                 ?.unfocus();
                                             Fluttertoast.showToast(
                                                 msg:
-                                                    "Bu rafta bir ürün zaten mevcut.",
+                                                    "Bu rafta bir ürün zaten mevcut",
                                                 backgroundColor: Colors.white,
                                                 textColor: Colors.black);
                                           }
@@ -353,7 +335,7 @@ class _AddMaterialsPageState extends State<AddMaterialsPage> {
                                             ?.unfocus();
                                         Fluttertoast.showToast(
                                             msg:
-                                                "Bu Qr Koda Sahip Malzeme zaten mevcut.",
+                                                "Bu Qr Koda Sahip Malzeme zaten mevcut",
                                             backgroundColor: Colors.white,
                                             textColor: Colors.black);
                                       }
@@ -363,7 +345,7 @@ class _AddMaterialsPageState extends State<AddMaterialsPage> {
                                         ?.unfocus();
                                     Fluttertoast.showToast(
                                         msg:
-                                            "Bu Ada Sahip Malzeme zaten mevcut.",
+                                            "Bu Ada Sahip Malzeme zaten mevcut",
                                         backgroundColor: Colors.white,
                                         textColor: Colors.black);
                                   }
@@ -416,11 +398,11 @@ class _AddMaterialsPageState extends State<AddMaterialsPage> {
                                 materialQrController.clear();
                                 materialStockController.clear();
                                 Fluttertoast.showToast(
-                                    msg: "Malzeme Başarıyla Güncellendi.");
+                                    msg: "Malzeme Başarıyla Güncellendi");
                               }
                             } else {
                               Fluttertoast.showToast(
-                                  msg: "Lütfen boş alanları doldurunuz.");
+                                  msg: "Lütfen boş alanları doldurunuz");
                             }
                           },
                           color: Color(0xffd41217),

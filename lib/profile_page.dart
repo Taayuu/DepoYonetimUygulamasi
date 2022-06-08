@@ -222,23 +222,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             const SizedBox(
               height: 15,
-            ) /*
-            Align(
-              alignment: Alignment.bottomRight,
-              child: Padding(
-                padding: const EdgeInsets.all(5),
-                child: FloatingActionButton(
-                    child: Icon(Icons.edit, size: 35),
-                    backgroundColor: Color(0xffd41217),
-                    onPressed: () {
-                      Fluttertoast.showToast(msg: "Kaleme Basıldı");
-                      setState(() {
-                        hasFocus = true;
-                      });
-                      FocusScope.of(context).requestFocus(nodeFirst);
-                    }),
-              ),
-            ),*/
+            )
           ],
         ),
       ),

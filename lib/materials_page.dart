@@ -158,7 +158,7 @@ class _MaterialsPageState extends State<MaterialsPage> {
                                                     AlertDialog(
                                                   title: Text("Sil"),
                                                   content: Text(
-                                                      "Silmek İstediğinize Emin misiniz?"),
+                                                      "Silmek İstediğinize Emin Misiniz?"),
                                                   actions: <Widget>[
                                                     TextButton(
                                                       onPressed: () {
@@ -174,7 +174,7 @@ class _MaterialsPageState extends State<MaterialsPage> {
                                                         Navigator.pop(context);
                                                         Fluttertoast.showToast(
                                                             msg:
-                                                                "Malzeme Silindi.");
+                                                                "Malzeme Silindi");
                                                       },
                                                       child: Text("Tamam"),
                                                     ),

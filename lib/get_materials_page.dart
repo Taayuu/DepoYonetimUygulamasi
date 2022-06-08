@@ -215,7 +215,7 @@ Malzeme Konumu:${malzemeler![index]["Konum"]}''',
                           "Emanet Alan": "$kAdi"
                         });
                         Fluttertoast.showToast(
-                            msg: "Malzeme Başarıyla Teslim Alındı.");
+                            msg: "Malzeme Başarıyla Teslim Alındı");
                         Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -226,7 +226,7 @@ Malzeme Konumu:${malzemeler![index]["Konum"]}''',
                                     gerigel: true)));
                       } else {
                         Fluttertoast.showToast(
-                            msg: "Bu malzeme için yeterli stok yok.");
+                            msg: "Bu malzeme için yeterli stok yok");
                       }
                     },
                     color: const Color(0xffd41217),
