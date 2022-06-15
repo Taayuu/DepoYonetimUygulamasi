@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:core';
 import 'dart:ffi';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -21,6 +22,7 @@ class _MaterialsPageState extends State<MaterialsPage> {
   String name = "";
   var delegate;
 
+  FirebaseAuth Auth = FirebaseAuth.instance;
   @override
   Widget build(BuildContext context) {
     var malzemeAdi;
@@ -185,6 +187,47 @@ class _MaterialsPageState extends State<MaterialsPage> {
                                                       ),
                                                       TextButton(
                                                         onPressed: () async {
+                                                          await FirebaseFirestore
+                                                              .instance
+                                                              .collection(
+                                                                  'Users')
+                                                              .doc(Auth
+                                                                  .currentUser!
+                                                                  .email)
+                                                              .update({
+                                                            "Emanetler":
+                                                                FieldValue
+                                                                    .arrayRemove([
+                                                              malzemeler[index][
+                                                                  "Malzeme Adı"]
+                                                            ])
+                                                          });
+                                                          FirebaseFirestore
+                                                              .instance
+                                                              .collection(
+                                                                  "Users")
+                                                              .doc(Auth
+                                                                  .currentUser!
+                                                                  .email)
+                                                              .get()
+                                                              .then(
+                                                                  (value) async {
+                                                            await FirebaseFirestore
+                                                                .instance
+                                                                .collection(
+                                                                    "Users")
+                                                                .doc(Auth
+                                                                    .currentUser!
+                                                                    .email)
+                                                                .collection(
+                                                                    "Ürün")
+                                                                .doc(malzemeler[
+                                                                            0][
+                                                                        "Malzeme Adı"] +
+                                                                    Auth.currentUser!
+                                                                        .email)
+                                                                .delete();
+                                                          });
                                                           await malzemeler[
                                                                   index]
                                                               .reference

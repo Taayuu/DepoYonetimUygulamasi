@@ -38,8 +38,6 @@ class _ProfilePageState extends State<ProfilePage> {
         .collection("Users")
         .doc(Auth.currentUser!.email)
         .collection("Ürün")
-        .where("Emanet Alma Tarihi Saatsiz",
-            isEqualTo: DateFormat('yyyy-MM-dd').format(DateTime.now()))
         .where("durum", isEqualTo: 1);
 
     docRef.snapshots().listen(
