@@ -163,7 +163,7 @@ class _ScanQrGetState extends State<ScanQrGet> {
                                       Qr: barcode!.code.toString(),
                                       teslimet: true,
                                       gerigel: true,
-                                      teslimal: true)));
+                                      teslimal: false)));
                         } else {
                           Navigator.push(
                               context,

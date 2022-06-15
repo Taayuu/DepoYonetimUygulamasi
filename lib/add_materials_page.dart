@@ -64,6 +64,7 @@ class _AddMaterialsPageState extends State<AddMaterialsPage> {
   // -> "12-34-56-78"
   @override
   Widget build(BuildContext context) {
+    List keyword = [];
     Map<String, dynamic> materialsDataGuncelle;
     Map<String, dynamic> materialsDataEkle;
     materialStockController.value = maskFormatter.updateMask(mask: "###");
@@ -302,13 +303,35 @@ class _AddMaterialsPageState extends State<AddMaterialsPage> {
                                                         .text),
                                                 "Konum": "Depo",
                                                 "Resim":
-                                                    "https://scontent.fesb10-3.fna.fbcdn.net/v/t1.6435-9/62213204_3238487636165202_1232018786266120192_n.png?_nc_cat=102&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=uI8gG8nVd3UAX8bCQ2O&_nc_ht=scontent.fesb10-3.fna&oh=00_AT_TDBmG4DsowdwCwLUwKX78pOWpXOWq0ICeQlXMWNYnAA&oe=62C0A333"
+                                                    "https://scontent.fesb10-3.fna.fbcdn.net/v/t1.6435-9/62213204_3238487636165202_1232018786266120192_n.png?_nc_cat=102&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=uI8gG8nVd3UAX8bCQ2O&_nc_ht=scontent.fesb10-3.fna&oh=00_AT_TDBmG4DsowdwCwLUwKX78pOWpXOWq0ICeQlXMWNYnAA&oe=62C0A333",
                                               };
                                             }
                                             await materialsRef
                                                 .doc(
                                                     materialNameController.text)
                                                 .set(materialsDataEkle);
+                                            try {
+                                              for (var i = 1;
+                                                  i <
+                                                      materialNameController
+                                                              .text.length +
+                                                          1;
+                                                  i++) {
+                                                keyword.add(
+                                                  materialNameController.text
+                                                      .toString()
+                                                      .substring(0, i),
+                                                );
+                                              }
+                                            } catch (e) {}
+                                            await FirebaseFirestore.instance
+                                                .collection("Materials")
+                                                .doc(
+                                                    materialNameController.text)
+                                                .update({
+                                              "keyword":
+                                                  FieldValue.arrayUnion(keyword)
+                                            });
                                             FocusManager.instance.primaryFocus
                                                 ?.unfocus();
                                             materialNameController.clear();
@@ -385,10 +408,30 @@ class _AddMaterialsPageState extends State<AddMaterialsPage> {
                                     .where("Qr Kod", isEqualTo: widget.Qr)
                                     .get()
                                     .then((QuerySnapshot qMaterials) async {
-                                  qMaterials.docs.forEach((doc) {
+                                  qMaterials.docs.forEach((doc) async {
                                     materialsRef
                                         .doc(doc.id)
                                         .update(materialsDataGuncelle);
+                                    try {
+                                      for (var i = 1;
+                                          i <
+                                              materialNameController
+                                                      .text.length +
+                                                  1;
+                                          i++) {
+                                        keyword.add(
+                                          materialNameController.text
+                                              .toString()
+                                              .substring(0, i),
+                                        );
+                                      }
+                                    } catch (e) {}
+                                    await FirebaseFirestore.instance
+                                        .collection("Materials")
+                                        .doc(materialNameController.text)
+                                        .update({
+                                      "keyword": FieldValue.arrayUnion(keyword)
+                                    });
                                   });
                                 });
                                 FocusManager.instance.primaryFocus?.unfocus();

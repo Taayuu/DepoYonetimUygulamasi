@@ -1,6 +1,7 @@
 // ignore_for_file: deprecated_member_use, unused_local_variable, prefer_typing_uninitialized_variables, duplicate_ignore, non_constant_identifier_names, unused_field
 
 import 'dart:convert';
+import 'dart:ffi';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -214,6 +215,33 @@ Malzeme Konumu:${malzemeler![index]["Konum"]}''',
                                   .format(DateTime.now()),
                           "Emanet Alan": "$kAdi"
                         });
+
+                        FirebaseFirestore.instance
+                            .collection("Users")
+                            .doc(Auth.currentUser!.email)
+                            .get()
+                            .then((value) async {
+                          await FirebaseFirestore.instance
+                              .collection("Users")
+                              .doc(Auth.currentUser!.email)
+                              .collection("Ürün")
+                              .doc(malzemeler?[0]["Malzeme Adı"] +
+                                  Auth.currentUser!.email)
+                              .set({
+                            "Emanet": {
+                              "${malzemeler?[0]["Malzeme Adı"]}": [6],
+                            },
+                            "Id": Auth.currentUser!.uid,
+                            "Emanet Alma Tarihi":
+                                DateFormat('yyyy-MM-dd HH:mm:ss')
+                                    .format(DateTime.now()),
+                            "Emanet Alma Tarihi Saatsiz":
+                                DateFormat('yyyy-MM-dd').format(DateTime.now()),
+                            "Emanet Alan": "$kAdi",
+                            "durum": 1
+                          });
+                        });
+
                         Fluttertoast.showToast(
                             msg: "Malzeme Başarıyla Teslim Alındı");
                         Navigator.push(
@@ -286,6 +314,30 @@ Malzeme Konumu:${malzemeler![index]["Konum"]}''',
                       depRef.snapshots().listen((event) {
                         malzemeAdi = event.data()!["Emanet Adı"];
                       });
+
+                      FirebaseFirestore.instance
+                          .collection("Users")
+                          .doc(Auth.currentUser!.email)
+                          .get()
+                          .then((value) async {
+                        await FirebaseFirestore.instance
+                            .collection("Users")
+                            .doc(Auth.currentUser!.email)
+                            .collection("Ürün")
+                            .doc(malzemeler?[0]["Malzeme Adı"] +
+                                Auth.currentUser!.email)
+                            .update({
+                          "Emanet": {
+                            "${malzemeler?[0]["Malzeme Adı"]}": [6],
+                          },
+                          "Id": Auth.currentUser!.uid,
+                          "Teslim Tarihi": DateFormat('yyyy-MM-dd HH:mm:ss')
+                              .format(DateTime.now()),
+                          "Emanet Alan": "$kAdi",
+                          "durum": 0
+                        });
+                      });
+
                       Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -315,6 +367,7 @@ Malzeme Konumu:${malzemeler![index]["Konum"]}''',
                 child: Padding(
                   padding: const EdgeInsets.all(5),
                   child: FloatingActionButton(
+                      heroTag: "btnGeri",
                       child: const Icon(Icons.arrow_back, size: 35),
                       backgroundColor: const Color(0xffd41217),
                       onPressed: () {
@@ -330,15 +383,29 @@ Malzeme Konumu:${malzemeler![index]["Konum"]}''',
               ),
             ),
             FloatingActionButton(
+                heroTag: "deneme",
                 child: const Icon(Icons.add, size: 35),
                 backgroundColor: const Color(0xffd41217),
                 onPressed: () async {
-                  Map<String, int> data = {"Çekiç": 23, "Kalem": 5};
-                  await FirebaseFirestore.instance
-                      .collection("Deneme")
-                      .doc("deneme")
-                      .collection(Auth.currentUser!.uid)
-                      .add(data);
+                  /*final depRef = FirebaseFirestore.instance
+                      .collection("Users")
+                      .doc(Auth.currentUser!.email)
+                      .get()
+                      .then((value) async {
+                    await FirebaseFirestore.instance
+                        .collection("Users")
+                        .doc(Auth.currentUser!.email)
+                        .collection("Ürün")
+                        .doc(malzemeler?[0]["Malzeme Adı"] +
+                            Auth.currentUser!.email)
+                        .set({
+                      "Emanet": {
+                        "${malzemeler?[0]["Malzeme Adı"]}": [6],
+                      },
+                      "Id": Auth.currentUser!.uid,
+                      "zaman": 2001
+                    });
+                  });*/
                 }),
           ],
         ),

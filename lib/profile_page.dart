@@ -29,13 +29,18 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     int index;
+
     final docRef = FirebaseFirestore.instance
         .collection("Users")
         .doc(Auth.currentUser!.email);
 
     Query qmaterials = FirebaseFirestore.instance
         .collection("Users")
-        .where("Id", isEqualTo: Auth.currentUser!.uid);
+        .doc(Auth.currentUser!.email)
+        .collection("Ürün")
+        .where("Emanet Alma Tarihi Saatsiz",
+            isEqualTo: DateFormat('yyyy-MM-dd').format(DateTime.now()))
+        .where("durum", isEqualTo: 1);
 
     docRef.snapshots().listen(
           (event) =>
@@ -49,20 +54,58 @@ class _ProfilePageState extends State<ProfilePage> {
     var malzemeAlan;
     var malzemeTeslimTarihi;
 
-    final depRef = FirebaseFirestore.instance
+    /*final depRef = FirebaseFirestore.instance
         .collection("Deposit")
         .doc(Auth.currentUser!.email)
         .collection("Emanetlerim")
-        .doc(Auth.currentUser!.email);
+        .doc(Auth.currentUser!.email);*/
 
-    yaziGetir() async {
+    final depRef = FirebaseFirestore.instance
+        .collection("Users")
+        .doc(Auth.currentUser!.email)
+        .collection("Ürün");
+
+    /*yaziGetir() async {
       try {
         await depRef.get().then((gelenVeri) {
           setState(() {
-            malzemeAdi = gelenVeri["Emanet Adı"];
+            malzemeAdi = gelenVeri["Emanet"]
+                .toString()
+                .replaceAll('{', '')
+                .replaceAll('}', '');
             malzemeAlan = gelenVeri["Emanet Alan"];
             malzemeAlmaTarihi = gelenVeri["Emanet Alma Tarihi"];
             malzemeTeslimTarihi = gelenVeri["Teslim Tarihi"];
+          });
+        });
+        // ignore: non_constant_identifier_names, avoid_types_as_parameter_names, empty_catches
+      } catch (Error) {}
+    }*/
+
+    yaziGetir() async {
+      try {
+        await FirebaseFirestore.instance
+            .collection("Users")
+            .doc(Auth.currentUser!.email)
+            .collection("Ürün")
+            .where("durum", isEqualTo: 0)
+            .get()
+            .then((value) {
+          List madi = [];
+          List mAlmaTarihi = [];
+          List mTeslimTarihi = [];
+          value.docs.forEach((element) {
+            madi.add(element
+                .data()["Emanet"]
+                .toString()
+                .replaceAll('{', '')
+                .replaceAll('}', ''));
+            malzemeAdi = madi.toList();
+            malzemeAlan = value.docs[0]["Emanet Alan"];
+            mAlmaTarihi.add(element.data()["Emanet Alma Tarihi"]);
+            malzemeAlmaTarihi = mAlmaTarihi.toList();
+            mTeslimTarihi.add(element.data()["Teslim Tarihi"]);
+            malzemeTeslimTarihi = mTeslimTarihi.toList();
           });
         });
         // ignore: non_constant_identifier_names, avoid_types_as_parameter_names, empty_catches
