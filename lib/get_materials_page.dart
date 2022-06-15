@@ -172,37 +172,38 @@ Malzeme Konumu:${malzemeler![index]["Konum"]}''',
                   borderRadius: BorderRadius.circular(15),
                   child: Column(
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(right: 5),
-                            child: SizedBox(
-                              width: 75,
-                              child: TextFormField(
-                                  textCapitalization: TextCapitalization.words,
-                                  controller: adetController,
-                                  decoration: InputDecoration(
-                                      fillColor: Colors.white,
-                                      filled: true,
-                                      enabledBorder: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(7),
-                                          borderSide: BorderSide(
-                                              color: Colors.black, width: 2)),
-                                      focusedBorder: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(12),
-                                          borderSide: BorderSide(
-                                              color: Colors.black, width: 3)),
-                                      hintText: "Adet",
-                                      hintStyle:
-                                          TextStyle(color: Colors.grey[700])),
-                                  keyboardType: TextInputType.number,
-                                  inputFormatters: [maskFormatter]),
-                            ),
-                          ),
-                          MaterialButton(
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: TextFormField(
+                            textCapitalization: TextCapitalization.words,
+                            controller: adetController,
+                            decoration: InputDecoration(
+                                fillColor: Colors.white,
+                                filled: true,
+                                enabledBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(7),
+                                    borderSide: BorderSide(
+                                        color: Colors.black, width: 2)),
+                                focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                    borderSide: BorderSide(
+                                        color: Colors.black, width: 3)),
+                                hintText: "Adet",
+                                hintStyle: TextStyle(color: Colors.grey[700])),
+                            keyboardType: TextInputType.number,
+                            inputFormatters: [maskFormatter]),
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(12),
+                          child: MaterialButton(
                             onPressed: () async {
                               if (adetController.text != null &&
                                   adetController.text != "") {
@@ -318,7 +319,7 @@ Malzeme Konumu:${malzemeler![index]["Konum"]}''',
                                   TextStyle(fontSize: 13, color: Colors.white),
                             ),
                           ),
-                        ],
+                        ),
                       )
                     ],
                   ),

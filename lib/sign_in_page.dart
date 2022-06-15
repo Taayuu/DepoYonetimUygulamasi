@@ -38,42 +38,52 @@ class SignInPage extends StatelessWidget {
                           children: [
                             Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(12),
-                                child: TextField(
-                                  onChanged: (emailMtn) {
-                                    emailStr = emailMtn;
-                                  },
-                                  decoration: const InputDecoration(
-                                      prefixIcon: Icon(
-                                        Icons.person,
-                                      ),
-                                      fillColor: Colors.white,
-                                      filled: true,
-                                      border: InputBorder.none,
-                                      hintText: "E-Posta"),
-                                ),
+                              child: TextFormField(
+                                onChanged: (emailMtn) {
+                                  emailStr = emailMtn;
+                                },
+                                decoration: InputDecoration(
+                                    prefixIcon: Icon(Icons.person),
+                                    fillColor: Colors.white,
+                                    filled: true,
+                                    enabledBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(7),
+                                        borderSide: BorderSide(
+                                            color: Colors.black, width: 2)),
+                                    focusedBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(7),
+                                        borderSide: BorderSide(
+                                            color: Colors.black, width: 2)),
+                                    hintText: "Kullanıcı Adı",
+                                    hintStyle:
+                                        TextStyle(color: Colors.grey[700])),
                               ),
                             ),
                             Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(12),
-                                child: Container(
-                                  child: TextField(
-                                    onChanged: (passwordMtn) {
-                                      passwordStr = passwordMtn;
-                                    },
-                                    obscureText: true,
-                                    decoration: const InputDecoration(
-                                        prefixIcon: Icon(
-                                          Icons.key,
-                                        ),
-                                        fillColor: Colors.white,
-                                        filled: true,
-                                        border: InputBorder.none,
-                                        hintText: "Şifre"),
-                                  ),
+                              child: Container(
+                                child: TextField(
+                                  onChanged: (passwordMtn) {
+                                    passwordStr = passwordMtn;
+                                  },
+                                  obscureText: true,
+                                  decoration: InputDecoration(
+                                      prefixIcon: Icon(Icons.key),
+                                      fillColor: Colors.white,
+                                      filled: true,
+                                      enabledBorder: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(7),
+                                          borderSide: BorderSide(
+                                              color: Colors.black, width: 2)),
+                                      focusedBorder: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(7),
+                                          borderSide: BorderSide(
+                                              color: Colors.black, width: 2)),
+                                      hintText: "Şifre",
+                                      hintStyle:
+                                          TextStyle(color: Colors.grey[700])),
                                 ),
                               ),
                             ),
@@ -88,28 +98,6 @@ class SignInPage extends StatelessWidget {
                                             MaterialPageRoute(
                                                 builder: (context) =>
                                                     RegisterPage()));
-                                        /*await _authService
-                                            .createUserWithEmailAndPassword(
-                                                email: emailStr,
-                                                password: passwordStr)
-                                            .then((kullanici) {
-                                          FirebaseAuth Auth =
-                                              FirebaseAuth.instance;
-                                          FirebaseFirestore.instance
-                                              .collection('Users')
-                                              .doc(emailStr)
-                                              .set({
-                                            "Eposta": emailStr,
-                                            "Şifre": passwordStr,
-                                            "Kullanıcı Adı": "",
-                                            "Üye Olma Tarihi": DateTime.now(),
-                                            "Emanetler": FieldValue.arrayUnion(
-                                                malzemeler),
-                                            "Id": Auth.currentUser!.uid,
-                                          });
-                                          emailStr = "";
-                                          passwordStr = "";
-                                        });*/
                                       },
                                       child: Text(
                                         'Hesap\nOluştur',

@@ -19,30 +19,26 @@ class ForgotPassword extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(15),
-              child: TextField(
-                decoration: InputDecoration(
+            child: TextField(
+              decoration: InputDecoration(
                   prefixIcon: Icon(Icons.email),
                   fillColor: Colors.white,
                   filled: true,
-                  border: InputBorder.none,
-                  hintText: "E-Posta",
                   enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: BorderRadius.circular(7),
                       borderSide: BorderSide(color: Colors.black, width: 2)),
-                ),
-                onChanged: (emailMtn) {
-                  emailStr = emailMtn;
-                },
-              ),
+                  focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(color: Colors.black, width: 3)),
+                  hintText: "E-Posta",
+                  hintStyle: TextStyle(color: Colors.grey[700])),
+              onChanged: (emailMtn) {
+                emailStr = emailMtn;
+              },
             ),
           ),
           Row(
             children: [
-              SizedBox(
-                width: 30,
-              ),
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),

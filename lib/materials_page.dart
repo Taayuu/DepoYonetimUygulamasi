@@ -73,15 +73,23 @@ class _MaterialsPageState extends State<MaterialsPage> {
       body: SafeArea(
         child: Center(
           child: Column(
-            // mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SizedBox(
                 height: 10,
               ),
               Card(
                 child: TextField(
-                  textCapitalization: TextCapitalization.words,
+                  keyboardType: TextInputType.text,
+                  textCapitalization: TextCapitalization.sentences,
                   decoration: InputDecoration(
+                      enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(7),
+                          borderSide:
+                              BorderSide(color: Colors.black, width: 2)),
+                      focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide:
+                              BorderSide(color: Colors.black, width: 3)),
                       prefixIcon: Icon(Icons.search),
                       hintText: "Arama yapınız..."),
                   onChanged: (val) {

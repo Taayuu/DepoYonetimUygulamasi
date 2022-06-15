@@ -190,6 +190,26 @@ class _AddMaterialsPageState extends State<AddMaterialsPage> {
                         height: 10,
                       ),
                       TextFormField(
+                          controller: materialImageController,
+                          decoration: InputDecoration(
+                              labelText: "Malzeme Resmi",
+                              fillColor: Colors.white,
+                              filled: true,
+                              enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(7),
+                                  borderSide: BorderSide(
+                                      color: Colors.black, width: 2)),
+                              focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: BorderSide(
+                                      color: Colors.black, width: 3)),
+                              hintText: "URL giriniz",
+                              hintStyle: TextStyle(color: Colors.grey[700])),
+                          style: TextStyle(color: Colors.blue)),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      TextFormField(
                           textCapitalization: TextCapitalization.words,
                           controller: materialStockController,
                           decoration: InputDecoration(
@@ -208,26 +228,6 @@ class _AddMaterialsPageState extends State<AddMaterialsPage> {
                               hintStyle: TextStyle(color: Colors.grey[700])),
                           keyboardType: TextInputType.number,
                           inputFormatters: [maskFormatter]),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      TextFormField(
-                          controller: materialImageController,
-                          decoration: InputDecoration(
-                              labelText: "Malzeme Resmi",
-                              fillColor: Colors.white,
-                              filled: true,
-                              enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(7),
-                                  borderSide: BorderSide(
-                                      color: Colors.black, width: 2)),
-                              focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                  borderSide: BorderSide(
-                                      color: Colors.black, width: 3)),
-                              hintText: "URL giriniz",
-                              hintStyle: TextStyle(color: Colors.grey[700])),
-                          style: TextStyle(color: Colors.blue)),
                       SizedBox(height: 10),
                       ClipRRect(
                         borderRadius: BorderRadius.circular(15),

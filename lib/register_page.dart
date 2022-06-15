@@ -29,65 +29,62 @@ class _RegisterPageState extends State<RegisterPage> {
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(15),
-              child: TextField(
-                textCapitalization: TextCapitalization.words,
-                controller: k_Adi,
-                decoration: InputDecoration(
+            child: TextField(
+              textCapitalization: TextCapitalization.words,
+              controller: k_Adi,
+              decoration: InputDecoration(
                   prefixIcon: Icon(Icons.person),
                   fillColor: Colors.white,
                   filled: true,
-                  border: InputBorder.none,
-                  hintText: "Kullanıcı Adı",
                   enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: BorderRadius.circular(7),
                       borderSide: BorderSide(color: Colors.black, width: 2)),
-                ),
-              ),
+                  focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(color: Colors.black, width: 3)),
+                  hintText: "Kullanıcı Adı",
+                  hintStyle: TextStyle(color: Colors.grey[700])),
             ),
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(15),
-              child: TextField(
-                onChanged: (emailMtn) {
-                  emailStr = emailMtn;
-                },
-                decoration: InputDecoration(
+            child: TextFormField(
+              onChanged: (emailMtn) {
+                emailStr = emailMtn;
+              },
+              decoration: InputDecoration(
                   prefixIcon: Icon(Icons.mail),
                   fillColor: Colors.white,
                   filled: true,
-                  border: InputBorder.none,
-                  hintText: "E-Posta",
                   enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: BorderRadius.circular(7),
                       borderSide: BorderSide(color: Colors.black, width: 2)),
-                ),
-              ),
+                  focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(color: Colors.black, width: 3)),
+                  hintText: "E-Posta",
+                  hintStyle: TextStyle(color: Colors.grey[700])),
             ),
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(15),
-              child: TextField(
-                onChanged: (passwordMtn) {
-                  passwordStr = passwordMtn;
-                },
-                obscureText: true,
-                decoration: InputDecoration(
+            child: TextField(
+              onChanged: (passwordMtn) {
+                passwordStr = passwordMtn;
+              },
+              obscureText: true,
+              decoration: InputDecoration(
                   prefixIcon: Icon(Icons.key),
                   fillColor: Colors.white,
                   filled: true,
-                  border: InputBorder.none,
-                  hintText: "Şifre",
                   enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: BorderRadius.circular(7),
                       borderSide: BorderSide(color: Colors.black, width: 2)),
-                ),
-              ),
+                  focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide(color: Colors.black, width: 3)),
+                  hintText: "Şifre",
+                  hintStyle: TextStyle(color: Colors.grey[700])),
             ),
           ),
           SizedBox(

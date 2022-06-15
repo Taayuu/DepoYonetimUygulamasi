@@ -91,13 +91,13 @@ class _HomePageState extends State<HomePage> {
                     title: Text("Güvenli Çıkış"),
                     content: Text("Çıkmak İstediğinize Emin Misiniz?"),
                     actions: <Widget>[
-                      FlatButton(
+                      TextButton(
                         onPressed: () {
                           Navigator.pop(context);
                         },
                         child: Text("Hayır"),
                       ),
-                      FlatButton(
+                      TextButton(
                         onPressed: () async {
                           await _authService.signOut();
                           Navigator.pop(context);
