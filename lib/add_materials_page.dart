@@ -75,6 +75,13 @@ class _AddMaterialsPageState extends State<AddMaterialsPage> {
     materialNameController.text = widget.malzemeAdi;
     materialStockController.text = widget.malzemeStok.toString();
     materialImageController.text = widget.malzemeImage;
+    if (materialImageController.text ==
+        "https://scontent.fesb10-3.fna.fbcdn.net/v/t1.6435-9/62213204_3238487636165202_1232018786266120192_n.png?_nc_cat=102&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=uI8gG8nVd3UAX8bCQ2O&_nc_ht=scontent.fesb10-3.fna&oh=00_AT_TDBmG4DsowdwCwLUwKX78pOWpXOWq0ICeQlXMWNYnAA&oe=62C0A333") {
+      materialImageController.clear();
+    }
+    if (materialStockController.text == "0") {
+      materialStockController.clear();
+    }
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Color(0xffFFEBC1),
@@ -237,7 +244,7 @@ class _AddMaterialsPageState extends State<AddMaterialsPage> {
                                 materialDepartmentController.text != "" &&
                                 materialNameController.text != "" &&
                                 materialQrController.text != "" &&
-                                materialStockController.text != null) {
+                                materialStockController.text != "") {
                               if (widget.malzemeEkleGuncelleButtonText ==
                                   "Ekle") {
                                 FirebaseFirestore.instance
@@ -340,9 +347,12 @@ class _AddMaterialsPageState extends State<AddMaterialsPage> {
                                                 .clear();
                                             materialQrController.clear();
                                             materialStockController.clear();
+                                            materialImageController.clear();
                                             Fluttertoast.showToast(
                                                 msg:
-                                                    "Malzeme Başarıyla Eklendi");
+                                                    "Malzeme Başarıyla Eklendi",
+                                                gravity: ToastGravity.CENTER,
+                                                fontSize: 20);
                                           } else {
                                             FocusManager.instance.primaryFocus
                                                 ?.unfocus();
@@ -350,7 +360,9 @@ class _AddMaterialsPageState extends State<AddMaterialsPage> {
                                                 msg:
                                                     "Bu rafta bir ürün zaten mevcut",
                                                 backgroundColor: Colors.white,
-                                                textColor: Colors.black);
+                                                textColor: Colors.black,
+                                                gravity: ToastGravity.CENTER,
+                                                fontSize: 20);
                                           }
                                         });
                                       } else {
@@ -360,7 +372,9 @@ class _AddMaterialsPageState extends State<AddMaterialsPage> {
                                             msg:
                                                 "Bu Qr Koda Sahip Malzeme zaten mevcut",
                                             backgroundColor: Colors.white,
-                                            textColor: Colors.black);
+                                            textColor: Colors.black,
+                                            gravity: ToastGravity.CENTER,
+                                            fontSize: 20);
                                       }
                                     });
                                   } else {
@@ -370,7 +384,9 @@ class _AddMaterialsPageState extends State<AddMaterialsPage> {
                                         msg:
                                             "Bu Ada Sahip Malzeme zaten mevcut",
                                         backgroundColor: Colors.white,
-                                        textColor: Colors.black);
+                                        textColor: Colors.black,
+                                        gravity: ToastGravity.CENTER,
+                                        fontSize: 20);
                                   }
                                 });
                               } else if (widget.malzemeEkleGuncelleButtonText ==
@@ -440,12 +456,17 @@ class _AddMaterialsPageState extends State<AddMaterialsPage> {
                                 materialDepartmentController.clear();
                                 materialQrController.clear();
                                 materialStockController.clear();
+                                materialImageController.clear();
                                 Fluttertoast.showToast(
-                                    msg: "Malzeme Başarıyla Güncellendi");
+                                    msg: "Malzeme Başarıyla Güncellendi",
+                                    gravity: ToastGravity.CENTER,
+                                    fontSize: 20);
                               }
                             } else {
                               Fluttertoast.showToast(
-                                  msg: "Lütfen boş alanları doldurunuz");
+                                  msg: "Lütfen boş alanları doldurunuz",
+                                  gravity: ToastGravity.CENTER,
+                                  fontSize: 20);
                             }
                           },
                           color: Color(0xffd41217),

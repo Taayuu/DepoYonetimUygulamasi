@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:login/sign_in_page.dart';
 import 'package:provider/provider.dart';
 
@@ -16,8 +17,10 @@ class RegisterPage extends StatefulWidget {
 
 class _RegisterPageState extends State<RegisterPage> {
   TextEditingController k_Adi = TextEditingController();
+  FirebaseAuth Auth = FirebaseAuth.instance;
   @override
   Widget build(BuildContext context) {
+    List bosListe = [];
     final _authService = Provider.of<IAuthService>(context, listen: false);
     return SafeArea(
         child: Scaffold(
@@ -128,25 +131,38 @@ class _RegisterPageState extends State<RegisterPage> {
                         padding:
                             EdgeInsets.symmetric(vertical: 10, horizontal: 25),
                         onPressed: () async {
-                          await _authService
-                              .createUserWithEmailAndPassword(
-                                  email: emailStr, password: passwordStr)
-                              .then((kullanici) {
-                            FirebaseAuth Auth = FirebaseAuth.instance;
-                            FirebaseFirestore.instance
-                                .collection('Users')
-                                .doc(emailStr)
-                                .set({
-                              "Eposta": emailStr,
-                              "Şifre": passwordStr,
-                              "Kullanıcı Adı": k_Adi.text,
-                              "Üye Olma Tarihi": DateTime.now(),
-                              "Emanetler": "",
-                              "Id": Auth.currentUser!.uid,
-                              "Durum": 0,
-                            });
-                            emailStr = "";
-                            passwordStr = "";
+                          await FirebaseFirestore.instance
+                              .collection("Users")
+                              .where("Kullanıcı Adı", isEqualTo: k_Adi.text)
+                              .get()
+                              .then((gelenVeri) async {
+                            if (gelenVeri.docs.isEmpty) {
+                              await _authService
+                                  .createUserWithEmailAndPassword(
+                                      email: emailStr, password: passwordStr)
+                                  .then((kullanici) {
+                                FirebaseAuth Auth = FirebaseAuth.instance;
+                                FirebaseFirestore.instance
+                                    .collection('Users')
+                                    .doc(emailStr)
+                                    .set({
+                                  "Eposta": emailStr,
+                                  "Şifre": passwordStr,
+                                  "Kullanıcı Adı": k_Adi.text,
+                                  "Üye Olma Tarihi": DateTime.now(),
+                                  "Emanetler": FieldValue.arrayUnion(bosListe),
+                                  "Id": Auth.currentUser!.uid,
+                                  "Durum": 0,
+                                });
+                                emailStr = "";
+                                passwordStr = "";
+                              });
+                            } else {
+                              Fluttertoast.showToast(
+                                  msg: "Bu kullanıcı adı zaten kullanılıyor",
+                                  gravity: ToastGravity.CENTER,
+                                  fontSize: 20);
+                            }
                           });
                         }),
                   ),

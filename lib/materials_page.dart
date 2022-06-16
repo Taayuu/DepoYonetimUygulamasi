@@ -244,7 +244,11 @@ class _MaterialsPageState extends State<MaterialsPage> {
                                                               context);
                                                           Fluttertoast.showToast(
                                                               msg:
-                                                                  "Malzeme Silindi");
+                                                                  "Malzeme Silindi",
+                                                              gravity:
+                                                                  ToastGravity
+                                                                      .CENTER,
+                                                              fontSize: 20);
                                                         },
                                                         child: Text("Tamam"),
                                                       ),
@@ -265,14 +269,15 @@ class _MaterialsPageState extends State<MaterialsPage> {
                                     ),
                                     title: Text(
                                       '${malzemeler[index]['Malzeme Adı']}',
-                                      style: TextStyle(fontSize: 19),
+                                      style: TextStyle(fontSize: 17),
                                     ),
                                     subtitle: Text(
                                       '''
-Malzeme Sınıfı:${malzemeler[index]["${"Malzeme Sınıfı"}"]}
-Malzeme Rafı:${malzemeler[index]["${"Malzeme Rafı"}"]}
-Malzeme Konumu:${malzemeler[index]["${"Konum"}"]},''',
-                                      style: TextStyle(fontSize: 15),
+Qr Kod: ${malzemeler[index]["Qr Kod"]}
+Malzeme Rafı: ${malzemeler[index]["${"Malzeme Rafı"}"]}
+Malzeme Konumu: ${malzemeler[index]["${"Konum"}"]}
+Stok: ${malzemeler[index]["${"Stok"}"]}''',
+                                      style: TextStyle(fontSize: 13),
                                     ),
                                   ),
                                 ),

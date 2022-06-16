@@ -115,7 +115,9 @@ class SignInPage extends StatelessWidget {
                                                   email: emailStr,
                                                   password: passwordStr);
                                           Fluttertoast.showToast(
-                                              msg: "Giriş Yapıldı");
+                                              msg: "Giriş Yapıldı",
+                                              gravity: ToastGravity.CENTER,
+                                              fontSize: 20);
                                           emailStr = "";
                                           passwordStr = "";
                                         },

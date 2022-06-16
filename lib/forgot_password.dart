@@ -75,7 +75,9 @@ class ForgotPassword extends StatelessWidget {
                           Auth.sendPasswordResetEmail(email: emailStr);
                           Navigator.of(context).pop();
                           Fluttertoast.showToast(
-                              msg: "Sıfırlama linki mail adresine gönderildi");
+                              msg: "Sıfırlama linki mail adresine gönderildi",
+                              gravity: ToastGravity.CENTER,
+                              fontSize: 20);
                         }),
                   ),
                 ),

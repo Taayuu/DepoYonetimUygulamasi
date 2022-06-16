@@ -145,10 +145,11 @@ class _GetMaterialsState extends State<GetMaterials> {
                               ),
                               subtitle: Text(
                                 '''
-Qr Kod:${malzemeler![index]["Qr Kod"]}
-Malzeme Sınıfı:${malzemeler![index]["Malzeme Sınıfı"]}
-Malzeme Rafı:${malzemeler![index]["Malzeme Rafı"]}
-Malzeme Konumu:${malzemeler![index]["Konum"]}''',
+Qr Kod: ${malzemeler![index]["Qr Kod"]}
+Malzeme Sınıfı: ${malzemeler![index]["Malzeme Sınıfı"]}
+Malzeme Rafı: ${malzemeler![index]["Malzeme Rafı"]}
+Malzeme Konumu: ${malzemeler![index]["Konum"]}
+Stok: ${malzemeler![index]["Stok"]}''',
                                 style: const TextStyle(fontSize: 15),
                               ),
                             ),
@@ -292,7 +293,9 @@ Malzeme Konumu:${malzemeler![index]["Konum"]}''',
                                   });
 
                                   Fluttertoast.showToast(
-                                      msg: "Malzeme Başarıyla Teslim Alındı");
+                                      msg: "Malzeme Başarıyla Teslim Alındı",
+                                      gravity: ToastGravity.CENTER,
+                                      fontSize: 20);
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
@@ -304,10 +307,15 @@ Malzeme Konumu:${malzemeler![index]["Konum"]}''',
                                                   gerigel: true)));
                                 } else {
                                   Fluttertoast.showToast(
-                                      msg: "Bu malzeme için yeterli stok yok");
+                                      msg: "Bu malzeme için yeterli stok yok",
+                                      gravity: ToastGravity.CENTER,
+                                      fontSize: 20);
                                 }
                               } else {
-                                Fluttertoast.showToast(msg: "Adet Seçiniz");
+                                Fluttertoast.showToast(
+                                    msg: "Adet Seçiniz",
+                                    gravity: ToastGravity.CENTER,
+                                    fontSize: 20);
                               }
                             },
                             color: const Color(0xffd41217),
@@ -421,7 +429,9 @@ Malzeme Konumu:${malzemeler![index]["Konum"]}''',
                                   teslimet: false,
                                   gerigel: true)));
                       Fluttertoast.showToast(
-                          msg: "Malzeme Başarıyla Teslim Edildi.");
+                          msg: "Malzeme Başarıyla Teslim Edildi.",
+                          gravity: ToastGravity.CENTER,
+                          fontSize: 20);
                     },
                     color: const Color(0xffd41217),
                     padding: const EdgeInsets.symmetric(
@@ -470,7 +480,9 @@ Malzeme Konumu:${malzemeler![index]["Konum"]}''',
                       .then((value) async {
                     Fluttertoast.showToast(
                         msg:
-                            "${int.parse(value["Emanet.Çadır"].toString().replaceAll('[', '').replaceAll(']', ''))}");
+                            "${int.parse(value["Emanet.Çadır"].toString().replaceAll('[', '').replaceAll(']', ''))}",
+                        gravity: ToastGravity.CENTER,
+                        fontSize: 20);
                   });
                 }),
           ],
