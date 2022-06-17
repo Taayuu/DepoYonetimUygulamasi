@@ -37,6 +37,8 @@ class _GetMaterialsState extends State<GetMaterials> {
   var maskFormatter = new MaskTextInputFormatter(
       mask: '####-####', filter: {"#": RegExp(r'[0-9]')});
 
+  final List<String> _items = ["item1", "item2", "item3", "item4"];
+  String _default = "Seçiniz";
   FirebaseAuth Auth = FirebaseAuth.instance;
   @override
   Widget build(BuildContext context) {
@@ -174,6 +176,19 @@ Stok: ${malzemeler![index]["Stok"]}''',
                   borderRadius: BorderRadius.circular(15),
                   child: Column(
                     children: [
+                      DropdownButton(
+                        dropdownColor: Colors.green,
+                        value: _default,
+                        items: _items.map((String _items) {
+                          return DropdownMenuItem(
+                              value: _items, child: Text(_items));
+                        }).toList(),
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            _default = newValue!;
+                          });
+                        },
+                      ),
                       SizedBox(
                         height: 10,
                       ),
