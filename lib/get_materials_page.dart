@@ -32,6 +32,8 @@ class GetMaterials extends StatefulWidget {
 
 class _GetMaterialsState extends State<GetMaterials> {
   final _firestore = FirebaseFirestore.instance;
+
+  String Taayuu = "";
   TextEditingController adetController = TextEditingController();
   var maskFormatter = new MaskTextInputFormatter(
       mask: '####-####', filter: {"#": RegExp(r'[0-9]')});
