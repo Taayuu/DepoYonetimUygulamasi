@@ -37,6 +37,27 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final _authService = Provider.of<IAuthService>(context, listen: true);
+    FirebaseFirestore.instance
+        .collection("Users")
+        .where("Eposta", isEqualTo: Auth.currentUser!.email)
+        .snapshots()
+        .listen((event) async {
+      if (event.docs.isEmpty || event.docs[0]["Eposta"] == null) {
+        await _authService.signOut();
+      }
+    });
+
+    FirebaseFirestore.instance
+        .collection("Users")
+        .doc(Auth.currentUser!.email)
+        .snapshots()
+        .listen((event) async {
+      if (event.data()!["Eposta"] == "" || event.data()!["Eposta"] == null) {
+        await _authService.signOut();
+      }
+    });
+
     List<Widget> pages = [
       FirstPage(),
       GetMaterials(
@@ -58,7 +79,6 @@ class _HomePageState extends State<HomePage> {
               '''home data: ${k_adi.text = '''Hoşgeldiniz: ${event.data()!["Kullanıcı Adı"]}'''}'''),
           onError: (error) => print("Listen failed: $error"),
         );
-    final _authService = Provider.of<IAuthService>(context, listen: false);
     return Scaffold(
       bottomNavigationBar: NavigationBar(
         backgroundColor: Color(0xffFFEBC1),

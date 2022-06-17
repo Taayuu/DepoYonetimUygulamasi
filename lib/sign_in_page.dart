@@ -110,16 +110,31 @@ class SignInPage extends StatelessWidget {
                                       borderRadius: BorderRadius.circular(15),
                                       child: MaterialButton(
                                         onPressed: () async {
-                                          await _authService
-                                              .signInEmailAndPassword(
-                                                  email: emailStr,
-                                                  password: passwordStr);
-                                          Fluttertoast.showToast(
-                                              msg: "Giriş Yapıldı",
-                                              gravity: ToastGravity.CENTER,
-                                              fontSize: 20);
-                                          emailStr = "";
-                                          passwordStr = "";
+                                          await FirebaseFirestore.instance
+                                              .collection("Users")
+                                              .where("Eposta",
+                                                  isEqualTo: emailStr)
+                                              .get()
+                                              .then((gelenVeri) async {
+                                            if (gelenVeri.docs.isNotEmpty) {
+                                              await _authService
+                                                  .signInEmailAndPassword(
+                                                      email: emailStr,
+                                                      password: passwordStr);
+                                              Fluttertoast.showToast(
+                                                  msg: "Giriş Yapıldı",
+                                                  gravity: ToastGravity.CENTER,
+                                                  fontSize: 20);
+                                              emailStr = "";
+                                              passwordStr = "";
+                                            } else {
+                                              Fluttertoast.showToast(
+                                                  msg:
+                                                      "Eposta veya şifre yanlış",
+                                                  gravity: ToastGravity.CENTER,
+                                                  fontSize: 20);
+                                            }
+                                          });
                                         },
                                         color: Color(0xffd41217),
                                         padding: const EdgeInsets.symmetric(

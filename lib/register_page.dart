@@ -131,39 +131,47 @@ class _RegisterPageState extends State<RegisterPage> {
                         padding:
                             EdgeInsets.symmetric(vertical: 10, horizontal: 25),
                         onPressed: () async {
-                          await FirebaseFirestore.instance
-                              .collection("Users")
-                              .where("Kullanıcı Adı", isEqualTo: k_Adi.text)
-                              .get()
-                              .then((gelenVeri) async {
-                            if (gelenVeri.docs.isEmpty) {
-                              await _authService
-                                  .createUserWithEmailAndPassword(
-                                      email: emailStr, password: passwordStr)
-                                  .then((kullanici) {
-                                FirebaseAuth Auth = FirebaseAuth.instance;
-                                FirebaseFirestore.instance
-                                    .collection('Users')
-                                    .doc(emailStr)
-                                    .set({
-                                  "Eposta": emailStr,
-                                  "Şifre": passwordStr,
-                                  "Kullanıcı Adı": k_Adi.text,
-                                  "Üye Olma Tarihi": DateTime.now(),
-                                  "Emanetler": FieldValue.arrayUnion(bosListe),
-                                  "Id": Auth.currentUser!.uid,
-                                  "Durum": 0,
+                          if (passwordStr.length > 5) {
+                            await FirebaseFirestore.instance
+                                .collection("Users")
+                                .where("Kullanıcı Adı", isEqualTo: k_Adi.text)
+                                .get()
+                                .then((gelenVeri) async {
+                              if (gelenVeri.docs.isEmpty) {
+                                await _authService
+                                    .createUserWithEmailAndPassword(
+                                        email: emailStr, password: passwordStr)
+                                    .then((kullanici) {
+                                  FirebaseAuth Auth = FirebaseAuth.instance;
+                                  FirebaseFirestore.instance
+                                      .collection('Users')
+                                      .doc(emailStr)
+                                      .set({
+                                    "Eposta": emailStr,
+                                    "Şifre": passwordStr,
+                                    "Kullanıcı Adı": k_Adi.text,
+                                    "Üye Olma Tarihi": DateTime.now(),
+                                    "Emanetler":
+                                        FieldValue.arrayUnion(bosListe),
+                                    "Id": Auth.currentUser!.uid,
+                                    "Durum": 0,
+                                  });
+                                  emailStr = "";
+                                  passwordStr = "";
                                 });
-                                emailStr = "";
-                                passwordStr = "";
-                              });
-                            } else {
-                              Fluttertoast.showToast(
-                                  msg: "Bu kullanıcı adı zaten kullanılıyor",
-                                  gravity: ToastGravity.CENTER,
-                                  fontSize: 20);
-                            }
-                          });
+                              } else {
+                                Fluttertoast.showToast(
+                                    msg: "Bu kullanıcı adı zaten kullanılıyor",
+                                    gravity: ToastGravity.CENTER,
+                                    fontSize: 20);
+                              }
+                            });
+                          } else {
+                            Fluttertoast.showToast(
+                                msg: "Şifre en az 6 karakter olmalıdır",
+                                gravity: ToastGravity.CENTER,
+                                fontSize: 20);
+                          }
                         }),
                   ),
                 ),
