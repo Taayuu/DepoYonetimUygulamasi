@@ -37,8 +37,8 @@ class _GetMaterialsState extends State<GetMaterials> {
   var maskFormatter = new MaskTextInputFormatter(
       mask: '####-####', filter: {"#": RegExp(r'[0-9]')});
 
-  final List<String> _items = ["item1", "item2", "item3", "item4"];
-  String _default = "Seçiniz";
+  List<String> items = ["item1", "item2", "item3", "item4"];
+  String? value;
   FirebaseAuth Auth = FirebaseAuth.instance;
   @override
   Widget build(BuildContext context) {
@@ -176,42 +176,57 @@ Stok: ${malzemeler![index]["Stok"]}''',
                   borderRadius: BorderRadius.circular(15),
                   child: Column(
                     children: [
-                      DropdownButton(
-                        dropdownColor: Colors.green,
-                        value: _default,
-                        items: _items.map((String _items) {
-                          return DropdownMenuItem(
-                              value: _items, child: Text(_items));
-                        }).toList(),
-                        onChanged: (String? newValue) {
-                          setState(() {
-                            _default = newValue!;
-                          });
-                        },
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 100),
+                        child: Row(
+                          children: [
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 15),
+                              child: SizedBox(
+                                width: 75,
+                                child: TextFormField(
+                                    textCapitalization:
+                                        TextCapitalization.words,
+                                    controller: adetController,
+                                    decoration: InputDecoration(
+                                        fillColor: Colors.white,
+                                        filled: true,
+                                        enabledBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(7),
+                                            borderSide: BorderSide(
+                                                color: Colors.black, width: 2)),
+                                        focusedBorder: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                            borderSide: BorderSide(
+                                                color: Colors.black, width: 3)),
+                                        hintText: "Adet",
+                                        hintStyle:
+                                            TextStyle(color: Colors.grey[700])),
+                                    keyboardType: TextInputType.number,
+                                    inputFormatters: [maskFormatter]),
+                              ),
+                            ),
+                            DropdownButton(
+                              dropdownColor: Colors.green,
+                              value: value,
+                              items: items.map((String items) {
+                                return DropdownMenuItem(
+                                    value: items, child: Text(items));
+                              }).toList(),
+                              onChanged: (String? newValue) {
+                                setState(() {
+                                  value = newValue!;
+                                });
+                              },
+                            ),
+                          ],
+                        ),
                       ),
                       SizedBox(
                         height: 10,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: TextFormField(
-                            textCapitalization: TextCapitalization.words,
-                            controller: adetController,
-                            decoration: InputDecoration(
-                                fillColor: Colors.white,
-                                filled: true,
-                                enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(7),
-                                    borderSide: BorderSide(
-                                        color: Colors.black, width: 2)),
-                                focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                    borderSide: BorderSide(
-                                        color: Colors.black, width: 3)),
-                                hintText: "Adet",
-                                hintStyle: TextStyle(color: Colors.grey[700])),
-                            keyboardType: TextInputType.number,
-                            inputFormatters: [maskFormatter]),
                       ),
                       SizedBox(
                         height: 5,
