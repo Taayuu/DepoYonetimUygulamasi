@@ -209,18 +209,32 @@ Stok: ${malzemeler![index]["Stok"]}''',
                                     inputFormatters: [maskFormatter]),
                               ),
                             ),
-                            DropdownButton(
-                              dropdownColor: Colors.green,
-                              value: value,
-                              items: items.map((String items) {
-                                return DropdownMenuItem(
-                                    value: items, child: Text(items));
-                              }).toList(),
-                              onChanged: (String? newValue) {
-                                setState(() {
-                                  value = newValue!;
-                                });
-                              },
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Container(
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(
+                                      color: Colors.black, width: 2)),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: DropdownButton(
+                                  dropdownColor: Colors.white,
+                                  value: value,
+                                  borderRadius: BorderRadius.circular(12),
+                                  elevation: 10,
+                                  items: items.map((String items) {
+                                    return DropdownMenuItem(
+                                        value: items, child: Text(items));
+                                  }).toList(),
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      value = newValue!;
+                                    });
+                                  },
+                                ),
+                              ),
                             ),
                           ],
                         ),
