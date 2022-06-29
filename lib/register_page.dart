@@ -20,7 +20,6 @@ class _RegisterPageState extends State<RegisterPage> {
   FirebaseAuth Auth = FirebaseAuth.instance;
   @override
   Widget build(BuildContext context) {
-    List bosListe = [];
     final _authService = Provider.of<IAuthService>(context, listen: false);
     return SafeArea(
         child: Scaffold(
@@ -151,8 +150,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                     "Şifre": passwordStr,
                                     "Kullanıcı Adı": k_Adi.text,
                                     "Üye Olma Tarihi": DateTime.now(),
-                                    "Emanetler":
-                                        FieldValue.arrayUnion(bosListe),
+                                    "Emanetler": FieldValue.arrayUnion([]),
                                     "Id": Auth.currentUser!.uid,
                                     "Durum": 0,
                                   });

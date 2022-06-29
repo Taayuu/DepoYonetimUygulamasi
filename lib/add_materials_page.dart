@@ -65,6 +65,7 @@ class _AddMaterialsPageState extends State<AddMaterialsPage> {
   @override
   Widget build(BuildContext context) {
     List keyword = [];
+    List bosListe = ["Depo"];
     Map<String, dynamic> materialsDataGuncelle;
     Map<String, dynamic> materialsDataEkle;
     materialStockController.value = maskFormatter.updateMask(mask: "###");
@@ -289,7 +290,8 @@ class _AddMaterialsPageState extends State<AddMaterialsPage> {
                                                 "Stok": int.parse(
                                                     materialStockController
                                                         .text),
-                                                "Konum": "Depo",
+                                                "Konum": FieldValue.arrayUnion(
+                                                    bosListe),
                                                 "Resim":
                                                     materialImageController.text
                                               };
@@ -308,7 +310,8 @@ class _AddMaterialsPageState extends State<AddMaterialsPage> {
                                                 "Stok": int.parse(
                                                     materialStockController
                                                         .text),
-                                                "Konum": "Depo",
+                                                "Konum": FieldValue.arrayUnion(
+                                                    bosListe),
                                                 "Resim":
                                                     "https://scontent.fesb10-3.fna.fbcdn.net/v/t1.6435-9/62213204_3238487636165202_1232018786266120192_n.png?_nc_cat=102&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=uI8gG8nVd3UAX8bCQ2O&_nc_ht=scontent.fesb10-3.fna&oh=00_AT_TDBmG4DsowdwCwLUwKX78pOWpXOWq0ICeQlXMWNYnAA&oe=62C0A333",
                                               };

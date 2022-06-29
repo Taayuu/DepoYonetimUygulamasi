@@ -49,6 +49,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
     var malzemeAdi;
     var malzemeAlmaTarihi;
+    var emanetAlmaSebebi;
     var malzemeAlan;
     var malzemeTeslimTarihi;
 
@@ -100,6 +101,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 .replaceAll('}', ''));
             malzemeAdi = madi.toList();
             malzemeAlan = value.docs[0]["Emanet Alan"];
+            emanetAlmaSebebi = value.docs[0]["Emanet Alma Sebebi"];
             mAlmaTarihi.add(element.data()["Emanet Alma Tarihi"]);
             malzemeAlmaTarihi = mAlmaTarihi.toList();
             mTeslimTarihi.add(element.data()["Teslim Tarihi"]);
@@ -119,13 +121,16 @@ class _ProfilePageState extends State<ProfilePage> {
       range.setText("Emanet Adı: $malzemeAdi");
 
       final xls.Range range1 = rapor.getRangeByName('A2');
-      range1.setText("Teslim Alan: $malzemeAlan");
+      range1.setText("Emanet Alma Sebebi: $emanetAlmaSebebi");
 
       final xls.Range range2 = rapor.getRangeByName('A3');
-      range2.setText("Emanet Alma Tarihi: $malzemeAlmaTarihi");
+      range2.setText("Teslim Alan: $malzemeAlan");
 
       final xls.Range range3 = rapor.getRangeByName('A4');
-      range3.setText("Teslim Tarihi: $malzemeTeslimTarihi");
+      range3.setText("Emanet Alma Tarihi: $malzemeAlmaTarihi");
+
+      final xls.Range range4 = rapor.getRangeByName('A5');
+      range4.setText("Teslim Tarihi: $malzemeTeslimTarihi");
 
       range.autoFit();
       range1.autoFit();

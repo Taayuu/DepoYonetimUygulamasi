@@ -152,7 +152,7 @@ class _ScanQrGetState extends State<ScanQrGet> {
                       await FirebaseFirestore.instance
                           .collection("Materials")
                           .where("Malzeme Adı", isEqualTo: malzemeAdi)
-                          .where("Konum", isEqualTo: k_adi)
+                          .where("Konum", arrayContains: k_adi)
                           .get()
                           .then((QuerySnapshot gelenVeri) {
                         if (gelenVeri.docs.isNotEmpty) {

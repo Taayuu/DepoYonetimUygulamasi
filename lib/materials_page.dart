@@ -275,7 +275,7 @@ class _MaterialsPageState extends State<MaterialsPage> {
                                       '''
 Qr Kod: ${malzemeler[index]["Qr Kod"]}
 Malzeme Rafı: ${malzemeler[index]["${"Malzeme Rafı"}"]}
-Malzeme Konumu: ${malzemeler[index]["${"Konum"}"]}
+Malzeme Konumu: ${malzemeler[index]["${"Konum"}"].toString().replaceAll(']', '').replaceAll('[', '')}
 Stok: ${malzemeler[index]["${"Stok"}"]}''',
                                       style: TextStyle(fontSize: 13),
                                     ),
