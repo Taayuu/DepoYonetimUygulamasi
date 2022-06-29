@@ -138,7 +138,7 @@ class _ProfilePageState extends State<ProfilePage> {
       final List<int> bytes = workbook.saveAsStream();
       workbook.dispose();
       DateTime now = DateTime.now();
-      String formattedDate = DateFormat('yyyy-MM-dd').format(now);
+      String formattedDate = DateFormat('dd-MM-yyyy').format(now);
       final String path = (await getApplicationSupportDirectory()).path;
       final String fileName =
           '$path/IHH Depo Raporu_${k_adi.text}_$formattedDate.xlsx';

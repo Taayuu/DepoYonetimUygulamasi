@@ -6,9 +6,15 @@ import 'dart:ffi';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:intl/intl.dart';
+import 'package:login/core/service/google_signin.dart';
 import 'package:login/scan_qr_get.dart';
+import 'package:login/sign_in_page.dart';
+import 'package:mailer/mailer.dart';
+import 'package:mailer/smtp_server.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 import 'home_page.dart';
@@ -29,6 +35,9 @@ class GetMaterials extends StatefulWidget {
   @override
   State<GetMaterials> createState() => _GetMaterialsState();
 }
+
+var malzemeMail;
+var malzemeStokMail;
 
 class _GetMaterialsState extends State<GetMaterials> {
   final _firestore = FirebaseFirestore.instance;
@@ -346,6 +355,13 @@ Stok: ${malzemeler![index]["Stok"]}''',
                                         "durum": 1
                                       });
                                     });
+                                    malzemeMail = malzemeler?[0]["Malzeme Adı"]
+                                        .toString();
+                                    malzemeStokMail =
+                                        int.parse(adetController.text)
+                                            .toString();
+
+                                    SendAlEmail();
 
                                     Fluttertoast.showToast(
                                         msg: "Malzeme Başarıyla Teslim Alındı",
@@ -483,6 +499,8 @@ Stok: ${malzemeler![index]["Stok"]}''',
                         });
                       });
 
+                      SendTeslimEmail();
+
                       Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -534,7 +552,7 @@ Stok: ${malzemeler![index]["Stok"]}''',
                 child: const Icon(Icons.add, size: 35),
                 backgroundColor: const Color(0xffd41217),
                 onPressed: () async {
-                  await FirebaseFirestore.instance
+                  /* await FirebaseFirestore.instance
                       .collection("Users")
                       .doc(Auth.currentUser!.email)
                       .collection("Ürün")
@@ -546,11 +564,94 @@ Stok: ${malzemeler![index]["Stok"]}''',
                             "${int.parse(value["Emanet.Çadır"].toString().replaceAll('[', '').replaceAll(']', ''))}",
                         gravity: ToastGravity.CENTER,
                         fontSize: 20);
-                  });
+                  });*/
+                  SendTeslimEmail();
                 }),
           ],
         ),
       )),
     );
+  }
+}
+
+Future SendAlEmail() async {
+  GoogleAuthApi.signOut();
+  FirebaseAuth Auth = FirebaseAuth.instance;
+  final docRef = FirebaseFirestore.instance
+      .collection("Users")
+      .doc(Auth.currentUser!.email);
+  var kAdi;
+  FirebaseFirestore.instance.collection('Users');
+  docRef.snapshots().listen((event) {
+    kAdi = event.data()!["Kullanıcı Adı"];
+  });
+
+  final user = await GoogleAuthApi.signIn();
+
+  if (user == null) return;
+
+  final email = user.email;
+  final auth = await user.authentication;
+  final token = auth.accessToken!;
+
+  print('Authenticated: $email');
+
+  final smtpServer = gmailSaslXoauth2(email, token);
+  final message = Message()
+    ..from = Address(email, 'İHH Depo - $kAdi')
+    ..recipients = [
+      Auth.currentUser!.email, /*"ebadem864@gmail.com"*/
+    ]
+    ..subject = 'Emanet Hareket Bildirisi'
+    ..text =
+        '''$kAdi [$malzemeMail] malzemesinden [$malzemeStokMail] adet aldı. 
+        Tarih:${DateFormat('dd-MM-yyyy hh:mm:ss').format(DateTime.now())}''';
+
+  try {
+    await send(message, smtpServer);
+    Fluttertoast.showToast(msg: "Mail Gönderildi");
+  } on MailerException catch (e) {
+    print(e);
+  }
+}
+
+Future SendTeslimEmail() async {
+  GoogleAuthApi.signOut();
+  FirebaseAuth Auth = FirebaseAuth.instance;
+  final docRef = FirebaseFirestore.instance
+      .collection("Users")
+      .doc(Auth.currentUser!.email);
+  var kAdi;
+  FirebaseFirestore.instance.collection('Users');
+  docRef.snapshots().listen((event) {
+    kAdi = event.data()!["Kullanıcı Adı"];
+  });
+
+  final user = await GoogleAuthApi.signIn();
+
+  if (user == null) return;
+
+  final email = user.email;
+  final auth = await user.authentication;
+  final token = auth.accessToken!;
+
+  print('Authenticated: $email');
+
+  final smtpServer = gmailSaslXoauth2(email, token);
+  final message = Message()
+    ..from = Address(email, 'İHH Depo - $kAdi')
+    ..recipients = [
+      Auth.currentUser!.email, /*"ebadem864@gmail.com"*/
+    ]
+    ..subject = 'Emanet Hareket Bildirisi'
+    ..text =
+        '''$kAdi [$malzemeMail] malzemesinden [$malzemeStokMail] adet teslim etti. 
+        Tarih:${DateFormat('dd-MM-yyyy hh:mm:ss').format(DateTime.now())}''';
+
+  try {
+    await send(message, smtpServer);
+    Fluttertoast.showToast(msg: "Mail Gönderildi");
+  } on MailerException catch (e) {
+    print(e);
   }
 }
