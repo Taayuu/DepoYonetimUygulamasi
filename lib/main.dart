@@ -1,5 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:login/core/model/my_app_user.dart';
 import 'package:login/core/service/firebase_service.dart';
 import 'package:login/core/service/i_auth_service.dart';
@@ -16,7 +19,26 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(MyApp());
+  String version;
+  FirebaseFirestore.instance
+      .collection("AppControl")
+      .doc("İnfo")
+      .snapshots()
+      .listen((gelenVeri) {
+    version = gelenVeri["Version"].toString();
+    if (version == "1.0") {
+      runApp(MyApp());
+    } else {
+      Fluttertoast.showToast(
+          msg: "Lütfen uygulamanızı yeni sürüme yükseltiniz",
+          gravity: ToastGravity.CENTER,
+          fontSize: 20,
+          backgroundColor: Colors.black,
+          toastLength: Toast.LENGTH_LONG,
+          textColor: Colors.white);
+      SystemChannels.platform.invokeMethod('SystemNavigator.pop');
+    }
+  });
 }
 
 class MyApp extends StatelessWidget {
