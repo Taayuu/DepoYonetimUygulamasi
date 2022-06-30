@@ -277,7 +277,7 @@ Stok: ${malzemeler![index]["Stok"]}''',
                                     stok = gelenVeri["Stok"];
                                   });
 
-                                  if (stok > 0) {
+                                  if (stok >= int.parse(adetController.text)) {
                                     await FirebaseFirestore.instance
                                         .collection('Users')
                                         .doc(Auth.currentUser!.email)
@@ -352,7 +352,8 @@ Stok: ${malzemeler![index]["Stok"]}''',
                                                 .format(DateTime.now()),
                                         "Emanet Alan": "$kAdi",
                                         "Emanet Alma Sebebi": value,
-                                        "durum": 1
+                                        "durum": 1,
+                                        "Eksik": 0
                                       });
                                     });
                                     malzemeMail = malzemeler?[0]["Malzeme Adı"]
@@ -417,110 +418,153 @@ Stok: ${malzemeler![index]["Stok"]}''',
                 padding: const EdgeInsets.all(10.0),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(15),
-                  child: MaterialButton(
-                    onPressed: () async {
-                      await FirebaseFirestore.instance
-                          .collection('Materials')
-                          .doc(malzemeler?[0]['Malzeme Adı'])
-                          .get()
-                          .then((gelenVeri) {
-                        stok = gelenVeri["Stok"];
-                      });
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 15),
+                            child: SizedBox(
+                              width: 75,
+                              child: TextFormField(
+                                  textCapitalization: TextCapitalization.words,
+                                  controller: adetController,
+                                  decoration: InputDecoration(
+                                      fillColor: Colors.white,
+                                      filled: true,
+                                      enabledBorder: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(7),
+                                          borderSide: BorderSide(
+                                              color: Colors.black, width: 2)),
+                                      focusedBorder: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(12),
+                                          borderSide: BorderSide(
+                                              color: Colors.black, width: 3)),
+                                      hintText: "Adet",
+                                      hintStyle:
+                                          TextStyle(color: Colors.grey[700])),
+                                  keyboardType: TextInputType.number,
+                                  inputFormatters: [maskFormatter]),
+                            ),
+                          ),
+                        ],
+                      ),
+                      MaterialButton(
+                        onPressed: () async {
+                          if (adetController.text != null &&
+                              adetController.text != "") {
+                            await FirebaseFirestore.instance
+                                .collection("Users")
+                                .doc(Auth.currentUser!.email)
+                                .collection("Ürün")
+                                .doc(
+                                    "${malzemeler?[0]['Malzeme Adı']}${Auth.currentUser!.email}")
+                                .get()
+                                .then((value) async {
+                              if (int.parse(adetController.text) != 0 &&
+                                  int.parse(adetController.text) > 0 &&
+                                  int.parse(adetController.text) <=
+                                      int.parse(value[
+                                              "Emanet.${malzemeler?[0]['Malzeme Adı']}"]
+                                          .toString()
+                                          .replaceAll('[', '')
+                                          .replaceAll(']', ''))) {
+                                await FirebaseFirestore.instance
+                                    .collection('Materials')
+                                    .doc(malzemeler?[0]['Malzeme Adı'])
+                                    .get()
+                                    .then((gelenVeri) {
+                                  stok = gelenVeri["Stok"];
+                                });
 
-                      await FirebaseFirestore.instance
-                          .collection('Users')
-                          .doc(Auth.currentUser!.email)
-                          .update({
-                        "Emanetler": FieldValue.arrayRemove(
-                            [malzemeler?[0]["Malzeme Adı"]])
-                      });
+                                await FirebaseFirestore.instance
+                                    .collection('Users')
+                                    .doc(Auth.currentUser!.email)
+                                    .update({
+                                  "Emanetler": FieldValue.arrayRemove(
+                                      [malzemeler?[0]["Malzeme Adı"]])
+                                });
 
-                      await FirebaseFirestore.instance
-                          .collection('Materials')
-                          .doc(malzemeler?[0]['Malzeme Adı'])
-                          .update({
-                        "Konum": FieldValue.arrayRemove([kAdi])
-                      });
+                                await FirebaseFirestore.instance
+                                    .collection('Materials')
+                                    .doc(malzemeler?[0]['Malzeme Adı'])
+                                    .update({
+                                  "Konum": FieldValue.arrayRemove([kAdi])
+                                });
+                                await FirebaseFirestore.instance
+                                    .collection('Materials')
+                                    .doc(malzemeler?[0]['Malzeme Adı'])
+                                    .update({
+                                  "Stok": stok + int.parse(adetController.text)
+                                });
 
-                      await FirebaseFirestore.instance
-                          .collection("Users")
-                          .doc(Auth.currentUser!.email)
-                          .collection("Ürün")
-                          .doc(
-                              "${malzemeler?[0]['Malzeme Adı']}${Auth.currentUser!.email}")
-                          .get()
-                          .then((value) async {
-                        await FirebaseFirestore.instance
-                            .collection('Materials')
-                            .doc(malzemeler?[0]['Malzeme Adı'])
-                            .update({
-                          "Stok": stok +
-                              int.parse(value[
-                                      "Emanet.${malzemeler?[0]['Malzeme Adı']}"]
-                                  .toString()
-                                  .replaceAll('[', '')
-                                  .replaceAll(']', ''))
-                        });
-                      });
+                                FirebaseFirestore.instance
+                                    .collection("Users")
+                                    .doc(Auth.currentUser!.email)
+                                    .get()
+                                    .then((gelenVeri) async {
+                                  await FirebaseFirestore.instance
+                                      .collection("Users")
+                                      .doc(Auth.currentUser!.email)
+                                      .collection("Ürün")
+                                      .doc(malzemeler?[0]["Malzeme Adı"] +
+                                          Auth.currentUser!.email)
+                                      .update({
+                                    //"Emanet": {
+                                    //  "${malzemeler?[0]["Malzeme Adı"]}": [6],
+                                    //},
+                                    "Id": Auth.currentUser!.uid,
+                                    "Teslim Tarihi":
+                                        DateFormat('yyyy-MM-dd HH:mm:ss')
+                                            .format(DateTime.now()),
+                                    "Emanet Alan": "$kAdi",
+                                    "durum": 0,
+                                    "Eksik": int.parse(value[
+                                                "Emanet.${malzemeler?[0]['Malzeme Adı']}"]
+                                            .toString()
+                                            .replaceAll('[', '')
+                                            .replaceAll(']', '')) -
+                                        int.parse(adetController.text)
+                                  });
+                                });
 
-                      await FirebaseFirestore.instance
-                          .collection('Deposit')
-                          .doc(Auth.currentUser!.email)
-                          .collection("Emanetlerim")
-                          .doc(Auth.currentUser!.email)
-                          .update({
-                        "Teslim Tarihi": DateFormat('yyyy-MM-dd HH:mm:ss')
-                            .format(DateTime.now()),
-                      });
-                      depRef.snapshots().listen((event) {
-                        malzemeAdi = event.data()!["Emanet Adı"];
-                      });
+                                SendTeslimEmail();
 
-                      FirebaseFirestore.instance
-                          .collection("Users")
-                          .doc(Auth.currentUser!.email)
-                          .get()
-                          .then((value) async {
-                        await FirebaseFirestore.instance
-                            .collection("Users")
-                            .doc(Auth.currentUser!.email)
-                            .collection("Ürün")
-                            .doc(malzemeler?[0]["Malzeme Adı"] +
-                                Auth.currentUser!.email)
-                            .update({
-                          //"Emanet": {
-                          //  "${malzemeler?[0]["Malzeme Adı"]}": [6],
-                          //},
-                          "Id": Auth.currentUser!.uid,
-                          "Teslim Tarihi": DateFormat('yyyy-MM-dd HH:mm:ss')
-                              .format(DateTime.now()),
-                          "Emanet Alan": "$kAdi",
-                          "durum": 0
-                        });
-                      });
-
-                      SendTeslimEmail();
-
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const GetMaterials(
-                                  Qr: "",
-                                  teslimal: false,
-                                  teslimet: false,
-                                  gerigel: true)));
-                      Fluttertoast.showToast(
-                          msg: "Malzeme Başarıyla Teslim Edildi.",
-                          gravity: ToastGravity.CENTER,
-                          fontSize: 20);
-                    },
-                    color: const Color(0xffd41217),
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 20, horizontal: 25),
-                    child: const Text(
-                      'Malzemeyi Teslim Et',
-                      style: TextStyle(fontSize: 13, color: Colors.white),
-                    ),
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const GetMaterials(
+                                                Qr: "",
+                                                teslimal: false,
+                                                teslimet: false,
+                                                gerigel: true)));
+                                Fluttertoast.showToast(
+                                    msg: "Malzeme Başarıyla Teslim Edildi.",
+                                    gravity: ToastGravity.CENTER,
+                                    fontSize: 20);
+                              } else {
+                                Fluttertoast.showToast(
+                                    msg:
+                                        "Elinizdeki malzeme miktarından büyük adet girilemez");
+                              }
+                            });
+                          } else {
+                            Fluttertoast.showToast(msg: "Lütfen adet giriniz");
+                          }
+                        },
+                        color: const Color(0xffd41217),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 20, horizontal: 25),
+                        child: const Text(
+                          'Malzemeyi Teslim Et',
+                          style: TextStyle(fontSize: 13, color: Colors.white),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -575,7 +619,7 @@ Stok: ${malzemeler![index]["Stok"]}''',
 }
 
 Future SendAlEmail() async {
-  GoogleAuthApi.signOut();
+  //GoogleAuthApi.signOut();
   FirebaseAuth Auth = FirebaseAuth.instance;
   final docRef = FirebaseFirestore.instance
       .collection("Users")
@@ -616,7 +660,7 @@ Future SendAlEmail() async {
 }
 
 Future SendTeslimEmail() async {
-  GoogleAuthApi.signOut();
+  //GoogleAuthApi.signOut();
   FirebaseAuth Auth = FirebaseAuth.instance;
   final docRef = FirebaseFirestore.instance
       .collection("Users")
