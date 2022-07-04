@@ -47,39 +47,24 @@ class _ProfilePageState extends State<ProfilePage> {
           onError: (error) => print("Listen failed: $error"),
         );
 
-    var malzemeAdi;
-    var malzemeAlmaTarihi;
-    var emanetAlmaSebebi;
-    var malzemeAlan;
-    var malzemeTeslimTarihi;
-
-    /*final depRef = FirebaseFirestore.instance
-        .collection("Deposit")
-        .doc(Auth.currentUser!.email)
-        .collection("Emanetlerim")
-        .doc(Auth.currentUser!.email);*/
+    var malzemeAdi0;
+    var malzemeAlmaTarihi0;
+    var emanetAlmaSebebi0;
+    var malzemeAlan0;
+    var malzemeTeslimTarihi0;
+    var eksik0;
+    var durum;
+    var malzemeAdi1;
+    var malzemeAlmaTarihi1;
+    var emanetAlmaSebebi1;
+    var malzemeAlan1;
+    var malzemeTeslimTarihi1;
+    var eksik1;
 
     final depRef = FirebaseFirestore.instance
         .collection("Users")
         .doc(Auth.currentUser!.email)
         .collection("Ürün");
-
-    /*yaziGetir() async {
-      try {
-        await depRef.get().then((gelenVeri) {
-          setState(() {
-            malzemeAdi = gelenVeri["Emanet"]
-                .toString()
-                .replaceAll('{', '')
-                .replaceAll('}', '');
-            malzemeAlan = gelenVeri["Emanet Alan"];
-            malzemeAlmaTarihi = gelenVeri["Emanet Alma Tarihi"];
-            malzemeTeslimTarihi = gelenVeri["Teslim Tarihi"];
-          });
-        });
-        // ignore: non_constant_identifier_names, avoid_types_as_parameter_names, empty_catches
-      } catch (Error) {}
-    }*/
 
     yaziGetir() async {
       try {
@@ -90,22 +75,24 @@ class _ProfilePageState extends State<ProfilePage> {
             .where("durum", isEqualTo: 0)
             .get()
             .then((value) {
-          List madi = [];
-          List mAlmaTarihi = [];
-          List mTeslimTarihi = [];
+          List madi0 = [];
+          List mAlmaTarihi0 = [];
+          List mTeslimTarihi0 = [];
           value.docs.forEach((element) {
-            madi.add(element
+            madi0.add(element
                 .data()["Emanet"]
                 .toString()
                 .replaceAll('{', '')
                 .replaceAll('}', ''));
-            malzemeAdi = madi.toList();
-            malzemeAlan = value.docs[0]["Emanet Alan"];
-            emanetAlmaSebebi = value.docs[0]["Emanet Alma Sebebi"];
-            mAlmaTarihi.add(element.data()["Emanet Alma Tarihi"]);
-            malzemeAlmaTarihi = mAlmaTarihi.toList();
-            mTeslimTarihi.add(element.data()["Teslim Tarihi"]);
-            malzemeTeslimTarihi = mTeslimTarihi.toList();
+            malzemeAdi0 = madi0.toList();
+            malzemeAlan0 = value.docs[0]["Emanet Alan"];
+            emanetAlmaSebebi0 = value.docs[0]["Emanet Alma Sebebi"];
+            mAlmaTarihi0.add(element.data()["Emanet Alma Tarihi"]);
+            malzemeAlmaTarihi0 = mAlmaTarihi0.toList();
+            mTeslimTarihi0.add(element.data()["Teslim Tarihi"]);
+            malzemeTeslimTarihi0 = mTeslimTarihi0.toList();
+            eksik0 = value.docs[0]["Eksik"];
+            durum = value.docs[0]["durum"];
           });
         });
         // ignore: non_constant_identifier_names, avoid_types_as_parameter_names, empty_catches
@@ -116,25 +103,33 @@ class _ProfilePageState extends State<ProfilePage> {
       await yaziGetir();
       final xls.Workbook workbook = xls.Workbook();
       final xls.Worksheet rapor = workbook.worksheets[0];
+
       /*------------------------------------------------*/
-      final xls.Range range = rapor.getRangeByName('A1');
-      range.setText("Emanet Adı: $malzemeAdi");
+      final xls.Range rangebaslik = rapor.getRangeByName('A1');
+      rangebaslik.setText("TESLİM EDİLEN MAZLEMELER");
 
-      final xls.Range range1 = rapor.getRangeByName('A2');
-      range1.setText("Emanet Alma Sebebi: $emanetAlmaSebebi");
+      final xls.Range range = rapor.getRangeByName('A2');
+      range.setText("Emanet Adı: $malzemeAdi0");
 
-      final xls.Range range2 = rapor.getRangeByName('A3');
-      range2.setText("Teslim Alan: $malzemeAlan");
+      final xls.Range range1 = rapor.getRangeByName('A3');
+      range1.setText("Emanet Alma Sebebi: $emanetAlmaSebebi0");
 
-      final xls.Range range3 = rapor.getRangeByName('A4');
-      range3.setText("Emanet Alma Tarihi: $malzemeAlmaTarihi");
+      final xls.Range range2 = rapor.getRangeByName('A4');
+      range2.setText("Teslim Alan: $malzemeAlan0");
 
-      final xls.Range range4 = rapor.getRangeByName('A5');
-      range4.setText("Teslim Tarihi: $malzemeTeslimTarihi");
+      final xls.Range range3 = rapor.getRangeByName('A5');
+      range3.setText("Emanet Alma Tarihi: $malzemeAlmaTarihi0");
+
+      final xls.Range range4 = rapor.getRangeByName('A6');
+      range4.setText("Teslim Tarihi: $malzemeTeslimTarihi0");
+
+      final xls.Range range5 = rapor.getRangeByName('A7');
+      range5.setText("Eksik Sayısı: $eksik0");
 
       range.autoFit();
       range1.autoFit();
       /*------------------------------------------------*/
+
       final List<int> bytes = workbook.saveAsStream();
       workbook.dispose();
       DateTime now = DateTime.now();

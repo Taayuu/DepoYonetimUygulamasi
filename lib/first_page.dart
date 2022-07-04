@@ -23,6 +23,9 @@ class _FirstPageState extends State<FirstPage> {
         backgroundColor: Color(0xffFFEBC1),
         body: Column(
           children: [
+            Center(
+              child: Image.asset("assets/ihh_arkaresim.jpeg"),
+            ),
             SizedBox(
               height: 25,
             ),
