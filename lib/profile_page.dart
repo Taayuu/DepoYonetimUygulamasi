@@ -53,13 +53,14 @@ class _ProfilePageState extends State<ProfilePage> {
     var malzemeAlan0;
     var malzemeTeslimTarihi0;
     var eksik0;
-    var durum;
+    var durum0;
     var malzemeAdi1;
     var malzemeAlmaTarihi1;
     var emanetAlmaSebebi1;
     var malzemeAlan1;
     var malzemeTeslimTarihi1;
     var eksik1;
+    var durum1;
 
     final depRef = FirebaseFirestore.instance
         .collection("Users")
@@ -92,7 +93,34 @@ class _ProfilePageState extends State<ProfilePage> {
             mTeslimTarihi0.add(element.data()["Teslim Tarihi"]);
             malzemeTeslimTarihi0 = mTeslimTarihi0.toList();
             eksik0 = value.docs[0]["Eksik"];
-            durum = value.docs[0]["durum"];
+            durum0 = value.docs[0]["durum"];
+          });
+        });
+        await FirebaseFirestore.instance
+            .collection("Users")
+            .doc(Auth.currentUser!.email)
+            .collection("Ürün")
+            .where("durum", isEqualTo: 1)
+            .get()
+            .then((value1) {
+          List madi1 = [];
+          List mAlmaTarihi1 = [];
+          List mTeslimTarihi1 = [];
+          value1.docs.forEach((element) {
+            madi1.add(element
+                .data()["Emanet"]
+                .toString()
+                .replaceAll('{', '')
+                .replaceAll('}', ''));
+            malzemeAdi1 = madi1.toList();
+            malzemeAlan1 = value1.docs[0]["Emanet Alan"];
+            emanetAlmaSebebi1 = value1.docs[0]["Emanet Alma Sebebi"];
+            mAlmaTarihi1.add(element.data()["Emanet Alma Tarihi"]);
+            malzemeAlmaTarihi1 = mAlmaTarihi1.toList();
+            mTeslimTarihi1.add(element.data()["Teslim Tarihi"]);
+            malzemeTeslimTarihi1 = mTeslimTarihi1.toList();
+            eksik1 = value1.docs[0]["Eksik"];
+            durum1 = value1.docs[0]["durum"];
           });
         });
         // ignore: non_constant_identifier_names, avoid_types_as_parameter_names, empty_catches
@@ -125,6 +153,28 @@ class _ProfilePageState extends State<ProfilePage> {
 
       final xls.Range range5 = rapor.getRangeByName('A7');
       range5.setText("Eksik Sayısı: $eksik0");
+      /*-------------------------*/
+
+      final xls.Range rangebaslik1 = rapor.getRangeByName('A10');
+      rangebaslik1.setText("TESLİM EDİLMEYEN MAZLEMELER");
+
+      final xls.Range range11 = rapor.getRangeByName('A11');
+      range11.setText("Emanet Adı: $malzemeAdi1");
+
+      final xls.Range range12 = rapor.getRangeByName('A12');
+      range12.setText("Emanet Alma Sebebi: $emanetAlmaSebebi1");
+
+      final xls.Range range23 = rapor.getRangeByName('A13');
+      range23.setText("Teslim Alan: $malzemeAlan1");
+
+      final xls.Range range34 = rapor.getRangeByName('A14');
+      range34.setText("Emanet Alma Tarihi: $malzemeAlmaTarihi1");
+
+      final xls.Range range45 = rapor.getRangeByName('A15');
+      range45.setText("Teslim Tarihi: Teslim Eilmedi");
+
+      final xls.Range range56 = rapor.getRangeByName('A16');
+      range56.setText("Eksik Sayısı: $eksik1");
 
       range.autoFit();
       range1.autoFit();

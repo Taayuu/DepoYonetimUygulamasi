@@ -38,6 +38,7 @@ class GetMaterials extends StatefulWidget {
 
 var malzemeMail;
 var malzemeStokMail;
+var malzemeSebepMail;
 
 class _GetMaterialsState extends State<GetMaterials> {
   final _firestore = FirebaseFirestore.instance;
@@ -344,6 +345,7 @@ Stok: ${malzemeler![index]["Stok"]}''',
                                             int.parse(adetController.text)
                                       });
                                     });
+                                    malzemeSebepMail = value.toString();
                                     malzemeMail = malzemeler?[0]["Malzeme Adı"]
                                         .toString();
                                     malzemeStokMail =
@@ -720,7 +722,7 @@ Stok: ${malzemeler![index]["Stok"]}''',
                 ),
               ),
             ),
-            FloatingActionButton(
+            /*FloatingActionButton(
                 heroTag: "deneme",
                 child: const Icon(Icons.add, size: 35),
                 backgroundColor: const Color(0xffd41217),
@@ -739,7 +741,7 @@ Stok: ${malzemeler![index]["Stok"]}''',
                         fontSize: 20);
                   });*/
                   SendTeslimEmail();
-                }),
+                }),*/
           ],
         ),
       )),
@@ -748,7 +750,7 @@ Stok: ${malzemeler![index]["Stok"]}''',
 }
 
 Future SendAlEmail() async {
-  //GoogleAuthApi.signOut();
+  GoogleAuthApi.signOut();
   FirebaseAuth Auth = FirebaseAuth.instance;
   final docRef = FirebaseFirestore.instance
       .collection("Users")
@@ -777,7 +779,7 @@ Future SendAlEmail() async {
     ]
     ..subject = 'Emanet Hareket Bildirisi'
     ..text =
-        '''$kAdi [$malzemeMail] malzemesinden [$malzemeStokMail] adet aldı. 
+        '''$kAdi [$malzemeMail] malzemesinden  $malzemeSebepMail için [$malzemeStokMail] adet aldı. 
         Tarih:${DateFormat('dd-MM-yyyy hh:mm:ss').format(DateTime.now())}''';
 
   try {
@@ -789,7 +791,7 @@ Future SendAlEmail() async {
 }
 
 Future SendTeslimEmail() async {
-  //GoogleAuthApi.signOut();
+  GoogleAuthApi.signOut();
   FirebaseAuth Auth = FirebaseAuth.instance;
   final docRef = FirebaseFirestore.instance
       .collection("Users")
@@ -818,7 +820,7 @@ Future SendTeslimEmail() async {
     ]
     ..subject = 'Emanet Hareket Bildirisi'
     ..text =
-        '''$kAdi [$malzemeMail] malzemesinden [$malzemeStokMail] adet teslim etti. 
+        '''$kAdi [$malzemeMail] malzemesinden  $malzemeSebepMail için [$malzemeStokMail] adet teslim etti. 
         Tarih:${DateFormat('dd-MM-yyyy hh:mm:ss').format(DateTime.now())}''';
 
   try {
