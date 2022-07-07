@@ -342,6 +342,7 @@ class _AddMaterialsPageState extends State<AddMaterialsPage> {
                                             });
                                             FocusManager.instance.primaryFocus
                                                 ?.unfocus();
+                                            keyword.clear();
                                             materialNameController.clear();
                                             materialClassController.clear();
                                             materialDepartmentController
@@ -450,6 +451,7 @@ class _AddMaterialsPageState extends State<AddMaterialsPage> {
                                   });
                                 });
                                 FocusManager.instance.primaryFocus?.unfocus();
+                                keyword.clear();
                                 materialNameController.clear();
                                 materialClassController.clear();
                                 materialDepartmentController.clear();
