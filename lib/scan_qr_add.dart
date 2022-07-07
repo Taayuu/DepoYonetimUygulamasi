@@ -131,7 +131,6 @@ class _ScanQrAddState extends State<ScanQrAdd> {
                                 malzemeRafi: '',
                                 malzemeSinifi: '',
                                 malzemeEkleGuncelleButtonText: 'Ekle',
-                                malzemeKonum: '',
                                 malzemeStok: 0,
                                 malzemeImage: '',
                               )));

@@ -17,7 +17,6 @@ class AddMaterialsPage extends StatefulWidget {
       required this.malzemeSinifi,
       required this.malzemeRafi,
       required this.malzemeEkleGuncelleButtonText,
-      required this.malzemeKonum,
       required this.malzemeStok,
       required this.malzemeImage})
       : super(key: key);
@@ -25,7 +24,6 @@ class AddMaterialsPage extends StatefulWidget {
   final String malzemeAdi;
   final String malzemeSinifi;
   final String malzemeRafi;
-  final String malzemeKonum;
   final String malzemeImage;
   final int malzemeStok;
   final String malzemeEkleGuncelleButtonText;
@@ -404,7 +402,6 @@ class _AddMaterialsPageState extends State<AddMaterialsPage> {
                                     "Qr Kod": materialQrController.text,
                                     "Stok":
                                         int.parse(materialStockController.text),
-                                    "Konum": widget.malzemeKonum,
                                     "Resim": materialImageController.text
                                   };
                                 } else {
@@ -417,9 +414,8 @@ class _AddMaterialsPageState extends State<AddMaterialsPage> {
                                     "Qr Kod": materialQrController.text,
                                     "Stok":
                                         int.parse(materialStockController.text),
-                                    "Konum": widget.malzemeKonum,
                                     "Resim":
-                                        "https://scontent.fesb10-3.fna.fbcdn.net/v/t1.6435-9/62213204_3238487636165202_1232018786266120192_n.png?_nc_cat=102&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=uI8gG8nVd3UAX8bCQ2O&_nc_ht=scontent.fesb10-3.fna&oh=00_AT_TDBmG4DsowdwCwLUwKX78pOWpXOWq0ICeQlXMWNYnAA&oe=62C0A333"
+                                        "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjAKOCHPsSDZgL9HCwZqzRJRyAuU0jdrgJoKRbz7KSo-cXmQO02oiXrju2_QKSz8iKjY6kqcMcioQpdk_RSBagS1mD2abF4HSJrUI_lOye1CDIq56wX8RL415_KUuo2A3cYgYAXFxoKml5co8KcCg7YezMVqkqkGJmdSrjbJu_3HTUMVcqb_hvZ1MbX4Q/s1600/indir.png"
                                   };
                                 }
                                 await FirebaseFirestore.instance

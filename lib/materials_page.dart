@@ -58,7 +58,6 @@ class _MaterialsPageState extends State<MaterialsPage> {
                               malzemeRafi: '',
                               malzemeSinifi: '',
                               malzemeEkleGuncelleButtonText: 'Ekle',
-                              malzemeKonum: '',
                               malzemeStok: 0,
                               malzemeImage: '',
                             )));
@@ -148,7 +147,7 @@ class _MaterialsPageState extends State<MaterialsPage> {
                                             onPressed: (contextx) async {
                                               await yaziGetir();
                                               Navigator.push(
-                                                  contextx,
+                                                  context,
                                                   MaterialPageRoute(
                                                       builder: (contextx) =>
                                                           AddMaterialsPage(
@@ -161,8 +160,6 @@ class _MaterialsPageState extends State<MaterialsPage> {
                                                                 malzemeSinifi,
                                                             malzemeEkleGuncelleButtonText:
                                                                 'Güncelle',
-                                                            malzemeKonum:
-                                                                malzemeKonum,
                                                             malzemeStok:
                                                                 malzemeStok,
                                                             malzemeImage:
