@@ -48,6 +48,7 @@ class _ProfilePageState extends State<ProfilePage> {
         );
 
     var genel0;
+    var genel1;
     var malzemeAdi0;
     var malzemeAlmaTarihi0;
     var emanetAlmaSebebi0;
@@ -99,11 +100,15 @@ class _ProfilePageState extends State<ProfilePage> {
             eksik0 = mEksik0.toList();
             durum0 = value.docs[0]["durum"];
             mgenel0.add('''
-${'''Alınan Ürün: ${element.data()["Emanet"].toString().replaceAll('{', '').replaceAll('}', '')}'''}
-${value.docs[0]["Emanet Alan"]}
-${element.data()["Emanet Alma Tarihi"]}
-${element.data()["Teslim Tarihi"]}
-            ''');
+
+${'''Emanet Alınan Ürün: ${element.data()["Emanet"].toString().replaceAll('{', '').replaceAll('}', '')} adet'''}
+${'''Emanet Alan Kişi: ${value.docs[0]["Emanet Alan"]}'''}
+${'''Emanet Alma Sebebi: ${value.docs[0]["Emanet Alma Sebebi"]}'''}
+${'''Emanet Alma Tarihi: ${element.data()["Emanet Alma Tarihi"]}'''}
+${'''Emanet Teslim Tarihi: ${element.data()["Teslim Tarihi"]}'''}
+${'''Eksik Teslim: ${element.data()["Eksik"]}'''}
+-----------------------------------------------------------------------------------
+''');
             genel0 = mgenel0.toList();
           });
         });
@@ -114,6 +119,7 @@ ${element.data()["Teslim Tarihi"]}
             .where("durum", isEqualTo: 1)
             .get()
             .then((value1) {
+          List mgenel1 = [];
           List madi1 = [];
           List mAlmaTarihi1 = [];
           List mTeslimTarihi1 = [];
@@ -132,6 +138,15 @@ ${element.data()["Teslim Tarihi"]}
             malzemeTeslimTarihi1 = mTeslimTarihi1.toList();
             eksik1 = value1.docs[0]["Eksik"];
             durum1 = value1.docs[0]["durum"];
+            mgenel1.add('''
+
+${'''Emanet Alınan Ürün: ${element.data()["Emanet"].toString().replaceAll('{', '').replaceAll('}', '')} adet'''}
+${'''Emanet Alan Kişi: ${value1.docs[0]["Emanet Alan"]}'''}
+${'''Emanet Alma Sebebi: ${value1.docs[0]["Emanet Alma Sebebi"]}'''}
+${'''Emanet Alma Tarihi: ${element.data()["Emanet Alma Tarihi"]}'''}
+-----------------------------------------------------------------------------------
+''');
+            genel1 = mgenel1.toList();
           });
         });
         // ignore: non_constant_identifier_names, avoid_types_as_parameter_names, empty_catches
@@ -144,53 +159,41 @@ ${element.data()["Teslim Tarihi"]}
       final xls.Worksheet rapor = workbook.worksheets[0];
 
       /*------------------------------------------------*/
-      final xls.Range rangebaslik = rapor.getRangeByName('A1');
-      rangebaslik.setText("TESLİM EDİLEN MAZLEMELER");
+      final xls.Range rangebaslik0 = rapor.getRangeByName('A1');
+      rangebaslik0.setText("TESLİM EDİLEN MAZLEMELER");
 
       final xls.Range range = rapor.getRangeByName('A2');
-      range.setText('''Emanet Adı: 
-      $genel0''');
+      range.setText('$genel0'
+          .toString()
+          .replaceAll(',', '')
+          .replaceAll('[', '')
+          .replaceAll(']', ''));
 
-      final xls.Range range1 = rapor.getRangeByName('A3');
-      range1.setText("Emanet Alma Sebebi: $emanetAlmaSebebi0");
-
-      final xls.Range range2 = rapor.getRangeByName('A4');
-      range2.setText("Teslim Alan: $malzemeAlan0");
-
-      final xls.Range range3 = rapor.getRangeByName('A5');
-      range3.setText("Emanet Alma Tarihi: $malzemeAlmaTarihi0");
-
-      final xls.Range range4 = rapor.getRangeByName('A6');
-      range4.setText("Teslim Tarihi: $malzemeTeslimTarihi0");
-
-      final xls.Range range5 = rapor.getRangeByName('A7');
-      range5.setText("Eksik Sayısı: $eksik0");
       /*-------------------------*/
 
-      final xls.Range rangebaslik1 = rapor.getRangeByName('A10');
+      final xls.Range rangebaslik1 = rapor.getRangeByName('B1');
       rangebaslik1.setText("TESLİM EDİLMEYEN MAZLEMELER");
 
-      final xls.Range range11 = rapor.getRangeByName('A11');
-      range11.setText("Emanet Adı: $malzemeAdi1");
+      final xls.Range range11 = rapor.getRangeByName('B2');
+      range11.setText('$genel1'
+          .toString()
+          .replaceAll(',', '')
+          .replaceAll('[', '')
+          .replaceAll(']', ''));
 
-      final xls.Range range12 = rapor.getRangeByName('A12');
-      range12.setText("Emanet Alma Sebebi: $emanetAlmaSebebi1");
-
-      final xls.Range range23 = rapor.getRangeByName('A13');
-      range23.setText("Teslim Alan: $malzemeAlan1");
-
-      final xls.Range range34 = rapor.getRangeByName('A14');
-      range34.setText("Emanet Alma Tarihi: $malzemeAlmaTarihi1");
-
-      final xls.Range range45 = rapor.getRangeByName('A15');
-      range45.setText("Teslim Tarihi: Teslim Eilmedi");
-
-      final xls.Range range56 = rapor.getRangeByName('A16');
-      range56.setText("Eksik Sayısı: $eksik1");
-
-      range.autoFit();
+      rangebaslik0.cellStyle.fontColor = "#eb3434";
+      rangebaslik0.cellStyle.fontSize = 17;
+      rangebaslik0.cellStyle.bold = true;
+      range.cellStyle.fontSize = 13;
       range.cellStyle.wrapText = true;
-      range1.autoFit();
+      range.columnWidth = 60;
+
+      rangebaslik1.cellStyle.fontColor = "#eb3434";
+      rangebaslik1.cellStyle.fontSize = 17;
+      rangebaslik1.cellStyle.bold = true;
+      range11.cellStyle.fontSize = 13;
+      range11.cellStyle.wrapText = true;
+      range11.columnWidth = 60;
       /*------------------------------------------------*/
 
       final List<int> bytes = workbook.saveAsStream();
