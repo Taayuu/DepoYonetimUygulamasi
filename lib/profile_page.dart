@@ -47,6 +47,7 @@ class _ProfilePageState extends State<ProfilePage> {
           onError: (error) => print("Listen failed: $error"),
         );
 
+    var genel0;
     var malzemeAdi0;
     var malzemeAlmaTarihi0;
     var emanetAlmaSebebi0;
@@ -76,9 +77,11 @@ class _ProfilePageState extends State<ProfilePage> {
             .where("durum", isEqualTo: 0)
             .get()
             .then((value) {
+          List mgenel0 = [];
           List madi0 = [];
           List mAlmaTarihi0 = [];
           List mTeslimTarihi0 = [];
+          List mEksik0 = [];
           value.docs.forEach((element) {
             madi0.add(element
                 .data()["Emanet"]
@@ -92,8 +95,16 @@ class _ProfilePageState extends State<ProfilePage> {
             malzemeAlmaTarihi0 = mAlmaTarihi0.toList();
             mTeslimTarihi0.add(element.data()["Teslim Tarihi"]);
             malzemeTeslimTarihi0 = mTeslimTarihi0.toList();
-            eksik0 = value.docs[0]["Eksik"];
+            mEksik0.add(element.data()["Eksik"].toString());
+            eksik0 = mEksik0.toList();
             durum0 = value.docs[0]["durum"];
+            mgenel0.add('''
+${'''Alınan Ürün: ${element.data()["Emanet"].toString().replaceAll('{', '').replaceAll('}', '')}'''}
+${value.docs[0]["Emanet Alan"]}
+${element.data()["Emanet Alma Tarihi"]}
+${element.data()["Teslim Tarihi"]}
+            ''');
+            genel0 = mgenel0.toList();
           });
         });
         await FirebaseFirestore.instance
@@ -137,7 +148,8 @@ class _ProfilePageState extends State<ProfilePage> {
       rangebaslik.setText("TESLİM EDİLEN MAZLEMELER");
 
       final xls.Range range = rapor.getRangeByName('A2');
-      range.setText("Emanet Adı: $malzemeAdi0");
+      range.setText('''Emanet Adı: 
+      $genel0''');
 
       final xls.Range range1 = rapor.getRangeByName('A3');
       range1.setText("Emanet Alma Sebebi: $emanetAlmaSebebi0");
@@ -177,6 +189,7 @@ class _ProfilePageState extends State<ProfilePage> {
       range56.setText("Eksik Sayısı: $eksik1");
 
       range.autoFit();
+      range.cellStyle.wrapText = true;
       range1.autoFit();
       /*------------------------------------------------*/
 

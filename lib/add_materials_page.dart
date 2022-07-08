@@ -441,23 +441,30 @@ class _AddMaterialsPageState extends State<AddMaterialsPage> {
                                               .substring(0, i),
                                         );
                                       }
+                                      await FirebaseFirestore.instance
+                                          .collection("Materials")
+                                          .where("Qr Kod", isEqualTo: widget.Qr)
+                                          .get()
+                                          .then(
+                                              (QuerySnapshot qMaterials) async {
+                                        qMaterials.docs.forEach((docd) async {
+                                          materialsRef.doc(docd.id).update({
+                                            "keyword":
+                                                FieldValue.arrayUnion(keyword)
+                                          });
+                                          keyword.clear();
+                                          materialNameController.clear();
+                                          materialClassController.clear();
+                                          materialDepartmentController.clear();
+                                          materialQrController.clear();
+                                          materialStockController.clear();
+                                          materialImageController.clear();
+                                        });
+                                      });
                                     } catch (e) {}
-                                    await FirebaseFirestore.instance
-                                        .collection("Materials")
-                                        .doc(materialNameController.text)
-                                        .update({
-                                      "keyword": FieldValue.arrayUnion(keyword)
-                                    });
                                   });
                                 });
                                 FocusManager.instance.primaryFocus?.unfocus();
-                                keyword.clear();
-                                materialNameController.clear();
-                                materialClassController.clear();
-                                materialDepartmentController.clear();
-                                materialQrController.clear();
-                                materialStockController.clear();
-                                materialImageController.clear();
                                 Fluttertoast.showToast(
                                     msg: "Malzeme Başarıyla Güncellendi",
                                     gravity: ToastGravity.CENTER,

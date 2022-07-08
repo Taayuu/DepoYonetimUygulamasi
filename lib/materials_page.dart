@@ -79,7 +79,7 @@ class _MaterialsPageState extends State<MaterialsPage> {
               Card(
                 child: TextField(
                   keyboardType: TextInputType.text,
-                  textCapitalization: TextCapitalization.sentences,
+                  textCapitalization: TextCapitalization.words,
                   decoration: InputDecoration(
                       enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(7),
