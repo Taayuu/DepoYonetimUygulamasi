@@ -1,6 +1,6 @@
-import 'dart:convert';
+// ignore_for_file: prefer_typing_uninitialized_variables, non_constant_identifier_names, unused_local_variable
+
 import 'dart:core';
-import 'dart:ffi';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +9,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'add_materials_page.dart';
 
 class MaterialsPage extends StatefulWidget {
-  MaterialsPage({
+  const MaterialsPage({
     Key? key,
   }) : super(key: key);
 
@@ -29,18 +29,17 @@ class _MaterialsPageState extends State<MaterialsPage> {
     var malzemeQr;
     var malzemeSinifi;
     var malzemeRafi;
-    var malzemeKonum;
     var malzemeStok;
     var malzemeImage;
 
     String filterWord = "";
     CollectionReference materialsRef = _firestore.collection('Materials');
     return Scaffold(
-      backgroundColor: Color(0xffFFEBC1),
+      backgroundColor: const Color(0xffFFEBC1),
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: Color(0xffFFEBC1),
-        title: Text(
+        backgroundColor: const Color(0xffFFEBC1),
+        title: const Text(
           "Malzemeler",
           style: TextStyle(fontSize: 26, color: Colors.black),
         ),
@@ -52,7 +51,7 @@ class _MaterialsPageState extends State<MaterialsPage> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => AddMaterialsPage(
+                        builder: (context) => const AddMaterialsPage(
                               Qr: '',
                               malzemeAdi: '',
                               malzemeRafi: '',
@@ -62,7 +61,7 @@ class _MaterialsPageState extends State<MaterialsPage> {
                               malzemeImage: '',
                             )));
               },
-              icon: Icon(
+              icon: const Icon(
                 Icons.add_circle_outline,
                 color: Colors.black,
                 size: 29,
@@ -73,7 +72,7 @@ class _MaterialsPageState extends State<MaterialsPage> {
         child: Center(
           child: Column(
             children: [
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               Card(
@@ -84,12 +83,12 @@ class _MaterialsPageState extends State<MaterialsPage> {
                       enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(7),
                           borderSide:
-                              BorderSide(color: Colors.black, width: 2)),
+                              const BorderSide(color: Colors.black, width: 2)),
                       focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
                           borderSide:
-                              BorderSide(color: Colors.black, width: 3)),
-                      prefixIcon: Icon(Icons.search),
+                              const BorderSide(color: Colors.black, width: 3)),
+                      prefixIcon: const Icon(Icons.search),
                       hintText: "Arama yapınız..."),
                   onChanged: (val) {
                     setState(() {
@@ -106,7 +105,7 @@ class _MaterialsPageState extends State<MaterialsPage> {
                     : materialsRef.orderBy("Malzeme Adı").snapshots(),
                 builder: (context, snp) {
                   return (snp.connectionState == ConnectionState.waiting)
-                      ? Center(child: CircularProgressIndicator())
+                      ? const Center(child: CircularProgressIndicator())
                       : Flexible(
                           child: ListView.builder(
                             itemCount: snp.data!.docs.length,
@@ -122,7 +121,6 @@ class _MaterialsPageState extends State<MaterialsPage> {
                                     malzemeRafi = gelenVeri["Malzeme Rafı"];
                                     malzemeSinifi = gelenVeri["Malzeme Sınıfı"];
                                     malzemeQr = gelenVeri["Qr Kod"];
-                                    malzemeKonum = gelenVeri["Konum"];
                                     malzemeStok = gelenVeri["Stok"];
                                     malzemeImage = gelenVeri["Resim"];
                                   });
@@ -133,12 +131,12 @@ class _MaterialsPageState extends State<MaterialsPage> {
                                 color: Colors.white,
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(20),
-                                    side: BorderSide(
+                                    side: const BorderSide(
                                         color: Colors.black, width: 2)),
                                 child: Slidable(
                                   key: ValueKey(index),
                                   endActionPane: ActionPane(
-                                      motion: ScrollMotion(),
+                                      motion: const ScrollMotion(),
                                       children: [
                                         SlidableAction(
                                             label: "Düzenle",
@@ -168,7 +166,7 @@ class _MaterialsPageState extends State<MaterialsPage> {
                                             }),
                                         SlidableAction(
                                             borderRadius:
-                                                BorderRadius.horizontal(
+                                                const BorderRadius.horizontal(
                                                     right: Radius.circular(20)),
                                             label: "Sil",
                                             backgroundColor: Colors.red,
@@ -179,8 +177,8 @@ class _MaterialsPageState extends State<MaterialsPage> {
                                                   context: context,
                                                   builder: (builder) =>
                                                       AlertDialog(
-                                                    title: Text("Sil"),
-                                                    content: Text(
+                                                    title: const Text("Sil"),
+                                                    content: const Text(
                                                         "Silmek İstediğinize Emin Misiniz?"),
                                                     actions: <Widget>[
                                                       TextButton(
@@ -188,7 +186,8 @@ class _MaterialsPageState extends State<MaterialsPage> {
                                                           Navigator.pop(
                                                               context);
                                                         },
-                                                        child: Text("İptal"),
+                                                        child:
+                                                            const Text("İptal"),
                                                       ),
                                                       TextButton(
                                                         onPressed: () async {
@@ -247,7 +246,8 @@ class _MaterialsPageState extends State<MaterialsPage> {
                                                                       .CENTER,
                                                               fontSize: 20);
                                                         },
-                                                        child: Text("Tamam"),
+                                                        child:
+                                                            const Text("Tamam"),
                                                       ),
                                                     ],
                                                   ),
@@ -266,15 +266,15 @@ class _MaterialsPageState extends State<MaterialsPage> {
                                     ),
                                     title: Text(
                                       '${malzemeler[index]['Malzeme Adı']}',
-                                      style: TextStyle(fontSize: 17),
+                                      style: const TextStyle(fontSize: 17),
                                     ),
                                     subtitle: Text(
                                       '''
 Qr Kod: ${malzemeler[index]["Qr Kod"]}
-Malzeme Rafı: ${malzemeler[index]["${"Malzeme Rafı"}"]}
-Malzeme Konumu: ${malzemeler[index]["${"Konum"}"].toString().replaceAll(']', '').replaceAll('[', '')}
-Stok: ${malzemeler[index]["${"Stok"}"]}''',
-                                      style: TextStyle(fontSize: 13),
+Malzeme Rafı: ${malzemeler[index]["Malzeme Rafı"]}
+Malzeme Konumu: ${malzemeler[index]["Konum"].toString().replaceAll(']', '').replaceAll('[', '')}
+Stok: ${malzemeler[index]["Stok"]}''',
+                                      style: const TextStyle(fontSize: 13),
                                     ),
                                   ),
                                 ),

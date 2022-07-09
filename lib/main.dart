@@ -27,7 +27,7 @@ void main() async {
       .listen((gelenVeri) {
     version = gelenVeri["Version"].toString();
     if (version == "1.0") {
-      runApp(MyApp());
+      runApp(const MyApp());
     } else {
       Fluttertoast.showToast(
           msg: "Lütfen uygulamanızı yeni sürüme yükseltiniz",
@@ -55,8 +55,8 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           home: AuthWidget(snapshot: snapshot),
           routes: <String, WidgetBuilder>{
-            '/page1': (BuildContext context) => CreateQr(),
-            '/page2': (BuildContext context) => ScanQrAdd(),
+            '/page1': (BuildContext context) => const CreateQr(),
+            '/page2': (BuildContext context) => const ScanQrAdd(),
           },
         ),
       ),

@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names, deprecated_member_use
+
 import 'dart:io';
 
 //import 'package:firebase_core/firebase_core.dart'; *firebase
@@ -45,8 +47,8 @@ class _ScanQrGetState extends State<ScanQrGet> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: Color(0xffd41217),
-          title: Text('Qr Kod'),
+          backgroundColor: const Color(0xffd41217),
+          title: const Text('Qr Kod'),
         ),
         body: Stack(
           children: <Widget>[
@@ -61,7 +63,7 @@ class _ScanQrGetState extends State<ScanQrGet> {
   }
 
   Widget buildControlButtons() => Container(
-        padding: EdgeInsets.symmetric(horizontal: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(8), color: Colors.white54),
         child: Row(
@@ -93,7 +95,7 @@ class _ScanQrGetState extends State<ScanQrGet> {
                 builder: (context, snapshot) {
                   if (snapshot.data != null) {
                     ressemble();
-                    return Icon(Icons.switch_camera);
+                    return const Icon(Icons.switch_camera);
                   } else {
                     return Container();
                   }
@@ -111,7 +113,7 @@ class _ScanQrGetState extends State<ScanQrGet> {
   Widget buildResult() => Column(
         children: [
           Container(
-            padding: EdgeInsets.all(12),
+            padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8), color: Colors.white70),
             child: Text(
@@ -126,7 +128,7 @@ class _ScanQrGetState extends State<ScanQrGet> {
   Widget buildOnayla() => Column(
         children: <Widget>[
           RaisedButton(
-              child: Text("Onayla"),
+              child: const Text("Onayla"),
               onPressed: () async {
                 if (barControl.text != "Qr Kodu Tarat!") {
                   await FirebaseFirestore.instance
@@ -144,14 +146,22 @@ class _ScanQrGetState extends State<ScanQrGet> {
                       });
                       await FirebaseFirestore.instance
                           .collection("Materials")
-                          .doc(kMaterials.docs[0]["Malzeme Adı"])
+                          .where("Qr Kod", isEqualTo: barcode!.code.toString())
                           .get()
-                          .then((veri) {
-                        malzemeAdi = veri["Malzeme Adı"];
+                          .then((QuerySnapshot qMaterials) async {
+                        for (var docd in qMaterials.docs) {
+                          await FirebaseFirestore.instance
+                              .collection("Materials")
+                              .doc(docd.id)
+                              .get()
+                              .then((veri) {
+                            malzemeAdi = veri["Malzeme Adı"];
+                          });
+                        }
                       });
                       await FirebaseFirestore.instance
                           .collection("Materials")
-                          .where("Malzeme Adı", isEqualTo: malzemeAdi)
+                          .where("Qr Kod", isEqualTo: barcode!.code.toString())
                           .where("Konum", arrayContains: k_adi)
                           .get()
                           .then((QuerySnapshot gelenVeri) {

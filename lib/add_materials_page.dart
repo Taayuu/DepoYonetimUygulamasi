@@ -1,16 +1,18 @@
+// ignore_for_file: non_constant_identifier_names, empty_catches
+
 import 'dart:io';
-import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:login/scan_qr_add.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 class AddMaterialsPage extends StatefulWidget {
-  AddMaterialsPage(
+  const AddMaterialsPage(
       {Key? key,
       required this.Qr,
       required this.malzemeAdi,
@@ -57,7 +59,7 @@ class _AddMaterialsPageState extends State<AddMaterialsPage> {
   TextEditingController materialQrController = TextEditingController();
   TextEditingController materialImageController = TextEditingController();
   var materialStockController = TextEditingController(text: "12345678");
-  var maskFormatter = new MaskTextInputFormatter(
+  var maskFormatter = MaskTextInputFormatter(
       mask: '####-####', filter: {"#": RegExp(r'[0-9]')});
   // -> "12-34-56-78"
   @override
@@ -75,7 +77,7 @@ class _AddMaterialsPageState extends State<AddMaterialsPage> {
     materialStockController.text = widget.malzemeStok.toString();
     materialImageController.text = widget.malzemeImage;
     if (materialImageController.text ==
-        "https://scontent.fesb10-3.fna.fbcdn.net/v/t1.6435-9/62213204_3238487636165202_1232018786266120192_n.png?_nc_cat=102&ccb=1-7&_nc_sid=09cbfe&_nc_ohc=uI8gG8nVd3UAX8bCQ2O&_nc_ht=scontent.fesb10-3.fna&oh=00_AT_TDBmG4DsowdwCwLUwKX78pOWpXOWq0ICeQlXMWNYnAA&oe=62C0A333") {
+        "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjAKOCHPsSDZgL9HCwZqzRJRyAuU0jdrgJoKRbz7KSo-cXmQO02oiXrju2_QKSz8iKjY6kqcMcioQpdk_RSBagS1mD2abF4HSJrUI_lOye1CDIq56wX8RL415_KUuo2A3cYgYAXFxoKml5co8KcCg7YezMVqkqkGJmdSrjbJu_3HTUMVcqb_hvZ1MbX4Q/s1600/indir.png") {
       materialImageController.clear();
     }
     if (materialStockController.text == "0") {
@@ -83,10 +85,10 @@ class _AddMaterialsPageState extends State<AddMaterialsPage> {
     }
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      backgroundColor: Color(0xffFFEBC1),
+      backgroundColor: const Color(0xffFFEBC1),
       appBar: AppBar(
-        backgroundColor: Color(0xffd41217),
-        title: Text("Malzeme Ekle"),
+        backgroundColor: const Color(0xffd41217),
+        title: const Text("Malzeme Ekle"),
       ),
       body: SafeArea(
         child: Center(
@@ -107,12 +109,12 @@ class _AddMaterialsPageState extends State<AddMaterialsPage> {
                           filled: true,
                           enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(7),
-                              borderSide:
-                                  BorderSide(color: Colors.black, width: 2)),
+                              borderSide: const BorderSide(
+                                  color: Colors.black, width: 2)),
                           focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
-                              borderSide:
-                                  BorderSide(color: Colors.black, width: 3)),
+                              borderSide: const BorderSide(
+                                  color: Colors.black, width: 3)),
                           hintText: "Qr Kod giriniz",
                           hintStyle: TextStyle(color: Colors.grey[700]),
                           suffixIcon: IconButton(
@@ -120,7 +122,7 @@ class _AddMaterialsPageState extends State<AddMaterialsPage> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => ScanQrAdd()));
+                                      builder: (context) => const ScanQrAdd()));
                             },
                             icon: Icon(
                               Icons.qr_code_scanner_sharp,
@@ -129,7 +131,7 @@ class _AddMaterialsPageState extends State<AddMaterialsPage> {
                           ),
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
                       TextFormField(
@@ -141,16 +143,16 @@ class _AddMaterialsPageState extends State<AddMaterialsPage> {
                             filled: true,
                             enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(7),
-                                borderSide:
-                                    BorderSide(color: Colors.black, width: 2)),
+                                borderSide: const BorderSide(
+                                    color: Colors.black, width: 2)),
                             focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
-                                borderSide:
-                                    BorderSide(color: Colors.black, width: 3)),
+                                borderSide: const BorderSide(
+                                    color: Colors.black, width: 3)),
                             hintText: "Malzeme Adı giriniz",
                             hintStyle: TextStyle(color: Colors.grey[700])),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
                       TextFormField(
@@ -162,16 +164,16 @@ class _AddMaterialsPageState extends State<AddMaterialsPage> {
                             filled: true,
                             enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(7),
-                                borderSide:
-                                    BorderSide(color: Colors.black, width: 2)),
+                                borderSide: const BorderSide(
+                                    color: Colors.black, width: 2)),
                             focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
-                                borderSide:
-                                    BorderSide(color: Colors.black, width: 3)),
+                                borderSide: const BorderSide(
+                                    color: Colors.black, width: 3)),
                             hintText: "Malzeme Sınıfı giriniz",
                             hintStyle: TextStyle(color: Colors.grey[700])),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
                       TextFormField(
@@ -183,16 +185,16 @@ class _AddMaterialsPageState extends State<AddMaterialsPage> {
                             filled: true,
                             enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(7),
-                                borderSide:
-                                    BorderSide(color: Colors.black, width: 2)),
+                                borderSide: const BorderSide(
+                                    color: Colors.black, width: 2)),
                             focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
-                                borderSide:
-                                    BorderSide(color: Colors.black, width: 3)),
+                                borderSide: const BorderSide(
+                                    color: Colors.black, width: 3)),
                             hintText: "Malzeme Rafı giriniz",
                             hintStyle: TextStyle(color: Colors.grey[700])),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
                       TextFormField(
@@ -203,16 +205,16 @@ class _AddMaterialsPageState extends State<AddMaterialsPage> {
                               filled: true,
                               enabledBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(7),
-                                  borderSide: BorderSide(
+                                  borderSide: const BorderSide(
                                       color: Colors.black, width: 2)),
                               focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
-                                  borderSide: BorderSide(
+                                  borderSide: const BorderSide(
                                       color: Colors.black, width: 3)),
                               hintText: "URL giriniz",
                               hintStyle: TextStyle(color: Colors.grey[700])),
-                          style: TextStyle(color: Colors.blue)),
-                      SizedBox(
+                          style: const TextStyle(color: Colors.blue)),
+                      const SizedBox(
                         height: 10,
                       ),
                       TextFormField(
@@ -224,17 +226,17 @@ class _AddMaterialsPageState extends State<AddMaterialsPage> {
                               filled: true,
                               enabledBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(7),
-                                  borderSide: BorderSide(
+                                  borderSide: const BorderSide(
                                       color: Colors.black, width: 2)),
                               focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
-                                  borderSide: BorderSide(
+                                  borderSide: const BorderSide(
                                       color: Colors.black, width: 3)),
                               hintText: "Malzeme Stoğu Giriniz",
                               hintStyle: TextStyle(color: Colors.grey[700])),
                           keyboardType: TextInputType.number,
                           inputFormatters: [maskFormatter]),
-                      SizedBox(height: 10),
+                      const SizedBox(height: 10),
                       ClipRRect(
                         borderRadius: BorderRadius.circular(15),
                         child: MaterialButton(
@@ -403,7 +405,13 @@ class _AddMaterialsPageState extends State<AddMaterialsPage> {
                                     "Qr Kod": materialQrController.text,
                                     "Stok":
                                         int.parse(materialStockController.text),
-                                    "Resim": materialImageController.text
+                                    "Resim": materialImageController.text,
+                                    "ID": DateFormat(
+                                            'dd-MM-yyyy HH:mm:ss:SSSSSSS')
+                                        .format(DateTime.now())
+                                        .replaceAll("-", "")
+                                        .replaceAll(":", "")
+                                        .replaceAll(" ", "")
                                   };
                                 } else {
                                   materialsDataGuncelle = {
@@ -416,7 +424,13 @@ class _AddMaterialsPageState extends State<AddMaterialsPage> {
                                     "Stok":
                                         int.parse(materialStockController.text),
                                     "Resim":
-                                        "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjAKOCHPsSDZgL9HCwZqzRJRyAuU0jdrgJoKRbz7KSo-cXmQO02oiXrju2_QKSz8iKjY6kqcMcioQpdk_RSBagS1mD2abF4HSJrUI_lOye1CDIq56wX8RL415_KUuo2A3cYgYAXFxoKml5co8KcCg7YezMVqkqkGJmdSrjbJu_3HTUMVcqb_hvZ1MbX4Q/s1600/indir.png"
+                                        "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjAKOCHPsSDZgL9HCwZqzRJRyAuU0jdrgJoKRbz7KSo-cXmQO02oiXrju2_QKSz8iKjY6kqcMcioQpdk_RSBagS1mD2abF4HSJrUI_lOye1CDIq56wX8RL415_KUuo2A3cYgYAXFxoKml5co8KcCg7YezMVqkqkGJmdSrjbJu_3HTUMVcqb_hvZ1MbX4Q/s1600/indir.png",
+                                    "ID": DateFormat(
+                                            'dd-MM-yyyy HH:mm:ss:SSSSSSS')
+                                        .format(DateTime.now())
+                                        .replaceAll("-", "")
+                                        .replaceAll(":", "")
+                                        .replaceAll(" ", "")
                                   };
                                 }
                                 await FirebaseFirestore.instance
@@ -424,7 +438,7 @@ class _AddMaterialsPageState extends State<AddMaterialsPage> {
                                     .where("Qr Kod", isEqualTo: widget.Qr)
                                     .get()
                                     .then((QuerySnapshot qMaterials) async {
-                                  qMaterials.docs.forEach((doc) async {
+                                  for (var doc in qMaterials.docs) {
                                     materialsRef
                                         .doc(doc.id)
                                         .update(materialsDataGuncelle);
@@ -447,7 +461,18 @@ class _AddMaterialsPageState extends State<AddMaterialsPage> {
                                           .get()
                                           .then(
                                               (QuerySnapshot qMaterials) async {
-                                        qMaterials.docs.forEach((docd) async {
+                                        for (var docd in qMaterials.docs) {
+                                          materialsRef.doc(docd.id).update(
+                                              {"keyword": FieldValue.delete()});
+                                        }
+                                      });
+                                      await FirebaseFirestore.instance
+                                          .collection("Materials")
+                                          .where("Qr Kod", isEqualTo: widget.Qr)
+                                          .get()
+                                          .then(
+                                              (QuerySnapshot qMaterials) async {
+                                        for (var docd in qMaterials.docs) {
                                           materialsRef.doc(docd.id).update({
                                             "keyword":
                                                 FieldValue.arrayUnion(keyword)
@@ -459,10 +484,10 @@ class _AddMaterialsPageState extends State<AddMaterialsPage> {
                                           materialQrController.clear();
                                           materialStockController.clear();
                                           materialImageController.clear();
-                                        });
+                                        }
                                       });
                                     } catch (e) {}
-                                  });
+                                  }
                                 });
                                 FocusManager.instance.primaryFocus?.unfocus();
                                 Fluttertoast.showToast(
@@ -477,12 +502,13 @@ class _AddMaterialsPageState extends State<AddMaterialsPage> {
                                   fontSize: 20);
                             }
                           },
-                          color: Color(0xffd41217),
-                          padding: EdgeInsets.symmetric(
+                          color: const Color(0xffd41217),
+                          padding: const EdgeInsets.symmetric(
                               vertical: 20, horizontal: 25),
                           child: Text(
                             'Malzemeyi ${widget.malzemeEkleGuncelleButtonText}',
-                            style: TextStyle(fontSize: 13, color: Colors.white),
+                            style: const TextStyle(
+                                fontSize: 13, color: Colors.white),
                           ),
                         ),
                       ),

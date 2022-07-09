@@ -1,6 +1,7 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:login/sign_in_page.dart';
@@ -23,10 +24,10 @@ class _RegisterPageState extends State<RegisterPage> {
     final _authService = Provider.of<IAuthService>(context, listen: false);
     return SafeArea(
         child: Scaffold(
-      backgroundColor: Color(0xffFFEBC1),
+      backgroundColor: const Color(0xffFFEBC1),
       body: Column(
         children: <Widget>[
-          SizedBox(
+          const SizedBox(
             height: 50,
           ),
           Padding(
@@ -35,15 +36,17 @@ class _RegisterPageState extends State<RegisterPage> {
               textCapitalization: TextCapitalization.words,
               controller: k_Adi,
               decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.person),
+                  prefixIcon: const Icon(Icons.person),
                   fillColor: Colors.white,
                   filled: true,
                   enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(7),
-                      borderSide: BorderSide(color: Colors.black, width: 2)),
+                      borderSide:
+                          const BorderSide(color: Colors.black, width: 2)),
                   focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: Colors.black, width: 3)),
+                      borderSide:
+                          const BorderSide(color: Colors.black, width: 3)),
                   hintText: "Kullanıcı Adı",
                   hintStyle: TextStyle(color: Colors.grey[700])),
             ),
@@ -55,15 +58,17 @@ class _RegisterPageState extends State<RegisterPage> {
                 emailStr = emailMtn;
               },
               decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.mail),
+                  prefixIcon: const Icon(Icons.mail),
                   fillColor: Colors.white,
                   filled: true,
                   enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(7),
-                      borderSide: BorderSide(color: Colors.black, width: 2)),
+                      borderSide:
+                          const BorderSide(color: Colors.black, width: 2)),
                   focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: Colors.black, width: 3)),
+                      borderSide:
+                          const BorderSide(color: Colors.black, width: 3)),
                   hintText: "E-Posta",
                   hintStyle: TextStyle(color: Colors.grey[700])),
             ),
@@ -76,25 +81,27 @@ class _RegisterPageState extends State<RegisterPage> {
               },
               obscureText: true,
               decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.key),
+                  prefixIcon: const Icon(Icons.key),
                   fillColor: Colors.white,
                   filled: true,
                   enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(7),
-                      borderSide: BorderSide(color: Colors.black, width: 2)),
+                      borderSide:
+                          const BorderSide(color: Colors.black, width: 2)),
                   focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide(color: Colors.black, width: 3)),
+                      borderSide:
+                          const BorderSide(color: Colors.black, width: 3)),
                   hintText: "Şifre",
                   hintStyle: TextStyle(color: Colors.grey[700])),
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 35,
           ),
           Row(
             children: [
-              SizedBox(
+              const SizedBox(
                 width: 30,
               ),
               Expanded(
@@ -103,13 +110,13 @@ class _RegisterPageState extends State<RegisterPage> {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(15),
                     child: MaterialButton(
-                        child: Text(
+                        child: const Text(
                           'İptal',
                           style: TextStyle(fontSize: 20, color: Colors.white),
                         ),
-                        color: Color(0xffd41217),
-                        padding:
-                            EdgeInsets.symmetric(vertical: 10, horizontal: 25),
+                        color: const Color(0xffd41217),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 10, horizontal: 25),
                         onPressed: () {
                           Navigator.pop(context);
                         }),
@@ -122,13 +129,13 @@ class _RegisterPageState extends State<RegisterPage> {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(15),
                     child: MaterialButton(
-                        child: Text(
+                        child: const Text(
                           'Kayıt Ol',
                           style: TextStyle(fontSize: 20, color: Colors.white),
                         ),
-                        color: Color(0xffd41217),
-                        padding:
-                            EdgeInsets.symmetric(vertical: 10, horizontal: 25),
+                        color: const Color(0xffd41217),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 10, horizontal: 25),
                         onPressed: () async {
                           if (passwordStr.length > 5) {
                             await FirebaseFirestore.instance
@@ -174,7 +181,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 width: 30,
               ),
             ],

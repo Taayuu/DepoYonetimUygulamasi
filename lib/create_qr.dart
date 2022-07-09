@@ -1,9 +1,13 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 import 'home_page.dart';
 
 class CreateQr extends StatefulWidget {
+  const CreateQr({Key? key}) : super(key: key);
+
   @override
   State<CreateQr> createState() => _CreateQrState();
 }
@@ -15,11 +19,11 @@ class _CreateQrState extends State<CreateQr> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Admin'),
+        title: const Text('Admin'),
       ),
       body: Center(
         child: SingleChildScrollView(
-          padding: EdgeInsets.all(24),
+          padding: const EdgeInsets.all(24),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
@@ -28,11 +32,11 @@ class _CreateQrState extends State<CreateQr> {
                 size: 200,
                 backgroundColor: Colors.white,
               ),
-              SizedBox(height: 40),
+              const SizedBox(height: 40),
               buildTextField(context),
-              SizedBox(height: 40),
+              const SizedBox(height: 40),
               RaisedButton(
-                  child: Text("Geri"),
+                  child: const Text("Geri"),
                   onPressed: () {
                     Navigator.push(
                         context,
@@ -50,13 +54,13 @@ class _CreateQrState extends State<CreateQr> {
 
   Widget buildTextField(BuildContext context) => TextField(
         controller: controller,
-        style: TextStyle(
+        style: const TextStyle(
             color: Colors.black, fontWeight: FontWeight.bold, fontSize: 20),
         decoration: InputDecoration(
           hintText: 'Veri Giriniz',
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
-            borderSide: BorderSide(color: Colors.black),
+            borderSide: const BorderSide(color: Colors.black),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
@@ -65,7 +69,7 @@ class _CreateQrState extends State<CreateQr> {
           ),
           suffixIcon: IconButton(
             color: Theme.of(context).colorScheme.secondary,
-            icon: Icon(
+            icon: const Icon(
               Icons.done,
               size: 30,
             ),

@@ -1,3 +1,5 @@
+// ignore_for_file: unused_element, must_be_immutable, non_constant_identifier_names, avoid_print
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -59,15 +61,15 @@ class _HomePageState extends State<HomePage> {
     });
 
     List<Widget> pages = [
-      FirstPage(),
+      const FirstPage(),
       GetMaterials(
         Qr: widget.Qr,
         teslimet: false,
         gerigel: false,
         teslimal: false,
       ),
-      MaterialsPage(),
-      ProfilePage(
+      const MaterialsPage(),
+      const ProfilePage(
         malzeme: '',
       ),
     ];
@@ -81,7 +83,7 @@ class _HomePageState extends State<HomePage> {
         );
     return Scaffold(
       bottomNavigationBar: NavigationBar(
-        backgroundColor: Color(0xffFFEBC1),
+        backgroundColor: const Color(0xffFFEBC1),
         height: 65,
         animationDuration: const Duration(seconds: 1),
         selectedIndex: _currentIndexs,
@@ -93,42 +95,42 @@ class _HomePageState extends State<HomePage> {
           NavigationDestination(icon: Icon(Icons.person), label: "Profil"),
         ],
       ),
-      backgroundColor: Color(0xffFFEBC1),
+      backgroundColor: const Color(0xffFFEBC1),
       appBar: AppBar(
         title: TextField(
           enabled: false,
           controller: k_adi,
-          style: TextStyle(color: Colors.white, fontSize: 20),
-          decoration: InputDecoration(border: InputBorder.none),
+          style: const TextStyle(color: Colors.white, fontSize: 20),
+          decoration: const InputDecoration(border: InputBorder.none),
         ),
-        backgroundColor: Color(0xffd41217),
+        backgroundColor: const Color(0xffd41217),
         actions: [
           IconButton(
               onPressed: () async {
                 await showDialog(
                   context: context,
                   builder: (builder) => AlertDialog(
-                    title: Text("Güvenli Çıkış"),
-                    content: Text("Çıkmak İstediğinize Emin Misiniz?"),
+                    title: const Text("Güvenli Çıkış"),
+                    content: const Text("Çıkmak İstediğinize Emin Misiniz?"),
                     actions: <Widget>[
                       TextButton(
                         onPressed: () {
                           Navigator.pop(context);
                         },
-                        child: Text("Hayır"),
+                        child: const Text("Hayır"),
                       ),
                       TextButton(
                         onPressed: () async {
                           await _authService.signOut();
                           Navigator.pop(context);
                         },
-                        child: Text("Evet"),
+                        child: const Text("Evet"),
                       ),
                     ],
                   ),
                 );
               },
-              icon: Icon(Icons.exit_to_app))
+              icon: const Icon(Icons.exit_to_app))
         ],
       ),
       body: Center(

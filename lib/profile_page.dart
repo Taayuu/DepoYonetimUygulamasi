@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_typing_uninitialized_variables, avoid_print, unused_local_variable, non_constant_identifier_names
+// ignore_for_file: prefer_typing_uninitialized_variables, avoid_print, unused_local_variable, non_constant_identifier_names, duplicate_ignore
 
 import 'dart:io';
 
@@ -83,7 +83,7 @@ class _ProfilePageState extends State<ProfilePage> {
           List mAlmaTarihi0 = [];
           List mTeslimTarihi0 = [];
           List mEksik0 = [];
-          value.docs.forEach((element) {
+          for (var element in value.docs) {
             madi0.add(element
                 .data()["Emanet"]
                 .toString()
@@ -110,7 +110,7 @@ ${'''Eksik Teslim: ${element.data()["Eksik"]}'''}
 -----------------------------------------------------------------------------------
 ''');
             genel0 = mgenel0.toList();
-          });
+          }
         });
         await FirebaseFirestore.instance
             .collection("Users")
@@ -123,7 +123,7 @@ ${'''Eksik Teslim: ${element.data()["Eksik"]}'''}
           List madi1 = [];
           List mAlmaTarihi1 = [];
           List mTeslimTarihi1 = [];
-          value1.docs.forEach((element) {
+          for (var element in value1.docs) {
             madi1.add(element
                 .data()["Emanet"]
                 .toString()
@@ -147,7 +147,7 @@ ${'''Emanet Alma Tarihi: ${element.data()["Emanet Alma Tarihi"]}'''}
 -----------------------------------------------------------------------------------
 ''');
             genel1 = mgenel1.toList();
-          });
+          }
         });
         // ignore: non_constant_identifier_names, avoid_types_as_parameter_names, empty_catches
       } catch (Error) {}
@@ -321,7 +321,7 @@ ${'''Emanet Alma Tarihi: ${element.data()["Emanet Alma Tarihi"]}'''}
                 padding: const EdgeInsets.all(7),
                 child: FloatingActionButton(
                     child: const Icon(Icons.print, size: 35),
-                    backgroundColor: Color(0xffd41217),
+                    backgroundColor: const Color(0xffd41217),
                     onPressed: () {
                       createExcel();
                     }),

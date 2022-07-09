@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'dart:io';
 //import 'package:firebase_core/firebase_core.dart'; *firebase
 import 'package:flutter/material.dart';
@@ -23,7 +25,6 @@ class _ScanQrAddState extends State<ScanQrAdd> {
     super.dispose();
   }
 
-  @override
   void ressemble() async {
     super.reassemble();
 
@@ -38,8 +39,8 @@ class _ScanQrAddState extends State<ScanQrAdd> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: Color(0xffd41217),
-          title: Text('Qr Kod'),
+          backgroundColor: const Color(0xffd41217),
+          title: const Text('Qr Kod'),
         ),
         body: Stack(
           children: <Widget>[
@@ -54,7 +55,7 @@ class _ScanQrAddState extends State<ScanQrAdd> {
   }
 
   Widget buildControlButtons() => Container(
-        padding: EdgeInsets.symmetric(horizontal: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(8), color: Colors.white54),
         child: Row(
@@ -86,7 +87,7 @@ class _ScanQrAddState extends State<ScanQrAdd> {
                 builder: (context, snapshot) {
                   if (snapshot.data != null) {
                     ressemble();
-                    return Icon(Icons.switch_camera);
+                    return const Icon(Icons.switch_camera);
                   } else {
                     return Container();
                   }
@@ -104,7 +105,7 @@ class _ScanQrAddState extends State<ScanQrAdd> {
   Widget buildResult() => Column(
         children: [
           Container(
-            padding: EdgeInsets.all(12),
+            padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8), color: Colors.white70),
             child: Text(
@@ -119,7 +120,7 @@ class _ScanQrAddState extends State<ScanQrAdd> {
   Widget buildOnayla() => Column(
         children: <Widget>[
           RaisedButton(
-              child: Text("Onayla"),
+              child: const Text("Onayla"),
               onPressed: () {
                 if (barControl.text != "Qr Kodu Tarat!") {
                   Navigator.push(
