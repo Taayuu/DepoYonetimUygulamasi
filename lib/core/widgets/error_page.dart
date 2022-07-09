@@ -5,9 +5,9 @@ class ErrorPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       body: Center(
-        child: const Text('Bir Hata Oluştu'),
+        child: Text('Bir Hata Oluştu'),
       ),
     );
   }

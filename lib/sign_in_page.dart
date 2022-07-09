@@ -1,3 +1,5 @@
+// ignore_for_file: unused_local_variable
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -10,7 +12,7 @@ import 'core/service/i_auth_service.dart';
 List<DocumentSnapshot>? malzemeler;
 String emailStr = "";
 String passwordStr = "";
-final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
 class SignInPage extends StatelessWidget {
   const SignInPage({Key? key}) : super(key: key);
@@ -23,7 +25,7 @@ class SignInPage extends StatelessWidget {
       home: SafeArea(
         child: Scaffold(
           key: _scaffoldKey,
-          backgroundColor: Color(0xffFFEBC1),
+          backgroundColor: const Color(0xffFFEBC1),
           body: Form(
             child: Padding(
               padding: const EdgeInsets.only(left: 20, right: 20),
@@ -43,16 +45,16 @@ class SignInPage extends StatelessWidget {
                                   emailStr = emailMtn;
                                 },
                                 decoration: InputDecoration(
-                                    prefixIcon: Icon(Icons.person),
+                                    prefixIcon: const Icon(Icons.person),
                                     fillColor: Colors.white,
                                     filled: true,
                                     enabledBorder: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(7),
-                                        borderSide: BorderSide(
+                                        borderSide: const BorderSide(
                                             color: Colors.black, width: 2)),
                                     focusedBorder: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(7),
-                                        borderSide: BorderSide(
+                                        borderSide: const BorderSide(
                                             color: Colors.black, width: 2)),
                                     hintText: "Kullanıcı Adı",
                                     hintStyle:
@@ -61,30 +63,26 @@ class SignInPage extends StatelessWidget {
                             ),
                             Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: Container(
-                                child: TextField(
-                                  onChanged: (passwordMtn) {
-                                    passwordStr = passwordMtn;
-                                  },
-                                  obscureText: true,
-                                  decoration: InputDecoration(
-                                      prefixIcon: Icon(Icons.key),
-                                      fillColor: Colors.white,
-                                      filled: true,
-                                      enabledBorder: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(7),
-                                          borderSide: BorderSide(
-                                              color: Colors.black, width: 2)),
-                                      focusedBorder: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(7),
-                                          borderSide: BorderSide(
-                                              color: Colors.black, width: 2)),
-                                      hintText: "Şifre",
-                                      hintStyle:
-                                          TextStyle(color: Colors.grey[700])),
-                                ),
+                              child: TextField(
+                                onChanged: (passwordMtn) {
+                                  passwordStr = passwordMtn;
+                                },
+                                obscureText: true,
+                                decoration: InputDecoration(
+                                    prefixIcon: const Icon(Icons.key),
+                                    fillColor: Colors.white,
+                                    filled: true,
+                                    enabledBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(7),
+                                        borderSide: const BorderSide(
+                                            color: Colors.black, width: 2)),
+                                    focusedBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(7),
+                                        borderSide: const BorderSide(
+                                            color: Colors.black, width: 2)),
+                                    hintText: "Şifre",
+                                    hintStyle:
+                                        TextStyle(color: Colors.grey[700])),
                               ),
                             ),
                             Expanded(
@@ -97,9 +95,9 @@ class SignInPage extends StatelessWidget {
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
-                                                    RegisterPage()));
+                                                    const RegisterPage()));
                                       },
-                                      child: Text(
+                                      child: const Text(
                                         'Hesap\nOluştur',
                                         style: TextStyle(color: Colors.black),
                                       ),
@@ -136,7 +134,7 @@ class SignInPage extends StatelessWidget {
                                             }
                                           });
                                         },
-                                        color: Color(0xffd41217),
+                                        color: const Color(0xffd41217),
                                         padding: const EdgeInsets.symmetric(
                                             vertical: 16, horizontal: 20),
                                         child: const Text(
@@ -159,7 +157,7 @@ class SignInPage extends StatelessWidget {
                                               context,
                                               MaterialPageRoute(
                                                   builder: (context) =>
-                                                      ForgotPassword()));
+                                                      const ForgotPassword()));
                                         }),
                                   ),
                                 ],
