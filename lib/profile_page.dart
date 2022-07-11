@@ -140,7 +140,7 @@ ${'''Eksik Teslim: ${element.data()["Eksik"]}'''}
             durum1 = value1.docs[0]["durum"];
             mgenel1.add('''
 
-${'''Emanet Alınan Ürün: ${element.data()["Emanet"].toString().replaceAll('{', '').replaceAll('}', '')} adet'''}
+${'''Emanet Alınan Ürün: ${element.data()["Emanet"].toString().replaceAll('{', '').replaceAll('}', '')} adet mevcut ${element.data()["İlk Alınan"]} adet alındı'''}
 ${'''Emanet Alan Kişi: ${value1.docs[0]["Emanet Alan"]}'''}
 ${'''Emanet Alma Sebebi: ${value1.docs[0]["Emanet Alma Sebebi"]}'''}
 ${'''Emanet Alma Tarihi: ${element.data()["Emanet Alma Tarihi"]}'''}

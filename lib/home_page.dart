@@ -18,10 +18,12 @@ const TextStyle _textStyle = TextStyle(
 );
 
 class HomePage extends StatefulWidget {
-  HomePage({Key? key, this.currentIndexs = 0, required this.Qr})
+  HomePage(
+      {Key? key, this.currentIndexs = 0, required this.Qr, required this.ID})
       : super(key: key);
   int currentIndexs;
   final String Qr;
+  final String ID;
   @override
   State<HomePage> createState() => _HomePageState();
 }
@@ -67,6 +69,7 @@ class _HomePageState extends State<HomePage> {
         teslimet: false,
         gerigel: false,
         teslimal: false,
+        ID: widget.ID,
       ),
       const MaterialsPage(),
       const ProfilePage(

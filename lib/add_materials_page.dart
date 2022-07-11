@@ -292,8 +292,14 @@ class _AddMaterialsPageState extends State<AddMaterialsPage> {
                                                         .text),
                                                 "Konum": FieldValue.arrayUnion(
                                                     bosListe),
-                                                "Resim":
-                                                    materialImageController.text
+                                                "Resim": materialImageController
+                                                    .text,
+                                                "ID": DateFormat(
+                                                        'dd-MM-yyyy HH:mm:ss:SSSSSSS')
+                                                    .format(DateTime.now())
+                                                    .replaceAll("-", "")
+                                                    .replaceAll(":", "")
+                                                    .replaceAll(" ", "")
                                               };
                                             } else {
                                               materialsDataEkle = {
@@ -314,6 +320,12 @@ class _AddMaterialsPageState extends State<AddMaterialsPage> {
                                                     bosListe),
                                                 "Resim":
                                                     "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjAKOCHPsSDZgL9HCwZqzRJRyAuU0jdrgJoKRbz7KSo-cXmQO02oiXrju2_QKSz8iKjY6kqcMcioQpdk_RSBagS1mD2abF4HSJrUI_lOye1CDIq56wX8RL415_KUuo2A3cYgYAXFxoKml5co8KcCg7YezMVqkqkGJmdSrjbJu_3HTUMVcqb_hvZ1MbX4Q/s1600/indir.png",
+                                                "ID": DateFormat(
+                                                        'dd-MM-yyyy HH:mm:ss:SSSSSSS')
+                                                    .format(DateTime.now())
+                                                    .replaceAll("-", "")
+                                                    .replaceAll(":", "")
+                                                    .replaceAll(" ", "")
                                               };
                                             }
                                             await materialsRef

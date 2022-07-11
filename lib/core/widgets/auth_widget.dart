@@ -16,6 +16,7 @@ class AuthWidget extends StatelessWidget {
           ? HomePage(
               Qr: '',
               currentIndexs: 0,
+              ID: '',
             )
           : const SignInPage();
     }

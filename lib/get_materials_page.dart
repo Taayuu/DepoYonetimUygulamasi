@@ -19,9 +19,11 @@ class GetMaterials extends StatefulWidget {
       required this.Qr,
       required this.teslimal,
       required this.teslimet,
-      required this.gerigel})
+      required this.gerigel,
+      required this.ID})
       : super(key: key);
   final String Qr;
+  final String ID;
   final bool teslimal;
   final bool teslimet;
   final bool gerigel;
@@ -68,6 +70,7 @@ class _GetMaterialsState extends State<GetMaterials> {
     Query qmaterials = FirebaseFirestore.instance
         .collection("Materials")
         .where("Qr Kod", isEqualTo: widget.Qr);
+
     final depRef = FirebaseFirestore.instance
         .collection("Deposit")
         .doc(Auth.currentUser!.email)
@@ -352,9 +355,7 @@ Stok: ${malzemeler![index]["Stok"]}''',
                                                     .doc(
                                                         Auth.currentUser!.email)
                                                     .collection("Ürün")
-                                                    .doc(docdf["ID"] +
-                                                        Auth.currentUser!.email)
-                                                    .set({
+                                                    .add({
                                                   "Emanet": {
                                                     "${malzemeler?[0]["Malzeme Adı"]}":
                                                         [
@@ -375,7 +376,10 @@ Stok: ${malzemeler![index]["Stok"]}''',
                                                   "durum": 1,
                                                   "Eksik": 0,
                                                   "İlk Alınan": int.parse(
-                                                      adetController.text)
+                                                      adetController.text),
+                                                  "ID": malzemeler?[0]["ID"],
+                                                  "Qr Kod": malzemeler?[0]
+                                                      ["Qr Kod"],
                                                 });
                                               });
                                             }
@@ -401,10 +405,12 @@ Stok: ${malzemeler![index]["Stok"]}''',
                                               MaterialPageRoute(
                                                   builder: (context) =>
                                                       const GetMaterials(
-                                                          Qr: "",
-                                                          teslimal: false,
-                                                          teslimet: false,
-                                                          gerigel: true)));
+                                                        Qr: "",
+                                                        teslimal: false,
+                                                        teslimet: false,
+                                                        gerigel: true,
+                                                        ID: '',
+                                                      )));
                                         } else {
                                           Fluttertoast.showToast(
                                               msg:
@@ -497,14 +503,16 @@ Stok: ${malzemeler![index]["Stok"]}''',
                                     .collection("Users")
                                     .doc(Auth.currentUser!.email)
                                     .collection("Ürün")
-                                    .doc(
-                                        "${docde["ID"]}${Auth.currentUser!.email}")
+                                    .where("ID", isEqualTo: widget.ID)
+                                    .where("Id",
+                                        isEqualTo: Auth.currentUser?.uid)
+                                    .where("durum", isEqualTo: 1)
                                     .get()
                                     .then((value) async {
                                   if (int.parse(adetController.text) != 0 &&
                                       int.parse(adetController.text) > 0 &&
                                       int.parse(adetController.text) <=
-                                          int.parse(value[
+                                          int.parse(value.docs[0][
                                                   "Emanet.${malzemeler?[0]['Malzeme Adı']}"]
                                               .toString()
                                               .replaceAll('[', '')
@@ -540,8 +548,8 @@ Stok: ${malzemeler![index]["Stok"]}''',
                                       }
                                     });
 
-                                    if (value["Eksik"] == 0) {
-                                      if (int.parse(value[
+                                    if (value.docs[0]["Eksik"] == 0) {
+                                      if (int.parse(value.docs[0][
                                                       "Emanet.${malzemeler?[0]['Malzeme Adı']}"]
                                                   .toString()
                                                   .replaceAll('[', '')
@@ -565,44 +573,80 @@ Stok: ${malzemeler![index]["Stok"]}''',
                                                   .collection("Users")
                                                   .doc(Auth.currentUser!.email)
                                                   .collection("Ürün")
-                                                  .doc(docd["ID"] +
-                                                      Auth.currentUser!.email)
-                                                  .update({
-                                                "Id": Auth.currentUser!.uid,
-                                                "Teslim Tarihi": DateFormat(
-                                                        'yyyy-MM-dd HH:mm:ss')
-                                                    .format(DateTime.now()),
-                                                "Emanet Alan": "$kAdi",
-                                                "Eksik": int.parse(value[
-                                                            "Emanet.${malzemeler?[0]['Malzeme Adı']}"]
-                                                        .toString()
-                                                        .replaceAll('[', '')
-                                                        .replaceAll(']', '')) -
-                                                    int.parse(
-                                                        adetController.text),
-                                                "durum": 1,
+                                                  .where("ID",
+                                                      isEqualTo: widget.ID)
+                                                  .where("durum", isEqualTo: 1)
+                                                  .where("Id",
+                                                      isEqualTo:
+                                                          Auth.currentUser?.uid)
+                                                  .get()
+                                                  .then((QuerySnapshot
+                                                      deyta) async {
+                                                for (var dave in deyta.docs) {
+                                                  await FirebaseFirestore
+                                                      .instance
+                                                      .collection("Users")
+                                                      .doc(Auth
+                                                          .currentUser!.email)
+                                                      .collection("Ürün")
+                                                      .doc(dave.id)
+                                                      .update({
+                                                    "Id": Auth.currentUser!.uid,
+                                                    "Teslim Tarihi": DateFormat(
+                                                            'yyyy-MM-dd HH:mm:ss')
+                                                        .format(DateTime.now()),
+                                                    "Emanet Alan": "$kAdi",
+                                                    "Eksik": int.parse(value
+                                                            .docs[0][
+                                                                "Emanet.${malzemeler?[0]['Malzeme Adı']}"]
+                                                            .toString()
+                                                            .replaceAll('[', '')
+                                                            .replaceAll(
+                                                                ']', '')) -
+                                                        int.parse(adetController
+                                                            .text),
+                                                    "durum": 1,
+                                                  });
+                                                }
                                               });
                                               await FirebaseFirestore.instance
                                                   .collection("Users")
                                                   .doc(Auth.currentUser!.email)
                                                   .collection("Ürün")
-                                                  .doc(
-                                                      "${docd["ID"]}${Auth.currentUser!.email}")
+                                                  .where("ID",
+                                                      isEqualTo: widget.ID)
+                                                  .where("durum", isEqualTo: 1)
+                                                  .where("Id",
+                                                      isEqualTo:
+                                                          Auth.currentUser?.uid)
                                                   .get()
-                                                  .then((gelen) async {
-                                                await FirebaseFirestore.instance
-                                                    .collection("Users")
-                                                    .doc(
-                                                        Auth.currentUser!.email)
-                                                    .collection("Ürün")
-                                                    .doc(docd["ID"] +
-                                                        Auth.currentUser!.email)
-                                                    .update({
-                                                  "Emanet": {
-                                                    "${malzemeler?[0]["Malzeme Adı"]}":
-                                                        [gelen["Eksik"]],
-                                                  },
-                                                });
+                                                  .then((QuerySnapshot
+                                                      deyta) async {
+                                                for (var dave in deyta.docs) {
+                                                  await FirebaseFirestore
+                                                      .instance
+                                                      .collection("Users")
+                                                      .doc(Auth
+                                                          .currentUser!.email)
+                                                      .collection("Ürün")
+                                                      .doc(dave.id)
+                                                      .get()
+                                                      .then((gelen) async {
+                                                    await FirebaseFirestore
+                                                        .instance
+                                                        .collection("Users")
+                                                        .doc(Auth
+                                                            .currentUser!.email)
+                                                        .collection("Ürün")
+                                                        .doc(dave.id)
+                                                        .update({
+                                                      "Emanet": {
+                                                        "${malzemeler?[0]["Malzeme Adı"]}":
+                                                            [gelen["Eksik"]],
+                                                      },
+                                                    });
+                                                  });
+                                                }
                                               });
                                             });
                                           }
@@ -625,59 +669,86 @@ Stok: ${malzemeler![index]["Stok"]}''',
                                                   .collection("Users")
                                                   .doc(Auth.currentUser!.email)
                                                   .collection("Ürün")
-                                                  .doc(docd["ID"] +
-                                                      Auth.currentUser!.email)
-                                                  .update({
-                                                "Id": Auth.currentUser!.uid,
-                                                "Teslim Tarihi": DateFormat(
-                                                        'yyyy-MM-dd HH:mm:ss')
-                                                    .format(DateTime.now()),
-                                                "Emanet Alan": "$kAdi",
-                                                "Eksik": int.parse(value[
-                                                            "Emanet.${malzemeler?[0]['Malzeme Adı']}"]
-                                                        .toString()
-                                                        .replaceAll('[', '')
-                                                        .replaceAll(']', '')) -
-                                                    int.parse(
-                                                        adetController.text),
-                                                "durum": 0,
-                                              });
-
-                                              await FirebaseFirestore.instance
-                                                  .collection('Users')
-                                                  .doc(Auth.currentUser!.email)
-                                                  .update({
-                                                "Emanetler":
-                                                    FieldValue.arrayRemove([
-                                                  malzemeler?[0]["Malzeme Adı"]
-                                                ])
-                                              });
-                                              await FirebaseFirestore.instance
-                                                  .collection("Materials")
-                                                  .where("Qr Kod",
-                                                      isEqualTo: widget.Qr)
+                                                  .where("ID",
+                                                      isEqualTo: widget.ID)
+                                                  .where("durum", isEqualTo: 1)
+                                                  .where("Id",
+                                                      isEqualTo:
+                                                          Auth.currentUser?.uid)
                                                   .get()
                                                   .then((QuerySnapshot
-                                                      qMaterials) async {
-                                                for (var docdd
-                                                    in qMaterials.docs) {
+                                                      deyta) async {
+                                                for (var dave in deyta.docs) {
                                                   await FirebaseFirestore
                                                       .instance
-                                                      .collection('Materials')
-                                                      .doc(docdd.id)
+                                                      .collection("Users")
+                                                      .doc(Auth
+                                                          .currentUser!.email)
+                                                      .collection("Ürün")
+                                                      .doc(dave.id)
                                                       .update({
-                                                    "Konum":
-                                                        FieldValue.arrayRemove(
-                                                            [kAdi])
+                                                    "Id": Auth.currentUser!.uid,
+                                                    "Teslim Tarihi": DateFormat(
+                                                            'yyyy-MM-dd HH:mm:ss')
+                                                        .format(DateTime.now()),
+                                                    "Emanet Alan": "$kAdi",
+                                                    "Eksik": int.parse(value
+                                                            .docs[0][
+                                                                "Emanet.${malzemeler?[0]['Malzeme Adı']}"]
+                                                            .toString()
+                                                            .replaceAll('[', '')
+                                                            .replaceAll(
+                                                                ']', '')) -
+                                                        int.parse(adetController
+                                                            .text),
+                                                    "durum": 0,
+                                                    "Emanet": {
+                                                      "${malzemeler?[0]["Malzeme Adı"]}":
+                                                          [
+                                                        value.docs[0]
+                                                            ["İlk Alınan"]
+                                                      ],
+                                                    },
                                                   });
                                                 }
+
+                                                await FirebaseFirestore.instance
+                                                    .collection('Users')
+                                                    .doc(
+                                                        Auth.currentUser!.email)
+                                                    .update({
+                                                  "Emanetler":
+                                                      FieldValue.arrayRemove([
+                                                    malzemeler?[0]
+                                                        ["Malzeme Adı"]
+                                                  ])
+                                                });
+                                                await FirebaseFirestore.instance
+                                                    .collection("Materials")
+                                                    .where("Qr Kod",
+                                                        isEqualTo: widget.Qr)
+                                                    .get()
+                                                    .then((QuerySnapshot
+                                                        qMaterials) async {
+                                                  for (var docdd
+                                                      in qMaterials.docs) {
+                                                    await FirebaseFirestore
+                                                        .instance
+                                                        .collection('Materials')
+                                                        .doc(docdd.id)
+                                                        .update({
+                                                      "Konum": FieldValue
+                                                          .arrayRemove([kAdi])
+                                                    });
+                                                  }
+                                                });
                                               });
                                             });
                                           }
                                         });
                                       }
                                     } else {
-                                      if (value["Eksik"] -
+                                      if (value.docs[0]["Eksik"] -
                                               int.parse(adetController.text) >
                                           0) {
                                         await FirebaseFirestore.instance
@@ -685,23 +756,6 @@ Stok: ${malzemeler![index]["Stok"]}''',
                                             .doc(Auth.currentUser!.email)
                                             .get()
                                             .then((gelenVeri) async {
-                                          await FirebaseFirestore.instance
-                                              .collection("Users")
-                                              .doc(Auth.currentUser!.email)
-                                              .collection("Ürün")
-                                              .doc(malzemeler?[0]
-                                                      ["Malzeme Adı"] +
-                                                  Auth.currentUser!.email)
-                                              .update({
-                                            "Id": Auth.currentUser!.uid,
-                                            "Teslim Tarihi": DateFormat(
-                                                    'yyyy-MM-dd HH:mm:ss')
-                                                .format(DateTime.now()),
-                                            "Emanet Alan": "$kAdi",
-                                            "Eksik": value["Eksik"] -
-                                                int.parse(adetController.text),
-                                            "durum": 1,
-                                          });
                                           await FirebaseFirestore.instance
                                               .collection("Materials")
                                               .where("Qr Kod",
@@ -714,23 +768,76 @@ Stok: ${malzemeler![index]["Stok"]}''',
                                                   .collection("Users")
                                                   .doc(Auth.currentUser!.email)
                                                   .collection("Ürün")
-                                                  .doc(
-                                                      "${docd["ID"]}${Auth.currentUser!.email}")
+                                                  .where("ID",
+                                                      isEqualTo: widget.ID)
+                                                  .where("durum", isEqualTo: 1)
+                                                  .where("Id",
+                                                      isEqualTo:
+                                                          Auth.currentUser?.uid)
                                                   .get()
-                                                  .then((gelen) async {
-                                                await FirebaseFirestore.instance
-                                                    .collection("Users")
-                                                    .doc(
-                                                        Auth.currentUser!.email)
-                                                    .collection("Ürün")
-                                                    .doc(docd["ID"] +
-                                                        Auth.currentUser!.email)
-                                                    .update({
-                                                  "Emanet": {
-                                                    "${malzemeler?[0]["Malzeme Adı"]}":
-                                                        [gelen["Eksik"]],
-                                                  },
-                                                });
+                                                  .then((QuerySnapshot
+                                                      deyta) async {
+                                                for (var dave in deyta.docs) {
+                                                  await FirebaseFirestore
+                                                      .instance
+                                                      .collection("Users")
+                                                      .doc(Auth
+                                                          .currentUser!.email)
+                                                      .collection("Ürün")
+                                                      .doc(dave.id)
+                                                      .update({
+                                                    "Id": Auth.currentUser!.uid,
+                                                    "Teslim Tarihi": DateFormat(
+                                                            'yyyy-MM-dd HH:mm:ss')
+                                                        .format(DateTime.now()),
+                                                    "Emanet Alan": "$kAdi",
+                                                    "Eksik": value.docs[0]
+                                                            ["Eksik"] -
+                                                        int.parse(adetController
+                                                            .text),
+                                                    "durum": 1,
+                                                  });
+                                                }
+                                              });
+                                            }
+                                          });
+
+                                          await FirebaseFirestore.instance
+                                              .collection("Materials")
+                                              .where("Qr Kod",
+                                                  isEqualTo: widget.Qr)
+                                              .get()
+                                              .then((QuerySnapshot
+                                                  qMaterials) async {
+                                            for (var docd in qMaterials.docs) {
+                                              await FirebaseFirestore.instance
+                                                  .collection("Users")
+                                                  .doc(Auth.currentUser!.email)
+                                                  .collection("Ürün")
+                                                  .where("ID",
+                                                      isEqualTo: widget.ID)
+                                                  .where("durum", isEqualTo: 1)
+                                                  .where("Id",
+                                                      isEqualTo:
+                                                          Auth.currentUser?.uid)
+                                                  .get()
+                                                  .then((QuerySnapshot
+                                                      deyta) async {
+                                                for (var dave in deyta.docs) {
+                                                  await FirebaseFirestore
+                                                      .instance
+                                                      .collection("Users")
+                                                      .doc(Auth
+                                                          .currentUser!.email)
+                                                      .collection("Ürün")
+                                                      .doc(dave.id)
+                                                      .update({
+                                                    "Emanet": {
+                                                      "${malzemeler?[0]["Malzeme Adı"]}":
+                                                          [dave["Eksik"]],
+                                                    },
+                                                  });
+                                                }
                                               });
                                             }
                                           });
@@ -753,18 +860,43 @@ Stok: ${malzemeler![index]["Stok"]}''',
                                                   .collection("Users")
                                                   .doc(Auth.currentUser!.email)
                                                   .collection("Ürün")
-                                                  .doc(docd["ID"] +
-                                                      Auth.currentUser!.email)
-                                                  .update({
-                                                "Id": Auth.currentUser!.uid,
-                                                "Teslim Tarihi": DateFormat(
-                                                        'yyyy-MM-dd HH:mm:ss')
-                                                    .format(DateTime.now()),
-                                                "Emanet Alan": "$kAdi",
-                                                "Eksik": value["Eksik"] -
-                                                    int.parse(
-                                                        adetController.text),
-                                                "durum": 0,
+                                                  .where("ID",
+                                                      isEqualTo: widget.ID)
+                                                  .where("Id",
+                                                      isEqualTo:
+                                                          Auth.currentUser?.uid)
+                                                  .where("durum", isEqualTo: 1)
+                                                  .get()
+                                                  .then((QuerySnapshot
+                                                      deyta) async {
+                                                for (var dave in deyta.docs) {
+                                                  await FirebaseFirestore
+                                                      .instance
+                                                      .collection("Users")
+                                                      .doc(Auth
+                                                          .currentUser!.email)
+                                                      .collection("Ürün")
+                                                      .doc(dave.id)
+                                                      .update({
+                                                    "Id": Auth.currentUser!.uid,
+                                                    "Teslim Tarihi": DateFormat(
+                                                            'yyyy-MM-dd HH:mm:ss')
+                                                        .format(DateTime.now()),
+                                                    "Emanet Alan": "$kAdi",
+                                                    "Eksik": value.docs[0]
+                                                            ["Eksik"] -
+                                                        int.parse(adetController
+                                                            .text),
+                                                    "durum": 0,
+                                                    "Emanet": {
+                                                      "${malzemeler?[0]["Malzeme Adı"]}":
+                                                          [
+                                                        value.docs[0]
+                                                            ["İlk Alınan"]
+                                                      ],
+                                                    },
+                                                  });
+                                                }
                                               });
 
                                               await FirebaseFirestore.instance
@@ -810,10 +942,12 @@ Stok: ${malzemeler![index]["Stok"]}''',
                                         MaterialPageRoute(
                                             builder: (context) =>
                                                 const GetMaterials(
-                                                    Qr: "",
-                                                    teslimal: false,
-                                                    teslimet: false,
-                                                    gerigel: true)));
+                                                  Qr: "",
+                                                  teslimal: false,
+                                                  teslimet: false,
+                                                  gerigel: true,
+                                                  ID: '',
+                                                )));
                                     Fluttertoast.showToast(
                                         msg: "Malzeme Başarıyla Teslim Edildi.",
                                         gravity: ToastGravity.CENTER,
@@ -860,6 +994,7 @@ Stok: ${malzemeler![index]["Stok"]}''',
                                 builder: (context) => HomePage(
                                       currentIndexs: 1,
                                       Qr: "",
+                                      ID: '',
                                     )));
                       }),
                 ),
@@ -870,7 +1005,7 @@ Stok: ${malzemeler![index]["Stok"]}''',
                 child: const Icon(Icons.add, size: 35),
                 backgroundColor: const Color(0xffd41217),
                 onPressed: () async {
-                  /* await FirebaseFirestore.instance
+                   await FirebaseFirestore.instance
                       .collection("Users")
                       .doc(Auth.currentUser!.email)
                       .collection("Ürün")
@@ -882,7 +1017,7 @@ Stok: ${malzemeler![index]["Stok"]}''',
                             "${int.parse(value["Emanet.Çadır"].toString().replaceAll('[', '').replaceAll(']', ''))}",
                         gravity: ToastGravity.CENTER,
                         fontSize: 20);
-                  });*/
+                  });
                   SendTeslimEmail();
                 }),*/
           ],

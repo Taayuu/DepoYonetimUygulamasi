@@ -43,6 +43,7 @@ class _CreateQrState extends State<CreateQr> {
                         MaterialPageRoute(
                             builder: (context) => HomePage(
                                   Qr: '',
+                                  ID: '',
                                 )));
                   })
             ],
