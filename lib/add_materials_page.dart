@@ -3,6 +3,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -20,13 +21,15 @@ class AddMaterialsPage extends StatefulWidget {
       required this.malzemeRafi,
       required this.malzemeEkleGuncelleButtonText,
       required this.malzemeStok,
-      required this.malzemeImage})
+      required this.malzemeImage,
+      required this.ID})
       : super(key: key);
   final String Qr;
   final String malzemeAdi;
   final String malzemeSinifi;
   final String malzemeRafi;
   final String malzemeImage;
+  final String ID;
   final int malzemeStok;
   final String malzemeEkleGuncelleButtonText;
   @override
@@ -62,6 +65,7 @@ class _AddMaterialsPageState extends State<AddMaterialsPage> {
   var maskFormatter = MaskTextInputFormatter(
       mask: '####-####', filter: {"#": RegExp(r'[0-9]')});
   // -> "12-34-56-78"
+  FirebaseAuth Auth = FirebaseAuth.instance;
   @override
   Widget build(BuildContext context) {
     List keyword = [];
@@ -445,6 +449,7 @@ class _AddMaterialsPageState extends State<AddMaterialsPage> {
                                         .replaceAll(" ", "")
                                   };
                                 }
+
                                 await FirebaseFirestore.instance
                                     .collection("Materials")
                                     .where("Qr Kod", isEqualTo: widget.Qr)

@@ -505,15 +505,14 @@ Stok: ${malzemeler![index]["Stok"]}''',
                                     .collection("Ürün")
                                     .where("ID", isEqualTo: widget.ID)
                                     .where("Id",
-                                        isEqualTo: Auth.currentUser?.uid)
+                                        isEqualTo: Auth.currentUser!.uid)
                                     .where("durum", isEqualTo: 1)
                                     .get()
                                     .then((value) async {
                                   if (int.parse(adetController.text) != 0 &&
                                       int.parse(adetController.text) > 0 &&
                                       int.parse(adetController.text) <=
-                                          int.parse(value.docs[0][
-                                                  "Emanet.${malzemeler?[0]['Malzeme Adı']}"]
+                                          int.parse(value.docs[0]["Emanet"]
                                               .toString()
                                               .replaceAll('[', '')
                                               .replaceAll(']', ''))) {
@@ -1005,20 +1004,12 @@ Stok: ${malzemeler![index]["Stok"]}''',
                 child: const Icon(Icons.add, size: 35),
                 backgroundColor: const Color(0xffd41217),
                 onPressed: () async {
-                   await FirebaseFirestore.instance
+                  await FirebaseFirestore.instance
                       .collection("Users")
                       .doc(Auth.currentUser!.email)
                       .collection("Ürün")
-                      .doc("Çadır${Auth.currentUser!.email}")
-                      .get()
-                      .then((value) async {
-                    Fluttertoast.showToast(
-                        msg:
-                            "${int.parse(value["Emanet.Çadır"].toString().replaceAll('[', '').replaceAll(']', ''))}",
-                        gravity: ToastGravity.CENTER,
-                        fontSize: 20);
-                  });
-                  SendTeslimEmail();
+                      .doc("0PsFwPPZDgoOz04oTOeF")
+                      .delete();
                 }),*/
           ],
         ),

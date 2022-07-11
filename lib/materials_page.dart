@@ -31,6 +31,7 @@ class _MaterialsPageState extends State<MaterialsPage> {
     var malzemeRafi;
     var malzemeStok;
     var malzemeImage;
+    var ID;
 
     String filterWord = "";
     CollectionReference materialsRef = _firestore.collection('Materials');
@@ -59,6 +60,7 @@ class _MaterialsPageState extends State<MaterialsPage> {
                               malzemeEkleGuncelleButtonText: 'Ekle',
                               malzemeStok: 0,
                               malzemeImage: '',
+                              ID: '',
                             )));
               },
               icon: const Icon(
@@ -123,6 +125,7 @@ class _MaterialsPageState extends State<MaterialsPage> {
                                     malzemeQr = gelenVeri["Qr Kod"];
                                     malzemeStok = gelenVeri["Stok"];
                                     malzemeImage = gelenVeri["Resim"];
+                                    ID = gelenVeri["ID"];
                                   });
                                 });
                               }
@@ -162,6 +165,7 @@ class _MaterialsPageState extends State<MaterialsPage> {
                                                                 malzemeStok,
                                                             malzemeImage:
                                                                 malzemeImage,
+                                                            ID: '',
                                                           )));
                                             }),
                                         SlidableAction(

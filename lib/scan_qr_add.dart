@@ -134,6 +134,7 @@ class _ScanQrAddState extends State<ScanQrAdd> {
                                 malzemeEkleGuncelleButtonText: 'Ekle',
                                 malzemeStok: 0,
                                 malzemeImage: '',
+                                ID: '',
                               )));
                 }
               })
