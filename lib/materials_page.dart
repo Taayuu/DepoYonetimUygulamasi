@@ -33,7 +33,6 @@ class _MaterialsPageState extends State<MaterialsPage> {
     var malzemeImage;
     var ID;
 
-    String filterWord = "";
     CollectionReference materialsRef = _firestore.collection('Materials');
     return Scaffold(
       backgroundColor: const Color(0xffFFEBC1),
@@ -165,7 +164,7 @@ class _MaterialsPageState extends State<MaterialsPage> {
                                                                 malzemeStok,
                                                             malzemeImage:
                                                                 malzemeImage,
-                                                            ID: '',
+                                                            ID: ID,
                                                           )));
                                             }),
                                         SlidableAction(
