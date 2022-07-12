@@ -411,106 +411,119 @@ class _AddMaterialsPageState extends State<AddMaterialsPage> {
                                 });
                               } else if (widget.malzemeEkleGuncelleButtonText ==
                                   "Güncelle") {
-                                if (materialImageController.text != "") {
-                                  materialsDataGuncelle = {
-                                    "Malzeme Adı": materialNameController.text,
-                                    "Malzeme Sınıfı":
-                                        materialClassController.text,
-                                    "Malzeme Rafı":
-                                        materialDepartmentController.text,
-                                    "Qr Kod": materialQrController.text,
-                                    "Stok":
-                                        int.parse(materialStockController.text),
-                                    "Resim": materialImageController.text,
-                                    "ID": DateFormat(
-                                            'dd-MM-yyyy HH:mm:ss:SSSSSSS')
-                                        .format(DateTime.now())
-                                        .replaceAll("-", "")
-                                        .replaceAll(":", "")
-                                        .replaceAll(" ", "")
-                                  };
-                                } else {
-                                  materialsDataGuncelle = {
-                                    "Malzeme Adı": materialNameController.text,
-                                    "Malzeme Sınıfı":
-                                        materialClassController.text,
-                                    "Malzeme Rafı":
-                                        materialDepartmentController.text,
-                                    "Qr Kod": materialQrController.text,
-                                    "Stok":
-                                        int.parse(materialStockController.text),
-                                    "Resim":
-                                        "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjAKOCHPsSDZgL9HCwZqzRJRyAuU0jdrgJoKRbz7KSo-cXmQO02oiXrju2_QKSz8iKjY6kqcMcioQpdk_RSBagS1mD2abF4HSJrUI_lOye1CDIq56wX8RL415_KUuo2A3cYgYAXFxoKml5co8KcCg7YezMVqkqkGJmdSrjbJu_3HTUMVcqb_hvZ1MbX4Q/s1600/indir.png",
-                                    "ID": DateFormat(
-                                            'dd-MM-yyyy HH:mm:ss:SSSSSSS')
-                                        .format(DateTime.now())
-                                        .replaceAll("-", "")
-                                        .replaceAll(":", "")
-                                        .replaceAll(" ", "")
-                                  };
-                                }
-
                                 await FirebaseFirestore.instance
-                                    .collection("Materials")
-                                    .where("Qr Kod", isEqualTo: widget.Qr)
+                                    .collection("Users")
+                                    .doc(Auth.currentUser!.email)
+                                    .collection("Ürün")
+                                    .where("ID", isEqualTo: widget.ID)
+                                    .where("durum", isEqualTo: 1)
                                     .get()
-                                    .then((QuerySnapshot qMaterials) async {
-                                  for (var doc in qMaterials.docs) {
-                                    materialsRef
-                                        .doc(doc.id)
-                                        .update(materialsDataGuncelle);
-                                    try {
-                                      for (var i = 1;
-                                          i <
-                                              materialNameController
-                                                      .text.length +
-                                                  1;
-                                          i++) {
-                                        keyword.add(
-                                          materialNameController.text
-                                              .toString()
-                                              .substring(0, i),
-                                        );
-                                      }
-                                      await FirebaseFirestore.instance
-                                          .collection("Materials")
-                                          .where("Qr Kod", isEqualTo: widget.Qr)
-                                          .get()
-                                          .then(
-                                              (QuerySnapshot qMaterials) async {
-                                        for (var docd in qMaterials.docs) {
-                                          materialsRef.doc(docd.id).update(
-                                              {"keyword": FieldValue.delete()});
-                                        }
-                                      });
-                                      await FirebaseFirestore.instance
-                                          .collection("Materials")
-                                          .where("Qr Kod", isEqualTo: widget.Qr)
-                                          .get()
-                                          .then(
-                                              (QuerySnapshot qMaterials) async {
-                                        for (var docd in qMaterials.docs) {
-                                          materialsRef.doc(docd.id).update({
-                                            "keyword":
-                                                FieldValue.arrayUnion(keyword)
+                                    .then((veriD) async {
+                                  if (veriD.docs.isEmpty) {
+                                    if (materialImageController.text != "") {
+                                      materialsDataGuncelle = {
+                                        "Malzeme Adı":
+                                            materialNameController.text,
+                                        "Malzeme Sınıfı":
+                                            materialClassController.text,
+                                        "Malzeme Rafı":
+                                            materialDepartmentController.text,
+                                        "Qr Kod": materialQrController.text,
+                                        "Stok": int.parse(
+                                            materialStockController.text),
+                                        "Resim": materialImageController.text,
+                                      };
+                                    } else {
+                                      materialsDataGuncelle = {
+                                        "Malzeme Adı":
+                                            materialNameController.text,
+                                        "Malzeme Sınıfı":
+                                            materialClassController.text,
+                                        "Malzeme Rafı":
+                                            materialDepartmentController.text,
+                                        "Qr Kod": materialQrController.text,
+                                        "Stok": int.parse(
+                                            materialStockController.text),
+                                        "Resim":
+                                            "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjAKOCHPsSDZgL9HCwZqzRJRyAuU0jdrgJoKRbz7KSo-cXmQO02oiXrju2_QKSz8iKjY6kqcMcioQpdk_RSBagS1mD2abF4HSJrUI_lOye1CDIq56wX8RL415_KUuo2A3cYgYAXFxoKml5co8KcCg7YezMVqkqkGJmdSrjbJu_3HTUMVcqb_hvZ1MbX4Q/s1600/indir.png",
+                                      };
+                                    }
+
+                                    await FirebaseFirestore.instance
+                                        .collection("Materials")
+                                        .where("Qr Kod", isEqualTo: widget.Qr)
+                                        .get()
+                                        .then((QuerySnapshot qMaterials) async {
+                                      for (var doc in qMaterials.docs) {
+                                        materialsRef
+                                            .doc(doc.id)
+                                            .update(materialsDataGuncelle);
+                                        try {
+                                          for (var i = 1;
+                                              i <
+                                                  materialNameController
+                                                          .text.length +
+                                                      1;
+                                              i++) {
+                                            keyword.add(
+                                              materialNameController.text
+                                                  .toString()
+                                                  .substring(0, i),
+                                            );
+                                          }
+                                          await FirebaseFirestore.instance
+                                              .collection("Materials")
+                                              .where("Qr Kod",
+                                                  isEqualTo: widget.Qr)
+                                              .get()
+                                              .then((QuerySnapshot
+                                                  qMaterials) async {
+                                            for (var docd in qMaterials.docs) {
+                                              materialsRef.doc(docd.id).update({
+                                                "keyword": FieldValue.delete()
+                                              });
+                                            }
                                           });
-                                          keyword.clear();
-                                          materialNameController.clear();
-                                          materialClassController.clear();
-                                          materialDepartmentController.clear();
-                                          materialQrController.clear();
-                                          materialStockController.clear();
-                                          materialImageController.clear();
-                                        }
-                                      });
-                                    } catch (e) {}
+                                          await FirebaseFirestore.instance
+                                              .collection("Materials")
+                                              .where("Qr Kod",
+                                                  isEqualTo: widget.Qr)
+                                              .get()
+                                              .then((QuerySnapshot
+                                                  qMaterials) async {
+                                            for (var docd in qMaterials.docs) {
+                                              materialsRef.doc(docd.id).update({
+                                                "keyword":
+                                                    FieldValue.arrayUnion(
+                                                        keyword)
+                                              });
+                                              keyword.clear();
+                                              materialNameController.clear();
+                                              materialClassController.clear();
+                                              materialDepartmentController
+                                                  .clear();
+                                              materialQrController.clear();
+                                              materialStockController.clear();
+                                              materialImageController.clear();
+                                            }
+                                          });
+                                        } catch (e) {}
+                                      }
+                                    });
+                                    FocusManager.instance.primaryFocus
+                                        ?.unfocus();
+                                    Fluttertoast.showToast(
+                                        msg: "Malzeme Başarıyla Güncellendi",
+                                        gravity: ToastGravity.CENTER,
+                                        fontSize: 20);
+                                  } else {
+                                    Fluttertoast.showToast(
+                                        msg:
+                                            "Ürün emanette iken değiştirilemez.",
+                                        gravity: ToastGravity.CENTER,
+                                        fontSize: 20);
                                   }
                                 });
-                                FocusManager.instance.primaryFocus?.unfocus();
-                                Fluttertoast.showToast(
-                                    msg: "Malzeme Başarıyla Güncellendi",
-                                    gravity: ToastGravity.CENTER,
-                                    fontSize: 20);
                               }
                             } else {
                               Fluttertoast.showToast(

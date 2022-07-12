@@ -63,6 +63,8 @@ class _ProfilePageState extends State<ProfilePage> {
     var malzemeTeslimTarihi1;
     var eksik1;
     var durum1;
+    List mgenel0 = [];
+    List mgenel1 = [];
 
     final depRef = FirebaseFirestore.instance
         .collection("Users")
@@ -78,11 +80,11 @@ class _ProfilePageState extends State<ProfilePage> {
             .where("durum", isEqualTo: 0)
             .get()
             .then((value) {
-          List mgenel0 = [];
           List madi0 = [];
           List mAlmaTarihi0 = [];
           List mTeslimTarihi0 = [];
           List mEksik0 = [];
+          mgenel0.clear();
           for (var element in value.docs) {
             madi0.add(element
                 .data()["Emanet"]
@@ -107,7 +109,6 @@ ${'''Emanet Alma Sebebi: ${value.docs[0]["Emanet Alma Sebebi"]}'''}
 ${'''Emanet Alma Tarihi: ${element.data()["Emanet Alma Tarihi"]}'''}
 ${'''Emanet Teslim Tarihi: ${element.data()["Teslim Tarihi"]}'''}
 ${'''Eksik Teslim: ${element.data()["Eksik"]}'''}
------------------------------------------------------------------------------------
 ''');
             genel0 = mgenel0.toList();
           }
@@ -119,10 +120,10 @@ ${'''Eksik Teslim: ${element.data()["Eksik"]}'''}
             .where("durum", isEqualTo: 1)
             .get()
             .then((value1) {
-          List mgenel1 = [];
           List madi1 = [];
           List mAlmaTarihi1 = [];
           List mTeslimTarihi1 = [];
+          mgenel1.clear();
           for (var element in value1.docs) {
             madi1.add(element
                 .data()["Emanet"]
@@ -144,7 +145,6 @@ ${'''Emanet Alınan Ürün: ${element.data()["Emanet"].toString().replaceAll('{'
 ${'''Emanet Alan Kişi: ${value1.docs[0]["Emanet Alan"]}'''}
 ${'''Emanet Alma Sebebi: ${value1.docs[0]["Emanet Alma Sebebi"]}'''}
 ${'''Emanet Alma Tarihi: ${element.data()["Emanet Alma Tarihi"]}'''}
------------------------------------------------------------------------------------
 ''');
             genel1 = mgenel1.toList();
           }
@@ -157,43 +157,57 @@ ${'''Emanet Alma Tarihi: ${element.data()["Emanet Alma Tarihi"]}'''}
       await yaziGetir();
       final xls.Workbook workbook = xls.Workbook();
       final xls.Worksheet rapor = workbook.worksheets[0];
+      rapor.name = "Emanet Raporu";
 
       /*------------------------------------------------*/
       final xls.Range rangebaslik0 = rapor.getRangeByName('A1');
       rangebaslik0.setText("TESLİM EDİLEN MAZLEMELER");
 
-      final xls.Range range = rapor.getRangeByName('A2');
-      range.setText('$genel0'
-          .toString()
-          .replaceAll(',', '')
-          .replaceAll('[', '')
-          .replaceAll(']', ''));
+      rangebaslik0.cellStyle.fontColor = "#eb3434";
+      rangebaslik0.cellStyle.fontSize = 17;
+      rangebaslik0.cellStyle.bold = true;
+
+      try {
+        if (mgenel0.length == 1) {
+          final xls.Range list =
+              rapor.getRangeByName('A2:A${mgenel0.length + 2}');
+          rapor.importList(mgenel0, 2, 1, true);
+          list.columnWidth = 60;
+          list.cellStyle.wrapText = true;
+        } else {
+          final xls.Range list =
+              rapor.getRangeByName('A2:A${mgenel0.length + 1}');
+          rapor.importList(mgenel0, 2, 1, true);
+          list.columnWidth = 60;
+          list.cellStyle.wrapText = true;
+        }
+      } catch (e) {}
 
       /*-------------------------*/
 
       final xls.Range rangebaslik1 = rapor.getRangeByName('B1');
       rangebaslik1.setText("TESLİM EDİLMEYEN MAZLEMELER");
 
-      final xls.Range range11 = rapor.getRangeByName('B2');
-      range11.setText('$genel1'
-          .toString()
-          .replaceAll(',', '')
-          .replaceAll('[', '')
-          .replaceAll(']', ''));
-
-      rangebaslik0.cellStyle.fontColor = "#eb3434";
-      rangebaslik0.cellStyle.fontSize = 17;
-      rangebaslik0.cellStyle.bold = true;
-      range.cellStyle.fontSize = 13;
-      range.cellStyle.wrapText = true;
-      range.columnWidth = 60;
-
       rangebaslik1.cellStyle.fontColor = "#eb3434";
       rangebaslik1.cellStyle.fontSize = 17;
       rangebaslik1.cellStyle.bold = true;
-      range11.cellStyle.fontSize = 13;
-      range11.cellStyle.wrapText = true;
-      range11.columnWidth = 60;
+
+      try {
+        if (mgenel1.length == 1) {
+          final xls.Range list1 =
+              rapor.getRangeByName('B2:B${mgenel1.length + 2}');
+          rapor.importList(mgenel1, 2, 2, true);
+          list1.columnWidth = 60;
+          list1.cellStyle.wrapText = true;
+        } else {
+          final xls.Range list1 =
+              rapor.getRangeByName('B2:B${mgenel1.length + 1}');
+          rapor.importList(mgenel1, 2, 2, true);
+          list1.columnWidth = 60;
+          list1.cellStyle.wrapText = true;
+        }
+      } catch (e) {}
+
       /*------------------------------------------------*/
 
       final List<int> bytes = workbook.saveAsStream();
@@ -240,24 +254,6 @@ ${'''Emanet Alma Tarihi: ${element.data()["Emanet Alma Tarihi"]}'''}
                 ),
               ),
             ),
-            /*Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(12),
-                child: Container(
-                    child: TextField(
-                  enabled: hasFocus,
-                  controller: eposta,
-                  decoration: InputDecoration(
-                    prefixIcon: Icon(Icons.email),
-                    fillColor: Colors.white,
-                    filled: true,
-                    hintText: "Eposta",
-                    border: InputBorder.none,
-                  ),
-                )),
-              ),
-            ),*/
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(8.0),

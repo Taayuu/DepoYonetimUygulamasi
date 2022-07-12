@@ -14,14 +14,14 @@ import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'home_page.dart';
 
 class GetMaterials extends StatefulWidget {
-  const GetMaterials(
-      {Key? key,
-      required this.Qr,
-      required this.teslimal,
-      required this.teslimet,
-      required this.gerigel,
-      required this.ID})
-      : super(key: key);
+  const GetMaterials({
+    Key? key,
+    required this.Qr,
+    required this.teslimal,
+    required this.teslimet,
+    required this.gerigel,
+    required this.ID,
+  }) : super(key: key);
   final String Qr;
   final String ID;
   final bool teslimal;
@@ -51,6 +51,7 @@ class _GetMaterialsState extends State<GetMaterials> {
     "Eğitim(SAK)",
     "Eğitim(KAK)"
   ];
+
   String? value;
   FirebaseAuth Auth = FirebaseAuth.instance;
   @override
@@ -70,12 +71,6 @@ class _GetMaterialsState extends State<GetMaterials> {
     Query qmaterials = FirebaseFirestore.instance
         .collection("Materials")
         .where("Qr Kod", isEqualTo: widget.Qr);
-
-    final depRef = FirebaseFirestore.instance
-        .collection("Deposit")
-        .doc(Auth.currentUser!.email)
-        .collection("Emanetlerim")
-        .doc(Auth.currentUser!.email);
 
     List<DocumentSnapshot>? malzemeler;
     return Scaffold(
@@ -512,7 +507,8 @@ Stok: ${malzemeler![index]["Stok"]}''',
                                   if (int.parse(adetController.text) != 0 &&
                                       int.parse(adetController.text) > 0 &&
                                       int.parse(adetController.text) <=
-                                          int.parse(value.docs[0]["Emanet"]
+                                          int.parse(value.docs[0][
+                                                  "Emanet.${malzemeler?[0]['Malzeme Adı']}"]
                                               .toString()
                                               .replaceAll('[', '')
                                               .replaceAll(']', ''))) {
@@ -934,6 +930,12 @@ Stok: ${malzemeler![index]["Stok"]}''',
                                       }
                                     }
 
+                                    malzemeMail = malzemeler?[0]["Malzeme Adı"]
+                                        .toString();
+                                    malzemeStokMail =
+                                        int.parse(adetController.text)
+                                            .toString();
+
                                     SendTeslimEmail();
 
                                     Navigator.push(
@@ -1089,7 +1091,7 @@ Future SendTeslimEmail() async {
     ]
     ..subject = 'Emanet Hareket Bildirisi'
     ..text =
-        '''$kAdi [$malzemeMail] malzemesinden  $malzemeSebepMail için [$malzemeStokMail] adet teslim etti. 
+        '''$kAdi [$malzemeMail] malzemesinden [$malzemeStokMail] adet teslim etti. 
         Tarih:${DateFormat('dd-MM-yyyy hh:mm:ss').format(DateTime.now())}''';
 
   try {
