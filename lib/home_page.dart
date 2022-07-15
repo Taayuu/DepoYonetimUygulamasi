@@ -3,6 +3,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:login/admin/materials_page_admin.dart';
 import 'package:provider/provider.dart';
 
 import 'core/service/i_auth_service.dart';
@@ -39,6 +40,9 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  var durum = 0;
+  List<Widget> pages = [];
+
   @override
   Widget build(BuildContext context) {
     final _authService = Provider.of<IAuthService>(context, listen: true);
@@ -57,25 +61,44 @@ class _HomePageState extends State<HomePage> {
         .doc(Auth.currentUser!.email)
         .snapshots()
         .listen((event) async {
+      durum = event.data()!["Durum"];
       if (event.data()!["Eposta"] == "" || event.data()!["Eposta"] == null) {
         await _authService.signOut();
       }
     });
 
-    List<Widget> pages = [
-      const FirstPage(),
-      GetMaterials(
-        Qr: widget.Qr,
-        teslimet: false,
-        gerigel: false,
-        teslimal: false,
-        ID: widget.ID,
-      ),
-      const MaterialsPage(),
-      const ProfilePage(
-        malzeme: '',
-      ),
-    ];
+    if (durum == 0) {
+      pages = [
+        const FirstPage(),
+        GetMaterials(
+          Qr: widget.Qr,
+          teslimet: false,
+          gerigel: false,
+          teslimal: false,
+          ID: widget.ID,
+        ),
+        const MaterialsPage(),
+        const ProfilePage(
+          malzeme: '',
+        ),
+      ];
+    } else if (durum == 1) {
+      pages = [
+        const FirstPage(),
+        GetMaterials(
+          Qr: widget.Qr,
+          teslimet: false,
+          gerigel: false,
+          teslimal: false,
+          ID: widget.ID,
+        ),
+        const MaterialsPageAdmin(),
+        const ProfilePage(
+          malzeme: '',
+        ),
+      ];
+    }
+
     final docRef = FirebaseFirestore.instance
         .collection("Users")
         .doc(Auth.currentUser!.email);

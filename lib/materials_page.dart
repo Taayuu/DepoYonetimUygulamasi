@@ -45,29 +45,6 @@ class _MaterialsPageState extends State<MaterialsPage> {
         ),
         centerTitle: true,
         elevation: 0,
-        actions: <Widget>[
-          IconButton(
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const AddMaterialsPage(
-                              Qr: '',
-                              malzemeAdi: '',
-                              malzemeRafi: '',
-                              malzemeSinifi: '',
-                              malzemeEkleGuncelleButtonText: 'Ekle',
-                              malzemeStok: 0,
-                              malzemeImage: '',
-                              ID: '',
-                            )));
-              },
-              icon: const Icon(
-                Icons.add_circle_outline,
-                color: Colors.black,
-                size: 29,
-              )),
-        ],
       ),
       body: SafeArea(
         child: Center(
@@ -135,150 +112,26 @@ class _MaterialsPageState extends State<MaterialsPage> {
                                     borderRadius: BorderRadius.circular(20),
                                     side: const BorderSide(
                                         color: Colors.black, width: 2)),
-                                child: Slidable(
-                                  key: ValueKey(index),
-                                  endActionPane: ActionPane(
-                                      motion: const ScrollMotion(),
-                                      children: [
-                                        SlidableAction(
-                                            label: "Düzenle",
-                                            backgroundColor: Colors.green,
-                                            icon: Icons.edit,
-                                            onPressed: (contextx) async {
-                                              await yaziGetir();
-                                              Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (contextx) =>
-                                                          AddMaterialsPage(
-                                                            Qr: malzemeQr,
-                                                            malzemeAdi:
-                                                                malzemeAdi,
-                                                            malzemeRafi:
-                                                                malzemeRafi,
-                                                            malzemeSinifi:
-                                                                malzemeSinifi,
-                                                            malzemeEkleGuncelleButtonText:
-                                                                'Güncelle',
-                                                            malzemeStok:
-                                                                malzemeStok,
-                                                            malzemeImage:
-                                                                malzemeImage,
-                                                            ID: ID,
-                                                          )));
-                                            }),
-                                        SlidableAction(
-                                            borderRadius:
-                                                const BorderRadius.horizontal(
-                                                    right: Radius.circular(20)),
-                                            label: "Sil",
-                                            backgroundColor: Colors.red,
-                                            icon: Icons.delete,
-                                            onPressed: (dialogcontext) async {
-                                              {
-                                                await showDialog(
-                                                  context: context,
-                                                  builder: (builder) =>
-                                                      AlertDialog(
-                                                    title: const Text("Sil"),
-                                                    content: const Text(
-                                                        "Silmek İstediğinize Emin Misiniz?"),
-                                                    actions: <Widget>[
-                                                      TextButton(
-                                                        onPressed: () {
-                                                          Navigator.pop(
-                                                              context);
-                                                        },
-                                                        child:
-                                                            const Text("İptal"),
-                                                      ),
-                                                      TextButton(
-                                                        onPressed: () async {
-                                                          await FirebaseFirestore
-                                                              .instance
-                                                              .collection(
-                                                                  'Users')
-                                                              .doc(Auth
-                                                                  .currentUser!
-                                                                  .email)
-                                                              .update({
-                                                            "Emanetler":
-                                                                FieldValue
-                                                                    .arrayRemove([
-                                                              malzemeler[index][
-                                                                  "Malzeme Adı"]
-                                                            ])
-                                                          });
-                                                          FirebaseFirestore
-                                                              .instance
-                                                              .collection(
-                                                                  "Users")
-                                                              .doc(Auth
-                                                                  .currentUser!
-                                                                  .email)
-                                                              .get()
-                                                              .then(
-                                                                  (value) async {
-                                                            await FirebaseFirestore
-                                                                .instance
-                                                                .collection(
-                                                                    "Users")
-                                                                .doc(Auth
-                                                                    .currentUser!
-                                                                    .email)
-                                                                .collection(
-                                                                    "Ürün")
-                                                                .doc(malzemeler[
-                                                                            0][
-                                                                        "Malzeme Adı"] +
-                                                                    Auth.currentUser!
-                                                                        .email)
-                                                                .delete();
-                                                          });
-                                                          await malzemeler[
-                                                                  index]
-                                                              .reference
-                                                              .delete();
-                                                          Navigator.pop(
-                                                              context);
-                                                          Fluttertoast.showToast(
-                                                              msg:
-                                                                  "Malzeme Silindi",
-                                                              gravity:
-                                                                  ToastGravity
-                                                                      .CENTER,
-                                                              fontSize: 20);
-                                                        },
-                                                        child:
-                                                            const Text("Tamam"),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                );
-                                              }
-                                            })
-                                      ]),
-                                  child: ListTile(
-                                    leading: ClipOval(
-                                      child: Image.network(
-                                        "${malzemeler[index]['Resim']}",
-                                        width: 80,
-                                        height: 80,
-                                        fit: BoxFit.contain,
-                                      ),
+                                child: ListTile(
+                                  leading: ClipOval(
+                                    child: Image.network(
+                                      "${malzemeler[index]['Resim']}",
+                                      width: 80,
+                                      height: 80,
+                                      fit: BoxFit.contain,
                                     ),
-                                    title: Text(
-                                      '${malzemeler[index]['Malzeme Adı']}',
-                                      style: const TextStyle(fontSize: 17),
-                                    ),
-                                    subtitle: Text(
-                                      '''
+                                  ),
+                                  title: Text(
+                                    '${malzemeler[index]['Malzeme Adı']}',
+                                    style: const TextStyle(fontSize: 17),
+                                  ),
+                                  subtitle: Text(
+                                    '''
 Qr Kod: ${malzemeler[index]["Qr Kod"]}
 Malzeme Rafı: ${malzemeler[index]["Malzeme Rafı"]}
 Malzeme Konumu: ${malzemeler[index]["Konum"].toString().replaceAll(']', '').replaceAll('[', '')}
 Stok: ${malzemeler[index]["Stok"]}''',
-                                      style: const TextStyle(fontSize: 13),
-                                    ),
+                                    style: const TextStyle(fontSize: 13),
                                   ),
                                 ),
                               );
