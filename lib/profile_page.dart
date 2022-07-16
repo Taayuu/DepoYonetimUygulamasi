@@ -316,7 +316,9 @@ ${'''Emanet Alma Tarihi: ${element.data()["Emanet Alma Tarihi"]}'''}
           list.columnWidth = 60;
           list.cellStyle.wrapText = true;
         }
-      } catch (e) {}
+      } catch (e) {
+        print(e);
+      }
 
       /*-------------------------*/
 
@@ -341,7 +343,9 @@ ${'''Emanet Alma Tarihi: ${element.data()["Emanet Alma Tarihi"]}'''}
           list1.columnWidth = 60;
           list1.cellStyle.wrapText = true;
         }
-      } catch (e) {}
+      } catch (e) {
+        print(e);
+      }
 
       /*------------------------------------------------*/
 

@@ -4,9 +4,6 @@ import 'dart:core';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'add_materials_page.dart';
 
 class MaterialsPage extends StatefulWidget {
   const MaterialsPage({
@@ -89,23 +86,6 @@ class _MaterialsPageState extends State<MaterialsPage> {
                             itemCount: snp.data!.docs.length,
                             itemBuilder: (context, index) {
                               var malzemeler = snp.data!.docs;
-                              yaziGetir() async {
-                                await malzemeler[index]
-                                    .reference
-                                    .get()
-                                    .then((gelenVeri) {
-                                  setState(() {
-                                    malzemeAdi = gelenVeri["Malzeme Adı"];
-                                    malzemeRafi = gelenVeri["Malzeme Rafı"];
-                                    malzemeSinifi = gelenVeri["Malzeme Sınıfı"];
-                                    malzemeQr = gelenVeri["Qr Kod"];
-                                    malzemeStok = gelenVeri["Stok"];
-                                    malzemeImage = gelenVeri["Resim"];
-                                    ID = gelenVeri["ID"];
-                                  });
-                                });
-                              }
-
                               return Card(
                                 color: Colors.white,
                                 shape: RoundedRectangleBorder(

@@ -9,7 +9,6 @@ import 'package:login/core/service/firebase_service.dart';
 import 'package:login/core/service/i_auth_service.dart';
 import 'package:login/core/widgets/auth_widget.dart';
 import 'package:login/core/widgets/auth_widget_builder.dart';
-import 'package:login/create_qr.dart';
 import 'package:login/scan_qr_add.dart';
 import 'package:provider/provider.dart';
 
@@ -69,7 +68,6 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           home: AuthWidget(snapshot: snapshot),
           routes: <String, WidgetBuilder>{
-            '/page1': (BuildContext context) => const CreateQr(),
             '/page2': (BuildContext context) => const ScanQrAdd(),
           },
         ),

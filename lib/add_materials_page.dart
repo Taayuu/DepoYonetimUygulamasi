@@ -1,13 +1,9 @@
 // ignore_for_file: non_constant_identifier_names, empty_catches
-
-import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:login/scan_qr_add.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
@@ -37,24 +33,6 @@ class AddMaterialsPage extends StatefulWidget {
 }
 
 class _AddMaterialsPageState extends State<AddMaterialsPage> {
-  late String indirmeBaglantisi;
-  late File yuklenecekDosya;
-
-  kameradanYukle() async {
-    var alinanResim = await ImagePicker().pickImage(source: ImageSource.camera);
-    setState(() {
-      yuklenecekDosya = File(alinanResim!.path);
-    });
-    Reference resimRef =
-        FirebaseStorage.instance.ref().child("malzemeresmi").child("rsm.png");
-
-    UploadTask yuklemeGorevi = resimRef.putFile(yuklenecekDosya);
-    String url = await yuklemeGorevi.snapshot.ref.getDownloadURL();
-    setState(() {
-      indirmeBaglantisi = url;
-    });
-  }
-
   final _firestore = FirebaseFirestore.instance;
   TextEditingController materialNameController = TextEditingController();
   TextEditingController materialClassController = TextEditingController();
@@ -204,7 +182,8 @@ class _AddMaterialsPageState extends State<AddMaterialsPage> {
                       TextFormField(
                           controller: materialImageController,
                           decoration: InputDecoration(
-                              labelText: "Malzeme Resmi",
+                              labelText:
+                                  "Resim URL'si (URL YOK İSE BOŞ BIRAKIN !!!)",
                               fillColor: Colors.white,
                               filled: true,
                               enabledBorder: OutlineInputBorder(
@@ -252,15 +231,13 @@ class _AddMaterialsPageState extends State<AddMaterialsPage> {
                                 materialStockController.text != "") {
                               if (widget.malzemeEkleGuncelleButtonText ==
                                   "Ekle") {
-                                FirebaseFirestore.instance
-                                    .collection("Materials")
+                                await materialsRef
                                     .where("Malzeme Adı",
                                         isEqualTo: materialNameController.text)
                                     .get()
                                     .then((QuerySnapshot aMaterials) async {
                                   if (aMaterials.docs.isEmpty) {
-                                    FirebaseFirestore.instance
-                                        .collection("Materials")
+                                    await materialsRef
                                         .where("Qr Kod",
                                             isEqualTo:
                                                 materialQrController.text)
@@ -268,8 +245,7 @@ class _AddMaterialsPageState extends State<AddMaterialsPage> {
                                         .then(
                                             (QuerySnapshot qrMaterials) async {
                                       if (qrMaterials.docs.isEmpty) {
-                                        FirebaseFirestore.instance
-                                            .collection("Materials")
+                                        await materialsRef
                                             .where("Malzeme Rafı",
                                                 isEqualTo:
                                                     materialDepartmentController
@@ -350,8 +326,7 @@ class _AddMaterialsPageState extends State<AddMaterialsPage> {
                                                 );
                                               }
                                             } catch (e) {}
-                                            await FirebaseFirestore.instance
-                                                .collection("Materials")
+                                            await materialsRef
                                                 .doc(
                                                     materialNameController.text)
                                                 .update({
@@ -411,7 +386,7 @@ class _AddMaterialsPageState extends State<AddMaterialsPage> {
                                 });
                               } else if (widget.malzemeEkleGuncelleButtonText ==
                                   "Güncelle") {
-                                await FirebaseFirestore.instance
+                                await _firestore
                                     .collection("Users")
                                     .doc(Auth.currentUser!.email)
                                     .collection("Ürün")
@@ -449,8 +424,7 @@ class _AddMaterialsPageState extends State<AddMaterialsPage> {
                                       };
                                     }
 
-                                    await FirebaseFirestore.instance
-                                        .collection("Materials")
+                                    await materialsRef
                                         .where("Qr Kod", isEqualTo: widget.Qr)
                                         .get()
                                         .then((QuerySnapshot qMaterials) async {
@@ -471,8 +445,7 @@ class _AddMaterialsPageState extends State<AddMaterialsPage> {
                                                   .substring(0, i),
                                             );
                                           }
-                                          await FirebaseFirestore.instance
-                                              .collection("Materials")
+                                          await materialsRef
                                               .where("Qr Kod",
                                                   isEqualTo: widget.Qr)
                                               .get()
@@ -484,8 +457,7 @@ class _AddMaterialsPageState extends State<AddMaterialsPage> {
                                               });
                                             }
                                           });
-                                          await FirebaseFirestore.instance
-                                              .collection("Materials")
+                                          await materialsRef
                                               .where("Qr Kod",
                                                   isEqualTo: widget.Qr)
                                               .get()

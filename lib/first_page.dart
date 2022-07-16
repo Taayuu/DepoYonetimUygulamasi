@@ -15,7 +15,7 @@ class _FirstPageState extends State<FirstPage> {
   FirebaseAuth Auth = FirebaseAuth.instance;
   @override
   Widget build(BuildContext context) {
-    CollectionReference materialsRef =
+    CollectionReference usersRef =
         FirebaseFirestore.instance.collection('Users');
     return SafeArea(
       child: Scaffold(
@@ -26,8 +26,7 @@ class _FirstPageState extends State<FirstPage> {
               height: 25,
             ),
             StreamBuilder<QuerySnapshot>(
-              stream:
-                  materialsRef.where("Emanetler", isNotEqualTo: []).snapshots(),
+              stream: usersRef.where("Emanetler", isNotEqualTo: []).snapshots(),
               builder: (context, snp) {
                 if (snp.hasError) {
                   return const Center(

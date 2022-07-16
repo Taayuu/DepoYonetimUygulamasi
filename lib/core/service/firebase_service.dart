@@ -35,22 +35,3 @@ class AuthService with ConvertUser implements IAuthService {
     await _authInstance.signOut();
   }
 }
-/*
-class MaterialService implements IMaterialsAddService {
-  final Future<FirebaseApp> _initialization = Firebase.initializeApp();
-  @override
-  Future<MyAppUserMaterials> createMaterialsWithQr(
-      {required String materialId,
-      required int materialQr,
-      required String materialClass,
-      required String materiaName,
-      required String materialDepartment,
-      required String materialReceiver,
-      required String materialDelivery,
-      required DateTime materialPurchaseDate,
-      required DateTime materialReturnDate}) async {
-    var _tempUser = await _initialization.createMaterialsWithQr(
-        email: email, password: password);
-    return _tempUser;
-  }
-}*/

@@ -43,11 +43,9 @@ var adminMail5;
 
 class _GetMaterialsState extends State<GetMaterials> {
   final _firestore = FirebaseFirestore.instance;
-
   TextEditingController adetController = TextEditingController();
   var maskFormatter = MaskTextInputFormatter(
       mask: '####-####', filter: {"#": RegExp(r'[0-9]')});
-
   List<String> items = [
     "Eğitim",
     "Aktivite",
@@ -56,7 +54,6 @@ class _GetMaterialsState extends State<GetMaterials> {
     "Eğitim(SAK)",
     "Eğitim(KAK)"
   ];
-
   String? value;
   FirebaseAuth Auth = FirebaseAuth.instance;
   @override
@@ -64,15 +61,24 @@ class _GetMaterialsState extends State<GetMaterials> {
     adetController.value = maskFormatter.updateMask(mask: "###");
     int stok = 0;
     var malzemeAdi;
-    final docRef = FirebaseFirestore.instance
+    final DocumentReference<Map<String, dynamic>> userRef = FirebaseFirestore
+        .instance
         .collection("Users")
         .doc(Auth.currentUser!.email);
+    final CollectionReference<Map<String, dynamic>> urunCol =
+        userRef.collection("Ürün");
+    final CollectionReference materialsRef =
+        FirebaseFirestore.instance.collection("Materials");
+    final Future<QuerySnapshot<Map<String, dynamic>>> urunQuery = urunCol
+        .where("ID", isEqualTo: widget.ID)
+        .where("Id", isEqualTo: Auth.currentUser!.uid)
+        .where("durum", isEqualTo: 1)
+        .get();
     var kAdi;
-    FirebaseFirestore.instance.collection('Users');
-    docRef.snapshots().listen((event) {
+    userRef.snapshots().listen((event) {
       kAdi = event.data()!["Kullanıcı Adı"];
     });
-
+    QuerySnapshot queryMaterials;
     FirebaseFirestore.instance
         .collection("AppControl")
         .doc("AdminMail")
@@ -84,11 +90,9 @@ class _GetMaterialsState extends State<GetMaterials> {
       adminMail4 = valueMail.data()!["Mail4"];
       adminMail5 = valueMail.data()!["Mail5"];
     });
-
-    Query qmaterials = FirebaseFirestore.instance
-        .collection("Materials")
-        .where("Qr Kod", isEqualTo: widget.Qr);
-
+    final Query qmaterials = materialsRef.where("Qr Kod", isEqualTo: widget.Qr);
+    final Future<QuerySnapshot<Object?>> queryQrGetMaterials =
+        materialsRef.where("Qr Kod", isEqualTo: widget.Qr).get();
     List<DocumentSnapshot>? malzemeler;
     return Scaffold(
       backgroundColor: const Color(0xffFFEBC1),
@@ -278,32 +282,22 @@ Stok: ${malzemeler![index]["Stok"]}''',
                             onPressed: () async {
                               if (adetController.text != "") {
                                 if (value != null && value != "") {
-                                  await FirebaseFirestore.instance
-                                      .collection("Materials")
-                                      .where("Qr Kod", isEqualTo: widget.Qr)
-                                      .get()
-                                      .then((QuerySnapshot qMaterials) async {
-                                    for (var docd in qMaterials.docs) {
-                                      await FirebaseFirestore.instance
-                                          .collection('Materials')
+                                  await queryQrGetMaterials
+                                      .then((queryMaterials) async {
+                                    for (var docd in queryMaterials.docs) {
+                                      await materialsRef
                                           .doc(docd.id)
                                           .get()
-                                          .then((gelenVeri) {
+                                          .then((gelenVeri) async {
                                         stok = gelenVeri["Stok"];
                                         if (stok >=
                                             int.parse(adetController.text)) {
-                                          FirebaseFirestore.instance
-                                              .collection('Users')
-                                              .doc(Auth.currentUser!.email)
-                                              .update({
+                                          await userRef.update({
                                             "Emanetler": FieldValue.arrayUnion([
                                               malzemeler![0]["Malzeme Adı"]
                                             ]),
                                           });
-
-                                          FirebaseFirestore.instance
-                                              .collection('Users');
-                                          docRef.snapshots().listen(
+                                          userRef.snapshots().listen(
                                             (event) {
                                               kAdi = event
                                                   .data()!["Kullanıcı Adı"];
@@ -312,62 +306,29 @@ Stok: ${malzemeler![index]["Stok"]}''',
                                             onError: (error) =>
                                                 print("Listen failed: $error"),
                                           );
-                                          FirebaseFirestore.instance
-                                              .collection("Materials")
-                                              .where("Qr Kod",
-                                                  isEqualTo: widget.Qr)
-                                              .get()
-                                              .then((QuerySnapshot
-                                                  qMaterials) async {
-                                            for (var docd in qMaterials.docs) {
-                                              await FirebaseFirestore.instance
-                                                  .collection('Materials')
+                                          await queryQrGetMaterials
+                                              .then((queryMaterials) async {
+                                            for (var docd
+                                                in queryMaterials.docs) {
+                                              await materialsRef
                                                   .doc(docd.id)
                                                   .update({
                                                 "Konum": FieldValue.arrayUnion(
-                                                    [kAdi])
-                                              });
-                                            }
-                                          });
-
-                                          FirebaseFirestore.instance
-                                              .collection("Materials")
-                                              .where("Qr Kod",
-                                                  isEqualTo: widget.Qr)
-                                              .get()
-                                              .then((QuerySnapshot
-                                                  qMaterials) async {
-                                            for (var docd in qMaterials.docs) {
-                                              await FirebaseFirestore.instance
-                                                  .collection('Materials')
-                                                  .doc(docd.id)
-                                                  .update({
+                                                    [kAdi]),
                                                 "Stok": stok -
                                                     int.parse(
                                                         adetController.text)
                                               });
                                             }
                                           });
-
-                                          FirebaseFirestore.instance
-                                              .collection("Materials")
-                                              .where("Qr Kod",
-                                                  isEqualTo: widget.Qr)
-                                              .get()
-                                              .then((QuerySnapshot
-                                                  qMaterials) async {
-                                            for (var docdf in qMaterials.docs) {
-                                              await FirebaseFirestore.instance
-                                                  .collection("Users")
-                                                  .doc(Auth.currentUser!.email)
+                                          await queryQrGetMaterials
+                                              .then((queryMaterials) async {
+                                            for (var docdf
+                                                in queryMaterials.docs) {
+                                              await userRef
                                                   .get()
                                                   .then((gelenVeri) async {
-                                                await FirebaseFirestore.instance
-                                                    .collection("Users")
-                                                    .doc(
-                                                        Auth.currentUser!.email)
-                                                    .collection("Ürün")
-                                                    .add({
+                                                await urunCol.add({
                                                   "Emanet": {
                                                     "${malzemeler?[0]["Malzeme Adı"]}":
                                                         [
@@ -505,22 +466,10 @@ Stok: ${malzemeler![index]["Stok"]}''',
                       MaterialButton(
                         onPressed: () async {
                           if (adetController.text != "") {
-                            await FirebaseFirestore.instance
-                                .collection("Materials")
-                                .where("Qr Kod", isEqualTo: widget.Qr)
-                                .get()
-                                .then((QuerySnapshot qMaterials) async {
-                              for (var docde in qMaterials.docs) {
-                                await FirebaseFirestore.instance
-                                    .collection("Users")
-                                    .doc(Auth.currentUser!.email)
-                                    .collection("Ürün")
-                                    .where("ID", isEqualTo: widget.ID)
-                                    .where("Id",
-                                        isEqualTo: Auth.currentUser!.uid)
-                                    .where("durum", isEqualTo: 1)
-                                    .get()
-                                    .then((value) async {
+                            await queryQrGetMaterials
+                                .then((queryMaterials) async {
+                              for (var docde in queryMaterials.docs) {
+                                await urunQuery.then((value) async {
                                   if (int.parse(adetController.text) != 0 &&
                                       int.parse(adetController.text) > 0 &&
                                       int.parse(adetController.text) <=
@@ -529,14 +478,10 @@ Stok: ${malzemeler![index]["Stok"]}''',
                                               .toString()
                                               .replaceAll('[', '')
                                               .replaceAll(']', ''))) {
-                                    await FirebaseFirestore.instance
-                                        .collection("Materials")
-                                        .where("Qr Kod", isEqualTo: widget.Qr)
-                                        .get()
-                                        .then((QuerySnapshot qMaterials) async {
-                                      for (var docd in qMaterials.docs) {
-                                        await FirebaseFirestore.instance
-                                            .collection('Materials')
+                                    await queryQrGetMaterials
+                                        .then((queryMaterials) async {
+                                      for (var docd in queryMaterials.docs) {
+                                        await materialsRef
                                             .doc(docd.id)
                                             .get()
                                             .then((gelenVeri) {
@@ -544,16 +489,10 @@ Stok: ${malzemeler![index]["Stok"]}''',
                                         });
                                       }
                                     });
-                                    await FirebaseFirestore.instance
-                                        .collection("Materials")
-                                        .where("Qr Kod", isEqualTo: widget.Qr)
-                                        .get()
-                                        .then((QuerySnapshot qMaterials) async {
-                                      for (var docd in qMaterials.docs) {
-                                        await FirebaseFirestore.instance
-                                            .collection('Materials')
-                                            .doc(docd.id)
-                                            .update({
+                                    await queryQrGetMaterials
+                                        .then((queryMaterials) async {
+                                      for (var docd in queryMaterials.docs) {
+                                        await materialsRef.doc(docd.id).update({
                                           "Stok": stok +
                                               int.parse(adetController.text)
                                         });
@@ -568,39 +507,17 @@ Stok: ${malzemeler![index]["Stok"]}''',
                                                   .replaceAll(']', '')) -
                                               int.parse(adetController.text) >
                                           0) {
-                                        await FirebaseFirestore.instance
-                                            .collection("Materials")
-                                            .where("Qr Kod",
-                                                isEqualTo: widget.Qr)
-                                            .get()
-                                            .then((QuerySnapshot
-                                                qMaterials) async {
-                                          for (var docd in qMaterials.docs) {
-                                            await FirebaseFirestore.instance
-                                                .collection("Users")
-                                                .doc(Auth.currentUser!.email)
+                                        await queryQrGetMaterials
+                                            .then((queryMaterials) async {
+                                          for (var docd
+                                              in queryMaterials.docs) {
+                                            await userRef
                                                 .get()
                                                 .then((gelenVeri) async {
-                                              await FirebaseFirestore.instance
-                                                  .collection("Users")
-                                                  .doc(Auth.currentUser!.email)
-                                                  .collection("Ürün")
-                                                  .where("ID",
-                                                      isEqualTo: widget.ID)
-                                                  .where("durum", isEqualTo: 1)
-                                                  .where("Id",
-                                                      isEqualTo:
-                                                          Auth.currentUser?.uid)
-                                                  .get()
-                                                  .then((QuerySnapshot
-                                                      deyta) async {
+                                              await urunQuery.then(
+                                                  (QuerySnapshot deyta) async {
                                                 for (var dave in deyta.docs) {
-                                                  await FirebaseFirestore
-                                                      .instance
-                                                      .collection("Users")
-                                                      .doc(Auth
-                                                          .currentUser!.email)
-                                                      .collection("Ürün")
+                                                  await urunCol
                                                       .doc(dave.id)
                                                       .update({
                                                     "Id": Auth.currentUser!.uid,
@@ -621,35 +538,14 @@ Stok: ${malzemeler![index]["Stok"]}''',
                                                   });
                                                 }
                                               });
-                                              await FirebaseFirestore.instance
-                                                  .collection("Users")
-                                                  .doc(Auth.currentUser!.email)
-                                                  .collection("Ürün")
-                                                  .where("ID",
-                                                      isEqualTo: widget.ID)
-                                                  .where("durum", isEqualTo: 1)
-                                                  .where("Id",
-                                                      isEqualTo:
-                                                          Auth.currentUser?.uid)
-                                                  .get()
-                                                  .then((QuerySnapshot
-                                                      deyta) async {
+                                              await urunQuery.then(
+                                                  (QuerySnapshot deyta) async {
                                                 for (var dave in deyta.docs) {
-                                                  await FirebaseFirestore
-                                                      .instance
-                                                      .collection("Users")
-                                                      .doc(Auth
-                                                          .currentUser!.email)
-                                                      .collection("Ürün")
+                                                  await urunCol
                                                       .doc(dave.id)
                                                       .get()
                                                       .then((gelen) async {
-                                                    await FirebaseFirestore
-                                                        .instance
-                                                        .collection("Users")
-                                                        .doc(Auth
-                                                            .currentUser!.email)
-                                                        .collection("Ürün")
+                                                    await urunCol
                                                         .doc(dave.id)
                                                         .update({
                                                       "Emanet": {
@@ -664,39 +560,17 @@ Stok: ${malzemeler![index]["Stok"]}''',
                                           }
                                         });
                                       } else {
-                                        await FirebaseFirestore.instance
-                                            .collection("Materials")
-                                            .where("Qr Kod",
-                                                isEqualTo: widget.Qr)
-                                            .get()
-                                            .then((QuerySnapshot
-                                                qMaterials) async {
-                                          for (var docd in qMaterials.docs) {
-                                            await FirebaseFirestore.instance
-                                                .collection("Users")
-                                                .doc(Auth.currentUser!.email)
+                                        await queryQrGetMaterials
+                                            .then((queryMaterials) async {
+                                          for (var docd
+                                              in queryMaterials.docs) {
+                                            await userRef
                                                 .get()
                                                 .then((gelenVeri) async {
-                                              await FirebaseFirestore.instance
-                                                  .collection("Users")
-                                                  .doc(Auth.currentUser!.email)
-                                                  .collection("Ürün")
-                                                  .where("ID",
-                                                      isEqualTo: widget.ID)
-                                                  .where("durum", isEqualTo: 1)
-                                                  .where("Id",
-                                                      isEqualTo:
-                                                          Auth.currentUser?.uid)
-                                                  .get()
-                                                  .then((QuerySnapshot
-                                                      deyta) async {
+                                              await urunQuery.then(
+                                                  (QuerySnapshot deyta) async {
                                                 for (var dave in deyta.docs) {
-                                                  await FirebaseFirestore
-                                                      .instance
-                                                      .collection("Users")
-                                                      .doc(Auth
-                                                          .currentUser!.email)
-                                                      .collection("Ürün")
+                                                  await urunCol
                                                       .doc(dave.id)
                                                       .update({
                                                     "Id": Auth.currentUser!.uid,
@@ -724,26 +598,17 @@ Stok: ${malzemeler![index]["Stok"]}''',
                                                   });
                                                 }
 
-                                                await FirebaseFirestore.instance
-                                                    .collection('Users')
-                                                    .doc(
-                                                        Auth.currentUser!.email)
-                                                    .update({
+                                                await userRef.update({
                                                   "Emanetler":
                                                       FieldValue.arrayRemove([
                                                     malzemeler?[0]
                                                         ["Malzeme Adı"]
                                                   ])
                                                 });
-                                                await FirebaseFirestore.instance
-                                                    .collection("Materials")
-                                                    .where("Qr Kod",
-                                                        isEqualTo: widget.Qr)
-                                                    .get()
-                                                    .then((QuerySnapshot
-                                                        qMaterials) async {
+                                                await queryQrGetMaterials.then(
+                                                    (queryMaterials) async {
                                                   for (var docdd
-                                                      in qMaterials.docs) {
+                                                      in queryMaterials.docs) {
                                                     await FirebaseFirestore
                                                         .instance
                                                         .collection('Materials')
@@ -763,39 +628,17 @@ Stok: ${malzemeler![index]["Stok"]}''',
                                       if (value.docs[0]["Eksik"] -
                                               int.parse(adetController.text) >
                                           0) {
-                                        await FirebaseFirestore.instance
-                                            .collection("Users")
-                                            .doc(Auth.currentUser!.email)
+                                        await userRef
                                             .get()
                                             .then((gelenVeri) async {
-                                          await FirebaseFirestore.instance
-                                              .collection("Materials")
-                                              .where("Qr Kod",
-                                                  isEqualTo: widget.Qr)
-                                              .get()
-                                              .then((QuerySnapshot
-                                                  qMaterials) async {
-                                            for (var docd in qMaterials.docs) {
-                                              await FirebaseFirestore.instance
-                                                  .collection("Users")
-                                                  .doc(Auth.currentUser!.email)
-                                                  .collection("Ürün")
-                                                  .where("ID",
-                                                      isEqualTo: widget.ID)
-                                                  .where("durum", isEqualTo: 1)
-                                                  .where("Id",
-                                                      isEqualTo:
-                                                          Auth.currentUser?.uid)
-                                                  .get()
-                                                  .then((QuerySnapshot
-                                                      deyta) async {
+                                          await queryQrGetMaterials
+                                              .then((queryMaterials) async {
+                                            for (var docd
+                                                in queryMaterials.docs) {
+                                              await urunQuery.then(
+                                                  (QuerySnapshot deyta) async {
                                                 for (var dave in deyta.docs) {
-                                                  await FirebaseFirestore
-                                                      .instance
-                                                      .collection("Users")
-                                                      .doc(Auth
-                                                          .currentUser!.email)
-                                                      .collection("Ürün")
+                                                  await urunCol
                                                       .doc(dave.id)
                                                       .update({
                                                     "Id": Auth.currentUser!.uid,
@@ -814,34 +657,14 @@ Stok: ${malzemeler![index]["Stok"]}''',
                                             }
                                           });
 
-                                          await FirebaseFirestore.instance
-                                              .collection("Materials")
-                                              .where("Qr Kod",
-                                                  isEqualTo: widget.Qr)
-                                              .get()
-                                              .then((QuerySnapshot
-                                                  qMaterials) async {
-                                            for (var docd in qMaterials.docs) {
-                                              await FirebaseFirestore.instance
-                                                  .collection("Users")
-                                                  .doc(Auth.currentUser!.email)
-                                                  .collection("Ürün")
-                                                  .where("ID",
-                                                      isEqualTo: widget.ID)
-                                                  .where("durum", isEqualTo: 1)
-                                                  .where("Id",
-                                                      isEqualTo:
-                                                          Auth.currentUser?.uid)
-                                                  .get()
-                                                  .then((QuerySnapshot
-                                                      deyta) async {
+                                          await queryQrGetMaterials
+                                              .then((queryMaterials) async {
+                                            for (var docd
+                                                in queryMaterials.docs) {
+                                              await urunQuery.then(
+                                                  (QuerySnapshot deyta) async {
                                                 for (var dave in deyta.docs) {
-                                                  await FirebaseFirestore
-                                                      .instance
-                                                      .collection("Users")
-                                                      .doc(Auth
-                                                          .currentUser!.email)
-                                                      .collection("Ürün")
+                                                  await urunCol
                                                       .doc(dave.id)
                                                       .update({
                                                     "Emanet": {
@@ -855,39 +678,17 @@ Stok: ${malzemeler![index]["Stok"]}''',
                                           });
                                         });
                                       } else {
-                                        await FirebaseFirestore.instance
-                                            .collection("Materials")
-                                            .where("Qr Kod",
-                                                isEqualTo: widget.Qr)
-                                            .get()
-                                            .then((QuerySnapshot
-                                                qMaterials) async {
-                                          for (var docd in qMaterials.docs) {
-                                            await FirebaseFirestore.instance
-                                                .collection("Users")
-                                                .doc(Auth.currentUser!.email)
+                                        await queryQrGetMaterials
+                                            .then((QqueryMaterials) async {
+                                          for (var docd
+                                              in queryMaterials.docs) {
+                                            await userRef
                                                 .get()
                                                 .then((gelenVeri) async {
-                                              await FirebaseFirestore.instance
-                                                  .collection("Users")
-                                                  .doc(Auth.currentUser!.email)
-                                                  .collection("Ürün")
-                                                  .where("ID",
-                                                      isEqualTo: widget.ID)
-                                                  .where("Id",
-                                                      isEqualTo:
-                                                          Auth.currentUser?.uid)
-                                                  .where("durum", isEqualTo: 1)
-                                                  .get()
-                                                  .then((QuerySnapshot
-                                                      deyta) async {
+                                              await urunQuery.then(
+                                                  (QuerySnapshot deyta) async {
                                                 for (var dave in deyta.docs) {
-                                                  await FirebaseFirestore
-                                                      .instance
-                                                      .collection("Users")
-                                                      .doc(Auth
-                                                          .currentUser!.email)
-                                                      .collection("Ürün")
+                                                  await urunCol
                                                       .doc(dave.id)
                                                       .update({
                                                     "Id": Auth.currentUser!.uid,
@@ -911,28 +712,18 @@ Stok: ${malzemeler![index]["Stok"]}''',
                                                 }
                                               });
 
-                                              await FirebaseFirestore.instance
-                                                  .collection('Users')
-                                                  .doc(Auth.currentUser!.email)
-                                                  .update({
+                                              await userRef.update({
                                                 "Emanetler":
                                                     FieldValue.arrayRemove([
                                                   malzemeler?[0]["Malzeme Adı"]
                                                 ])
                                               });
 
-                                              await FirebaseFirestore.instance
-                                                  .collection("Materials")
-                                                  .where("Qr Kod",
-                                                      isEqualTo: widget.Qr)
-                                                  .get()
-                                                  .then((QuerySnapshot
-                                                      qMaterials) async {
+                                              await queryQrGetMaterials
+                                                  .then((queryMaterials) async {
                                                 for (var docdd
-                                                    in qMaterials.docs) {
-                                                  await FirebaseFirestore
-                                                      .instance
-                                                      .collection('Materials')
+                                                    in queryMaterials.docs) {
+                                                  await materialsRef
                                                       .doc(docdd.id)
                                                       .update({
                                                     "Konum":
@@ -1018,18 +809,6 @@ Stok: ${malzemeler![index]["Stok"]}''',
                 ),
               ),
             ),
-            /*FloatingActionButton(
-                heroTag: "deneme",
-                child: const Icon(Icons.add, size: 35),
-                backgroundColor: const Color(0xffd41217),
-                onPressed: () async {
-                  await FirebaseFirestore.instance
-                      .collection("Users")
-                      .doc(Auth.currentUser!.email)
-                      .collection("Ürün")
-                      .doc("0PsFwPPZDgoOz04oTOeF")
-                      .delete();
-                }),*/
           ],
         ),
       )),
@@ -1040,12 +819,11 @@ Stok: ${malzemeler![index]["Stok"]}''',
 Future SendAlEmail() async {
   GoogleAuthApi.signOut();
   FirebaseAuth Auth = FirebaseAuth.instance;
-  final docRef = FirebaseFirestore.instance
+  final userRef = FirebaseFirestore.instance
       .collection("Users")
       .doc(Auth.currentUser!.email);
   var kAdi;
-  FirebaseFirestore.instance.collection('Users');
-  docRef.snapshots().listen((event) {
+  userRef.snapshots().listen((event) {
     kAdi = event.data()!["Kullanıcı Adı"];
   });
 
@@ -1086,12 +864,11 @@ Future SendAlEmail() async {
 Future SendTeslimEmail() async {
   GoogleAuthApi.signOut();
   FirebaseAuth Auth = FirebaseAuth.instance;
-  final docRef = FirebaseFirestore.instance
+  final userRef = FirebaseFirestore.instance
       .collection("Users")
       .doc(Auth.currentUser!.email);
   var kAdi;
-  FirebaseFirestore.instance.collection('Users');
-  docRef.snapshots().listen((event) {
+  userRef.snapshots().listen((event) {
     kAdi = event.data()!["Kullanıcı Adı"];
   });
 
