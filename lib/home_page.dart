@@ -33,7 +33,6 @@ class _HomePageState extends State<HomePage> {
   FirebaseAuth Auth = FirebaseAuth.instance;
   TextEditingController k_adi = TextEditingController();
   int _currentIndexs = 0;
-
   void _onItemTapped(int index) {
     setState(() {
       _currentIndexs = index;
@@ -45,6 +44,9 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final userRef = FirebaseFirestore.instance
+        .collection("Users")
+        .doc(Auth.currentUser!.email);
     final _authService = Provider.of<IAuthService>(context, listen: true);
     FirebaseFirestore.instance
         .collection("Users")
@@ -56,11 +58,7 @@ class _HomePageState extends State<HomePage> {
       }
     });
 
-    FirebaseFirestore.instance
-        .collection("Users")
-        .doc(Auth.currentUser!.email)
-        .snapshots()
-        .listen((event) async {
+    userRef.snapshots().listen((event) async {
       durum = event.data()!["Durum"];
       if (event.data()!["Eposta"] == "" || event.data()!["Eposta"] == null) {
         await _authService.signOut();
@@ -98,11 +96,7 @@ class _HomePageState extends State<HomePage> {
         ),
       ];
     }
-
-    final docRef = FirebaseFirestore.instance
-        .collection("Users")
-        .doc(Auth.currentUser!.email);
-    docRef.snapshots().listen(
+    userRef.snapshots().listen(
           (event) => print(
               '''home data: ${k_adi.text = '''Hoşgeldiniz: ${event.data()!["Kullanıcı Adı"]}'''}'''),
           onError: (error) => print("Listen failed: $error"),
