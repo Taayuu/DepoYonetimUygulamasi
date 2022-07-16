@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:intl/intl.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
@@ -65,6 +66,8 @@ class _ProfilePageState extends State<ProfilePage> {
     var durum1;
     List mgenel0 = [];
     List mgenel1 = [];
+    var tarihAlma;
+    var zaman = "Günlük";
 
     final depRef = FirebaseFirestore.instance
         .collection("Users")
@@ -73,35 +76,22 @@ class _ProfilePageState extends State<ProfilePage> {
 
     yaziGetir() async {
       try {
-        await FirebaseFirestore.instance
-            .collection("Users")
-            .doc(Auth.currentUser!.email)
-            .collection("Ürün")
-            .where("durum", isEqualTo: 0)
-            .get()
-            .then((value) {
-          List madi0 = [];
-          List mAlmaTarihi0 = [];
-          List mTeslimTarihi0 = [];
-          List mEksik0 = [];
-          mgenel0.clear();
-          for (var element in value.docs) {
-            madi0.add(element
-                .data()["Emanet"]
-                .toString()
-                .replaceAll('{', '')
-                .replaceAll('}', ''));
-            malzemeAdi0 = madi0.toList();
-            malzemeAlan0 = value.docs[0]["Emanet Alan"];
-            emanetAlmaSebebi0 = value.docs[0]["Emanet Alma Sebebi"];
-            mAlmaTarihi0.add(element.data()["Emanet Alma Tarihi"]);
-            malzemeAlmaTarihi0 = mAlmaTarihi0.toList();
-            mTeslimTarihi0.add(element.data()["Teslim Tarihi"]);
-            malzemeTeslimTarihi0 = mTeslimTarihi0.toList();
-            mEksik0.add(element.data()["Eksik"].toString());
-            eksik0 = mEksik0.toList();
-            durum0 = value.docs[0]["durum"];
-            mgenel0.add('''
+        if (zaman == "Günlük") {
+          await FirebaseFirestore.instance
+              .collection("Users")
+              .doc(Auth.currentUser!.email)
+              .collection("Ürün")
+              .where("durum", isEqualTo: 0)
+              .where("Emanet Alma Tarihi Saatsiz", isEqualTo: tarihAlma)
+              .get()
+              .then((value) {
+            List madi0 = [];
+            List mAlmaTarihi0 = [];
+            List mTeslimTarihi0 = [];
+            List mEksik0 = [];
+            mgenel0.clear();
+            for (var element in value.docs) {
+              mgenel0.add('''
 
 ${'''Emanet Alınan Ürün: ${element.data()["Emanet"].toString().replaceAll('{', '').replaceAll('}', '')} adet'''}
 ${'''Emanet Alan Kişi: ${value.docs[0]["Emanet Alan"]}'''}
@@ -110,45 +100,183 @@ ${'''Emanet Alma Tarihi: ${element.data()["Emanet Alma Tarihi"]}'''}
 ${'''Emanet Teslim Tarihi: ${element.data()["Teslim Tarihi"]}'''}
 ${'''Eksik Teslim: ${element.data()["Eksik"]}'''}
 ''');
-            genel0 = mgenel0.toList();
-          }
-        });
-        await FirebaseFirestore.instance
-            .collection("Users")
-            .doc(Auth.currentUser!.email)
-            .collection("Ürün")
-            .where("durum", isEqualTo: 1)
-            .get()
-            .then((value1) {
-          List madi1 = [];
-          List mAlmaTarihi1 = [];
-          List mTeslimTarihi1 = [];
-          mgenel1.clear();
-          for (var element in value1.docs) {
-            madi1.add(element
-                .data()["Emanet"]
-                .toString()
-                .replaceAll('{', '')
-                .replaceAll('}', ''));
-            malzemeAdi1 = madi1.toList();
-            malzemeAlan1 = value1.docs[0]["Emanet Alan"];
-            emanetAlmaSebebi1 = value1.docs[0]["Emanet Alma Sebebi"];
-            mAlmaTarihi1.add(element.data()["Emanet Alma Tarihi"]);
-            malzemeAlmaTarihi1 = mAlmaTarihi1.toList();
-            mTeslimTarihi1.add(element.data()["Teslim Tarihi"]);
-            malzemeTeslimTarihi1 = mTeslimTarihi1.toList();
-            eksik1 = value1.docs[0]["Eksik"];
-            durum1 = value1.docs[0]["durum"];
-            mgenel1.add('''
+              genel0 = mgenel0.toList();
+            }
+          });
+          await FirebaseFirestore.instance
+              .collection("Users")
+              .doc(Auth.currentUser!.email)
+              .collection("Ürün")
+              .where("durum", isEqualTo: 1)
+              .where("Emanet Alma Tarihi Saatsiz", isEqualTo: tarihAlma)
+              .get()
+              .then((value1) {
+            List madi1 = [];
+            List mAlmaTarihi1 = [];
+            List mTeslimTarihi1 = [];
+            mgenel1.clear();
+            for (var element in value1.docs) {
+              mgenel1.add('''
 
 ${'''Emanet Alınan Ürün: ${element.data()["Emanet"].toString().replaceAll('{', '').replaceAll('}', '')} adet mevcut ${element.data()["İlk Alınan"]} adet alındı'''}
 ${'''Emanet Alan Kişi: ${value1.docs[0]["Emanet Alan"]}'''}
 ${'''Emanet Alma Sebebi: ${value1.docs[0]["Emanet Alma Sebebi"]}'''}
 ${'''Emanet Alma Tarihi: ${element.data()["Emanet Alma Tarihi"]}'''}
 ''');
-            genel1 = mgenel1.toList();
-          }
-        });
+              genel1 = mgenel1.toList();
+            }
+          });
+        } else if (zaman == "Haftalık") {
+          await FirebaseFirestore.instance
+              .collection("Users")
+              .doc(Auth.currentUser!.email)
+              .collection("Ürün")
+              .where("durum", isEqualTo: 0)
+              .where("Emanet Alma Tarihi Saatsiz",
+                  isGreaterThanOrEqualTo: tarihAlma)
+              .get()
+              .then((value) {
+            List madi0 = [];
+            List mAlmaTarihi0 = [];
+            List mTeslimTarihi0 = [];
+            List mEksik0 = [];
+            mgenel0.clear();
+            for (var element in value.docs) {
+              mgenel0.add('''
+
+${'''Emanet Alınan Ürün: ${element.data()["Emanet"].toString().replaceAll('{', '').replaceAll('}', '')} adet'''}
+${'''Emanet Alan Kişi: ${value.docs[0]["Emanet Alan"]}'''}
+${'''Emanet Alma Sebebi: ${value.docs[0]["Emanet Alma Sebebi"]}'''}
+${'''Emanet Alma Tarihi: ${element.data()["Emanet Alma Tarihi"]}'''}
+${'''Emanet Teslim Tarihi: ${element.data()["Teslim Tarihi"]}'''}
+${'''Eksik Teslim: ${element.data()["Eksik"]}'''}
+''');
+              genel0 = mgenel0.toList();
+            }
+          });
+          await FirebaseFirestore.instance
+              .collection("Users")
+              .doc(Auth.currentUser!.email)
+              .collection("Ürün")
+              .where("durum", isEqualTo: 1)
+              .where("Emanet Alma Tarihi Saatsiz",
+                  isLessThanOrEqualTo: tarihAlma)
+              .get()
+              .then((value1) {
+            List madi1 = [];
+            List mAlmaTarihi1 = [];
+            List mTeslimTarihi1 = [];
+            mgenel1.clear();
+            for (var element in value1.docs) {
+              mgenel1.add('''
+
+${'''Emanet Alınan Ürün: ${element.data()["Emanet"].toString().replaceAll('{', '').replaceAll('}', '')} adet mevcut ${element.data()["İlk Alınan"]} adet alındı'''}
+${'''Emanet Alan Kişi: ${value1.docs[0]["Emanet Alan"]}'''}
+${'''Emanet Alma Sebebi: ${value1.docs[0]["Emanet Alma Sebebi"]}'''}
+${'''Emanet Alma Tarihi: ${element.data()["Emanet Alma Tarihi"]}'''}
+''');
+              genel1 = mgenel1.toList();
+            }
+          });
+        } else if (zaman == "Aylık") {
+          await FirebaseFirestore.instance
+              .collection("Users")
+              .doc(Auth.currentUser!.email)
+              .collection("Ürün")
+              .where("durum", isEqualTo: 0)
+              .where("Emanet Alma Tarihi Saatsiz", isEqualTo: tarihAlma)
+              .get()
+              .then((value) {
+            List madi0 = [];
+            List mAlmaTarihi0 = [];
+            List mTeslimTarihi0 = [];
+            List mEksik0 = [];
+            mgenel0.clear();
+            for (var element in value.docs) {
+              mgenel0.add('''
+
+${'''Emanet Alınan Ürün: ${element.data()["Emanet"].toString().replaceAll('{', '').replaceAll('}', '')} adet'''}
+${'''Emanet Alan Kişi: ${value.docs[0]["Emanet Alan"]}'''}
+${'''Emanet Alma Sebebi: ${value.docs[0]["Emanet Alma Sebebi"]}'''}
+${'''Emanet Alma Tarihi: ${element.data()["Emanet Alma Tarihi"]}'''}
+${'''Emanet Teslim Tarihi: ${element.data()["Teslim Tarihi"]}'''}
+${'''Eksik Teslim: ${element.data()["Eksik"]}'''}
+''');
+              genel0 = mgenel0.toList();
+            }
+          });
+          await FirebaseFirestore.instance
+              .collection("Users")
+              .doc(Auth.currentUser!.email)
+              .collection("Ürün")
+              .where("durum", isEqualTo: 1)
+              .where("Emanet Alma Tarihi Saatsiz", isEqualTo: tarihAlma)
+              .get()
+              .then((value1) {
+            List madi1 = [];
+            List mAlmaTarihi1 = [];
+            List mTeslimTarihi1 = [];
+            mgenel1.clear();
+            for (var element in value1.docs) {
+              mgenel1.add('''
+
+${'''Emanet Alınan Ürün: ${element.data()["Emanet"].toString().replaceAll('{', '').replaceAll('}', '')} adet mevcut ${element.data()["İlk Alınan"]} adet alındı'''}
+${'''Emanet Alan Kişi: ${value1.docs[0]["Emanet Alan"]}'''}
+${'''Emanet Alma Sebebi: ${value1.docs[0]["Emanet Alma Sebebi"]}'''}
+${'''Emanet Alma Tarihi: ${element.data()["Emanet Alma Tarihi"]}'''}
+''');
+              genel1 = mgenel1.toList();
+            }
+          });
+        } else if (zaman == "Genel") {
+          await FirebaseFirestore.instance
+              .collection("Users")
+              .doc(Auth.currentUser!.email)
+              .collection("Ürün")
+              .where("durum", isEqualTo: 0)
+              .get()
+              .then((value) {
+            List madi0 = [];
+            List mAlmaTarihi0 = [];
+            List mTeslimTarihi0 = [];
+            List mEksik0 = [];
+            mgenel0.clear();
+            for (var element in value.docs) {
+              mgenel0.add('''
+
+${'''Emanet Alınan Ürün: ${element.data()["Emanet"].toString().replaceAll('{', '').replaceAll('}', '')} adet'''}
+${'''Emanet Alan Kişi: ${value.docs[0]["Emanet Alan"]}'''}
+${'''Emanet Alma Sebebi: ${value.docs[0]["Emanet Alma Sebebi"]}'''}
+${'''Emanet Alma Tarihi: ${element.data()["Emanet Alma Tarihi"]}'''}
+${'''Emanet Teslim Tarihi: ${element.data()["Teslim Tarihi"]}'''}
+${'''Eksik Teslim: ${element.data()["Eksik"]}'''}
+''');
+              genel0 = mgenel0.toList();
+            }
+          });
+          await FirebaseFirestore.instance
+              .collection("Users")
+              .doc(Auth.currentUser!.email)
+              .collection("Ürün")
+              .where("durum", isEqualTo: 1)
+              .get()
+              .then((value1) {
+            List madi1 = [];
+            List mAlmaTarihi1 = [];
+            List mTeslimTarihi1 = [];
+            mgenel1.clear();
+            for (var element in value1.docs) {
+              mgenel1.add('''
+
+${'''Emanet Alınan Ürün: ${element.data()["Emanet"].toString().replaceAll('{', '').replaceAll('}', '')} adet mevcut ${element.data()["İlk Alınan"]} adet alındı'''}
+${'''Emanet Alan Kişi: ${value1.docs[0]["Emanet Alan"]}'''}
+${'''Emanet Alma Sebebi: ${value1.docs[0]["Emanet Alma Sebebi"]}'''}
+${'''Emanet Alma Tarihi: ${element.data()["Emanet Alma Tarihi"]}'''}
+''');
+              genel1 = mgenel1.toList();
+            }
+          });
+        }
         // ignore: non_constant_identifier_names, avoid_types_as_parameter_names, empty_catches
       } catch (Error) {}
     }
@@ -160,24 +288,31 @@ ${'''Emanet Alma Tarihi: ${element.data()["Emanet Alma Tarihi"]}'''}
       rapor.name = "Emanet Raporu";
 
       /*------------------------------------------------*/
-      final xls.Range rangebaslik0 = rapor.getRangeByName('A1');
+      final xls.Range rangebaslikBuyuk = rapor.getRangeByName('A1');
+      rangebaslikBuyuk.setText("$zaman Emanet Raporu");
+
+      rangebaslikBuyuk.cellStyle.fontColor = "#eb3434";
+      rangebaslikBuyuk.cellStyle.fontSize = 18;
+      rangebaslikBuyuk.cellStyle.bold = true;
+
+      final xls.Range rangebaslik0 = rapor.getRangeByName('A2');
       rangebaslik0.setText("TESLİM EDİLEN MAZLEMELER");
 
       rangebaslik0.cellStyle.fontColor = "#eb3434";
-      rangebaslik0.cellStyle.fontSize = 17;
+      rangebaslik0.cellStyle.fontSize = 13;
       rangebaslik0.cellStyle.bold = true;
 
       try {
         if (mgenel0.length == 1) {
           final xls.Range list =
-              rapor.getRangeByName('A2:A${mgenel0.length + 2}');
-          rapor.importList(mgenel0, 2, 1, true);
+              rapor.getRangeByName('A3:A${mgenel0.length + 3}');
+          rapor.importList(mgenel0, 3, 1, true);
           list.columnWidth = 60;
           list.cellStyle.wrapText = true;
         } else {
           final xls.Range list =
-              rapor.getRangeByName('A2:A${mgenel0.length + 1}');
-          rapor.importList(mgenel0, 2, 1, true);
+              rapor.getRangeByName('A3:A${mgenel0.length + 2}');
+          rapor.importList(mgenel0, 3, 1, true);
           list.columnWidth = 60;
           list.cellStyle.wrapText = true;
         }
@@ -185,24 +320,24 @@ ${'''Emanet Alma Tarihi: ${element.data()["Emanet Alma Tarihi"]}'''}
 
       /*-------------------------*/
 
-      final xls.Range rangebaslik1 = rapor.getRangeByName('B1');
+      final xls.Range rangebaslik1 = rapor.getRangeByName('B2');
       rangebaslik1.setText("TESLİM EDİLMEYEN MAZLEMELER");
 
       rangebaslik1.cellStyle.fontColor = "#eb3434";
-      rangebaslik1.cellStyle.fontSize = 17;
+      rangebaslik1.cellStyle.fontSize = 13;
       rangebaslik1.cellStyle.bold = true;
 
       try {
         if (mgenel1.length == 1) {
           final xls.Range list1 =
-              rapor.getRangeByName('B2:B${mgenel1.length + 2}');
-          rapor.importList(mgenel1, 2, 2, true);
+              rapor.getRangeByName('B3:B${mgenel1.length + 3}');
+          rapor.importList(mgenel1, 3, 2, true);
           list1.columnWidth = 60;
           list1.cellStyle.wrapText = true;
         } else {
           final xls.Range list1 =
-              rapor.getRangeByName('B2:B${mgenel1.length + 1}');
-          rapor.importList(mgenel1, 2, 2, true);
+              rapor.getRangeByName('B3:B${mgenel1.length + 2}');
+          rapor.importList(mgenel1, 3, 2, true);
           list1.columnWidth = 60;
           list1.cellStyle.wrapText = true;
         }
@@ -216,7 +351,7 @@ ${'''Emanet Alma Tarihi: ${element.data()["Emanet Alma Tarihi"]}'''}
       String formattedDate = DateFormat('dd-MM-yyyy').format(now);
       final String path = (await getApplicationSupportDirectory()).path;
       final String fileName =
-          '$path/IHH Depo Raporu_${k_adi.text}_$formattedDate.xlsx';
+          '$path/IHH $zaman Depo Raporu_${k_adi.text}_$formattedDate.xlsx';
       final File file = File(fileName);
       await file.writeAsBytes(bytes, flush: true);
       OpenFile.open(fileName);
@@ -314,14 +449,79 @@ ${'''Emanet Alma Tarihi: ${element.data()["Emanet Alma Tarihi"]}'''}
             Align(
               alignment: Alignment.bottomRight,
               child: Padding(
-                padding: const EdgeInsets.all(7),
-                child: FloatingActionButton(
+                  padding: const EdgeInsets.all(7),
+                  child: SpeedDial(
+                    overlayColor: Colors.red,
+                    overlayOpacity: 0,
+                    curve: Curves.easeInQuart,
+                    child: const Icon(Icons.print, size: 35),
+                    backgroundColor: const Color(0xffd41217),
+                    childMargin: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 17),
+                    buttonSize: const Size(65.0, 60.0),
+                    children: [
+                      SpeedDialChild(
+                          child: const Icon(Icons.today,
+                              size: 35, color: Colors.white),
+                          label: "Günlük Rapor",
+                          backgroundColor:
+                              const Color.fromARGB(255, 255, 208, 0),
+                          onTap: () {
+                            setState(() {
+                              zaman = "Günlük";
+                              tarihAlma = DateFormat("dd-MM-yyyy")
+                                  .format(DateTime.now());
+                            });
+                            createExcel();
+                          }),
+                      /*SpeedDialChild(
+                          child: const Icon(Icons.date_range,
+                              size: 35, color: Colors.white),
+                          label: "Haftalık Rapor",
+                          backgroundColor:
+                              const Color.fromARGB(255, 94, 255, 0),
+                          onTap: () {
+                            setState(() {
+                              zaman = "Haftalık";
+                              tarihAlma = DateTime.parse(
+                                  DateFormat('dd-MM-yyyy').format(DateTime.now()
+                                      .subtract(const Duration(days: 7))));
+                            });
+                            createExcel();
+                          }),*/
+                      /*SpeedDialChild(
+                          child: const Icon(Icons.calendar_month,
+                              size: 35, color: Colors.white),
+                          label: "Aylık Rapor",
+                          backgroundColor:
+                              const Color.fromARGB(255, 18, 212, 212),
+                          onTap: () {
+                            setState(() {
+                              zaman = "Aylık";
+                            });
+                            createExcel();
+                          }),*/
+                      SpeedDialChild(
+                          child: const Icon(Icons.view_day,
+                              size: 35, color: Colors.white),
+                          label: "Tüm Raporlar",
+                          backgroundColor:
+                              const Color.fromARGB(255, 18, 37, 212),
+                          onTap: () {
+                            setState(() {
+                              zaman = "Genel";
+                            });
+                            createExcel();
+                          }),
+                    ],
+                  )
+                  /*FloatingActionButton(
                     child: const Icon(Icons.print, size: 35),
                     backgroundColor: const Color(0xffd41217),
                     onPressed: () {
                       createExcel();
-                    }),
-              ),
+                    }),*/
+                  ),
             ),
             const SizedBox(
               height: 15,

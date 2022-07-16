@@ -45,7 +45,7 @@ class SignInPage extends StatelessWidget {
                                   emailStr = emailMtn;
                                 },
                                 decoration: InputDecoration(
-                                    prefixIcon: const Icon(Icons.person),
+                                    prefixIcon: const Icon(Icons.email),
                                     fillColor: Colors.white,
                                     filled: true,
                                     enabledBorder: OutlineInputBorder(
@@ -56,7 +56,7 @@ class SignInPage extends StatelessWidget {
                                         borderRadius: BorderRadius.circular(7),
                                         borderSide: const BorderSide(
                                             color: Colors.black, width: 2)),
-                                    hintText: "Kullanıcı Adı",
+                                    hintText: "E-Posta",
                                     hintStyle:
                                         TextStyle(color: Colors.grey[700])),
                               ),

@@ -35,6 +35,11 @@ class GetMaterials extends StatefulWidget {
 var malzemeMail;
 var malzemeStokMail;
 var malzemeSebepMail;
+var adminMail1;
+var adminMail2;
+var adminMail3;
+var adminMail4;
+var adminMail5;
 
 class _GetMaterialsState extends State<GetMaterials> {
   final _firestore = FirebaseFirestore.instance;
@@ -66,6 +71,18 @@ class _GetMaterialsState extends State<GetMaterials> {
     FirebaseFirestore.instance.collection('Users');
     docRef.snapshots().listen((event) {
       kAdi = event.data()!["Kullanıcı Adı"];
+    });
+
+    FirebaseFirestore.instance
+        .collection("AppControl")
+        .doc("AdminMail")
+        .get()
+        .then((valueMail) {
+      adminMail1 = valueMail.data()!["Mail1"];
+      adminMail2 = valueMail.data()!["Mail2"];
+      adminMail3 = valueMail.data()!["Mail3"];
+      adminMail4 = valueMail.data()!["Mail4"];
+      adminMail5 = valueMail.data()!["Mail5"];
     });
 
     Query qmaterials = FirebaseFirestore.instance
@@ -360,10 +377,10 @@ Stok: ${malzemeler![index]["Stok"]}''',
                                                   },
                                                   "Id": Auth.currentUser!.uid,
                                                   "Emanet Alma Tarihi": DateFormat(
-                                                          'yyyy-MM-dd HH:mm:ss')
+                                                          'dd-MM-yyyy HH:mm:ss')
                                                       .format(DateTime.now()),
                                                   "Emanet Alma Tarihi Saatsiz":
-                                                      DateFormat('yyyy-MM-dd')
+                                                      DateFormat('dd-MM-yyyy')
                                                           .format(
                                                               DateTime.now()),
                                                   "Emanet Alan": "$kAdi",
@@ -588,7 +605,7 @@ Stok: ${malzemeler![index]["Stok"]}''',
                                                       .update({
                                                     "Id": Auth.currentUser!.uid,
                                                     "Teslim Tarihi": DateFormat(
-                                                            'yyyy-MM-dd HH:mm:ss')
+                                                            'dd-MM-yyyy HH:mm:ss')
                                                         .format(DateTime.now()),
                                                     "Emanet Alan": "$kAdi",
                                                     "Eksik": int.parse(value
@@ -684,7 +701,7 @@ Stok: ${malzemeler![index]["Stok"]}''',
                                                       .update({
                                                     "Id": Auth.currentUser!.uid,
                                                     "Teslim Tarihi": DateFormat(
-                                                            'yyyy-MM-dd HH:mm:ss')
+                                                            'dd-MM-yyyy HH:mm:ss')
                                                         .format(DateTime.now()),
                                                     "Emanet Alan": "$kAdi",
                                                     "Eksik": int.parse(value
@@ -783,7 +800,7 @@ Stok: ${malzemeler![index]["Stok"]}''',
                                                       .update({
                                                     "Id": Auth.currentUser!.uid,
                                                     "Teslim Tarihi": DateFormat(
-                                                            'yyyy-MM-dd HH:mm:ss')
+                                                            'dd-MM-yyyy HH:mm:ss')
                                                         .format(DateTime.now()),
                                                     "Emanet Alan": "$kAdi",
                                                     "Eksik": value.docs[0]
@@ -875,7 +892,7 @@ Stok: ${malzemeler![index]["Stok"]}''',
                                                       .update({
                                                     "Id": Auth.currentUser!.uid,
                                                     "Teslim Tarihi": DateFormat(
-                                                            'yyyy-MM-dd HH:mm:ss')
+                                                            'dd-MM-yyyy HH:mm:ss')
                                                         .format(DateTime.now()),
                                                     "Emanet Alan": "$kAdi",
                                                     "Eksik": value.docs[0]
@@ -1046,7 +1063,12 @@ Future SendAlEmail() async {
   final message = Message()
     ..from = Address(email, 'İHH Depo - $kAdi')
     ..recipients = [
-      Auth.currentUser!.email, /*"ebadem864@gmail.com"*/
+      Auth.currentUser!.email,
+      adminMail1,
+      adminMail2,
+      adminMail3,
+      adminMail4,
+      adminMail5
     ]
     ..subject = 'Emanet Hareket Bildirisi'
     ..text =
@@ -1087,7 +1109,12 @@ Future SendTeslimEmail() async {
   final message = Message()
     ..from = Address(email, 'İHH Depo - $kAdi')
     ..recipients = [
-      Auth.currentUser!.email, /*"ebadem864@gmail.com"*/
+      Auth.currentUser!.email,
+      adminMail1,
+      adminMail2,
+      adminMail3,
+      adminMail4,
+      adminMail5
     ]
     ..subject = 'Emanet Hareket Bildirisi'
     ..text =

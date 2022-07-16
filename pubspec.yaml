@@ -48,6 +48,7 @@ dependencies:
   mailer: ^5.1.1
   google_sign_in: ^5.3.3
   internet_connection_checker: ^0.0.1+4
+  flutter_speed_dial: ^6.0.0
 
 
   # The following adds the Cupertino Icons font to your application.

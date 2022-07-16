@@ -19,6 +19,8 @@ class RegisterPage extends StatefulWidget {
 class _RegisterPageState extends State<RegisterPage> {
   TextEditingController k_Adi = TextEditingController();
   FirebaseAuth Auth = FirebaseAuth.instance;
+  String passwordmtn2 = "";
+  String verfyStr = "";
   @override
   Widget build(BuildContext context) {
     final _authService = Provider.of<IAuthService>(context, listen: false);
@@ -96,6 +98,51 @@ class _RegisterPageState extends State<RegisterPage> {
                   hintStyle: TextStyle(color: Colors.grey[700])),
             ),
           ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              onChanged: (passwordMtn2) {
+                passwordmtn2 = passwordMtn2;
+              },
+              obscureText: true,
+              decoration: InputDecoration(
+                  prefixIcon: const Icon(Icons.key),
+                  fillColor: Colors.white,
+                  filled: true,
+                  enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(7),
+                      borderSide:
+                          const BorderSide(color: Colors.black, width: 2)),
+                  focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide:
+                          const BorderSide(color: Colors.black, width: 3)),
+                  hintText: "Şifre Tekrar",
+                  hintStyle: TextStyle(color: Colors.grey[700])),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextFormField(
+              onChanged: (verfyMtn) {
+                verfyStr = verfyMtn;
+              },
+              decoration: InputDecoration(
+                  prefixIcon: const Icon(Icons.verified_user),
+                  fillColor: Colors.white,
+                  filled: true,
+                  enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(7),
+                      borderSide:
+                          const BorderSide(color: Colors.black, width: 2)),
+                  focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide:
+                          const BorderSide(color: Colors.black, width: 3)),
+                  hintText: "Doğrulama Kodu",
+                  hintStyle: TextStyle(color: Colors.grey[700])),
+            ),
+          ),
           const SizedBox(
             height: 35,
           ),
@@ -137,46 +184,72 @@ class _RegisterPageState extends State<RegisterPage> {
                         padding: const EdgeInsets.symmetric(
                             vertical: 10, horizontal: 25),
                         onPressed: () async {
-                          if (passwordStr.length > 5) {
-                            await FirebaseFirestore.instance
-                                .collection("Users")
-                                .where("Kullanıcı Adı", isEqualTo: k_Adi.text)
-                                .get()
-                                .then((gelenVeri) async {
-                              if (gelenVeri.docs.isEmpty) {
-                                await _authService
-                                    .createUserWithEmailAndPassword(
-                                        email: emailStr, password: passwordStr)
-                                    .then((kullanici) {
-                                  FirebaseAuth Auth = FirebaseAuth.instance;
-                                  FirebaseFirestore.instance
-                                      .collection('Users')
-                                      .doc(emailStr)
-                                      .set({
-                                    "Eposta": emailStr,
-                                    "Şifre": passwordStr,
-                                    "Kullanıcı Adı": k_Adi.text,
-                                    "Üye Olma Tarihi": DateTime.now(),
-                                    "Emanetler": FieldValue.arrayUnion([]),
-                                    "Id": Auth.currentUser!.uid,
-                                    "Durum": 0,
-                                  });
-                                  emailStr = "";
-                                  passwordStr = "";
+                          await FirebaseFirestore.instance
+                              .collection("AppControl")
+                              .doc("İnfo")
+                              .get()
+                              .then((valueVerfy) async {
+                            if (verfyStr == valueVerfy.data()!["Verify"]) {
+                              if (passwordStr.length > 5) {
+                                await FirebaseFirestore.instance
+                                    .collection("Users")
+                                    .where("Kullanıcı Adı",
+                                        isEqualTo: k_Adi.text)
+                                    .get()
+                                    .then((gelenVeri) async {
+                                  if (gelenVeri.docs.isEmpty) {
+                                    if (passwordStr == passwordmtn2) {
+                                      await _authService
+                                          .createUserWithEmailAndPassword(
+                                              email: emailStr,
+                                              password: passwordStr)
+                                          .then((kullanici) {
+                                        FirebaseAuth Auth =
+                                            FirebaseAuth.instance;
+                                        FirebaseFirestore.instance
+                                            .collection('Users')
+                                            .doc(emailStr)
+                                            .set({
+                                          "Eposta": emailStr,
+                                          "Şifre": passwordStr,
+                                          "Kullanıcı Adı": k_Adi.text,
+                                          "Üye Olma Tarihi": DateTime.now(),
+                                          "Emanetler":
+                                              FieldValue.arrayUnion([]),
+                                          "Id": Auth.currentUser!.uid,
+                                          "Durum": 0,
+                                        });
+                                        emailStr = "";
+                                        passwordStr = "";
+                                      });
+                                    } else {
+                                      Fluttertoast.showToast(
+                                          msg:
+                                              "Girdiğiniz şifre aynı olmalıdır",
+                                          gravity: ToastGravity.CENTER,
+                                          fontSize: 20);
+                                    }
+                                  } else {
+                                    Fluttertoast.showToast(
+                                        msg:
+                                            "Bu kullanıcı adı zaten kullanılıyor",
+                                        gravity: ToastGravity.CENTER,
+                                        fontSize: 20);
+                                  }
                                 });
                               } else {
                                 Fluttertoast.showToast(
-                                    msg: "Bu kullanıcı adı zaten kullanılıyor",
+                                    msg: "Şifre en az 6 karakter olmalıdır",
                                     gravity: ToastGravity.CENTER,
                                     fontSize: 20);
                               }
-                            });
-                          } else {
-                            Fluttertoast.showToast(
-                                msg: "Şifre en az 6 karakter olmalıdır",
-                                gravity: ToastGravity.CENTER,
-                                fontSize: 20);
-                          }
+                            } else {
+                              Fluttertoast.showToast(
+                                  msg: "Doğrulama kodu hatalı",
+                                  gravity: ToastGravity.CENTER,
+                                  fontSize: 20);
+                            }
+                          });
                         }),
                   ),
                 ),
