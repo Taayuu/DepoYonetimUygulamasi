@@ -1,14 +1,13 @@
 // ignore_for_file: non_constant_identifier_names, deprecated_member_use
-
 import 'dart:io';
-
 //import 'package:firebase_core/firebase_core.dart'; *firebase
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:login/get_materials_page.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'core/service/renk.dart';
+import 'get_materials_page.dart';
 
 class ScanQrGet extends StatefulWidget {
   const ScanQrGet({Key? key}) : super(key: key);
@@ -41,13 +40,12 @@ class _ScanQrGetState extends State<ScanQrGet> {
 
   String k_adi = "";
   String malzemeAdi = "";
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: const Color(0xffd41217),
+          backgroundColor: ikinciRenk,
           title: const Text('Qr Kod'),
         ),
         body: Stack(
@@ -109,7 +107,6 @@ class _ScanQrGetState extends State<ScanQrGet> {
           ],
         ),
       );
-
   Widget buildResult() => Column(
         children: [
           Container(
@@ -125,7 +122,6 @@ class _ScanQrGetState extends State<ScanQrGet> {
           ),
         ],
       );
-
   Widget buildOnayla() => Column(
         children: <Widget>[
           RaisedButton(
@@ -195,15 +191,14 @@ class _ScanQrGetState extends State<ScanQrGet> {
                           msg: "Bu Qr Koduna Ait Ürün Bulunamadı",
                           gravity: ToastGravity.CENTER,
                           fontSize: 20,
-                          backgroundColor: Colors.white,
-                          textColor: Colors.black);
+                          backgroundColor: white,
+                          textColor: black);
                     }
                   });
                 }
               })
         ],
       );
-
   void asd() {
     if (barControl.text != "Qr Kodu Tarat!") {
       FirebaseFirestore.instance
@@ -269,8 +264,8 @@ class _ScanQrGetState extends State<ScanQrGet> {
               msg: "Bu Qr Koduna Ait Ürün Bulunamadı",
               gravity: ToastGravity.CENTER,
               fontSize: 20,
-              backgroundColor: Colors.white,
-              textColor: Colors.black);
+              backgroundColor: white,
+              textColor: black);
         }
       });
     }
@@ -286,7 +281,6 @@ class _ScanQrGetState extends State<ScanQrGet> {
         borderRadius: 10,
         cutOutSize: MediaQuery.of(context).size.width * 0.8,
       ));
-
   void onQRViewCreated(QRViewController controller) {
     setState(() => this.controller = controller);
     controller.scannedDataStream.listen((barcode) => setState(() {

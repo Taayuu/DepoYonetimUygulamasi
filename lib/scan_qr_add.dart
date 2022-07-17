@@ -1,14 +1,13 @@
 // ignore_for_file: deprecated_member_use
-
 import 'dart:io';
 //import 'package:firebase_core/firebase_core.dart'; *firebase
 import 'package:flutter/material.dart';
-import 'package:login/add_materials_page.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'add_materials_page.dart';
+import 'core/service/renk.dart';
 
 class ScanQrAdd extends StatefulWidget {
   const ScanQrAdd({Key? key}) : super(key: key);
-
   @override
   State<ScanQrAdd> createState() => _ScanQrAddState();
 }
@@ -18,7 +17,6 @@ class _ScanQrAddState extends State<ScanQrAdd> {
   TextEditingController barControl = TextEditingController();
   Barcode? barcode;
   QRViewController? controller;
-
   @override
   void dispose() {
     controller?.dispose();
@@ -39,7 +37,7 @@ class _ScanQrAddState extends State<ScanQrAdd> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: const Color(0xffd41217),
+          backgroundColor: ikinciRenk,
           title: const Text('Qr Kod'),
         ),
         body: Stack(

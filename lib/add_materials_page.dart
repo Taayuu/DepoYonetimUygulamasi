@@ -1,12 +1,12 @@
 // ignore_for_file: non_constant_identifier_names, empty_catches
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:ihhdepom/core/service/firebaseKisayol.dart';
+import 'package:ihhdepom/scan_qr_add.dart';
 import 'package:intl/intl.dart';
-import 'package:login/scan_qr_add.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'core/service/renk.dart';
 
 class AddMaterialsPage extends StatefulWidget {
   const AddMaterialsPage(
@@ -33,7 +33,6 @@ class AddMaterialsPage extends StatefulWidget {
 }
 
 class _AddMaterialsPageState extends State<AddMaterialsPage> {
-  final _firestore = FirebaseFirestore.instance;
   TextEditingController materialNameController = TextEditingController();
   TextEditingController materialClassController = TextEditingController();
   TextEditingController materialDepartmentController = TextEditingController();
@@ -42,8 +41,6 @@ class _AddMaterialsPageState extends State<AddMaterialsPage> {
   var materialStockController = TextEditingController(text: "12345678");
   var maskFormatter = MaskTextInputFormatter(
       mask: '####-####', filter: {"#": RegExp(r'[0-9]')});
-  // -> "12-34-56-78"
-  FirebaseAuth Auth = FirebaseAuth.instance;
   @override
   Widget build(BuildContext context) {
     List keyword = [];
@@ -51,7 +48,6 @@ class _AddMaterialsPageState extends State<AddMaterialsPage> {
     Map<String, dynamic> materialsDataGuncelle;
     Map<String, dynamic> materialsDataEkle;
     materialStockController.value = maskFormatter.updateMask(mask: "###");
-    CollectionReference materialsRef = _firestore.collection('Materials');
     materialQrController.text = widget.Qr;
     materialClassController.text = widget.malzemeSinifi;
     materialDepartmentController.text = widget.malzemeRafi;
@@ -67,9 +63,9 @@ class _AddMaterialsPageState extends State<AddMaterialsPage> {
     }
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      backgroundColor: const Color(0xffFFEBC1),
+      backgroundColor: anaRenk,
       appBar: AppBar(
-        backgroundColor: const Color(0xffd41217),
+        backgroundColor: ikinciRenk,
         title: const Text("Malzeme Ekle"),
       ),
       body: SafeArea(
@@ -87,18 +83,18 @@ class _AddMaterialsPageState extends State<AddMaterialsPage> {
                         controller: materialQrController,
                         decoration: InputDecoration(
                           labelText: "Qr Kod",
-                          fillColor: Colors.white,
+                          fillColor: white,
                           filled: true,
                           enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(7),
-                              borderSide: const BorderSide(
-                                  color: Colors.black, width: 2)),
+                              borderSide:
+                                  const BorderSide(color: black, width: 2)),
                           focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
-                              borderSide: const BorderSide(
-                                  color: Colors.black, width: 3)),
+                              borderSide:
+                                  const BorderSide(color: black, width: 3)),
                           hintText: "Qr Kod giriniz",
-                          hintStyle: TextStyle(color: Colors.grey[700]),
+                          hintStyle: const TextStyle(color: grey700),
                           suffixIcon: IconButton(
                             onPressed: () {
                               Navigator.push(
@@ -106,9 +102,9 @@ class _AddMaterialsPageState extends State<AddMaterialsPage> {
                                   MaterialPageRoute(
                                       builder: (context) => const ScanQrAdd()));
                             },
-                            icon: Icon(
+                            icon: const Icon(
                               Icons.qr_code_scanner_sharp,
-                              color: Colors.grey[600],
+                              color: grey600,
                             ),
                           ),
                         ),
@@ -125,14 +121,14 @@ class _AddMaterialsPageState extends State<AddMaterialsPage> {
                             filled: true,
                             enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(7),
-                                borderSide: const BorderSide(
-                                    color: Colors.black, width: 2)),
+                                borderSide:
+                                    const BorderSide(color: black, width: 2)),
                             focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
-                                borderSide: const BorderSide(
-                                    color: Colors.black, width: 3)),
+                                borderSide:
+                                    const BorderSide(color: black, width: 3)),
                             hintText: "Malzeme Adı giriniz",
-                            hintStyle: TextStyle(color: Colors.grey[700])),
+                            hintStyle: const TextStyle(color: grey700)),
                       ),
                       const SizedBox(
                         height: 10,
@@ -142,18 +138,18 @@ class _AddMaterialsPageState extends State<AddMaterialsPage> {
                         controller: materialClassController,
                         decoration: InputDecoration(
                             labelText: "Malzeme Sınıfı",
-                            fillColor: Colors.white,
+                            fillColor: white,
                             filled: true,
                             enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(7),
-                                borderSide: const BorderSide(
-                                    color: Colors.black, width: 2)),
+                                borderSide:
+                                    const BorderSide(color: black, width: 2)),
                             focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
-                                borderSide: const BorderSide(
-                                    color: Colors.black, width: 3)),
+                                borderSide:
+                                    const BorderSide(color: black, width: 3)),
                             hintText: "Malzeme Sınıfı giriniz",
-                            hintStyle: TextStyle(color: Colors.grey[700])),
+                            hintStyle: const TextStyle(color: grey700)),
                       ),
                       const SizedBox(
                         height: 10,
@@ -163,18 +159,18 @@ class _AddMaterialsPageState extends State<AddMaterialsPage> {
                         controller: materialDepartmentController,
                         decoration: InputDecoration(
                             labelText: "Malzeme Rafı",
-                            fillColor: Colors.white,
+                            fillColor: white,
                             filled: true,
                             enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(7),
-                                borderSide: const BorderSide(
-                                    color: Colors.black, width: 2)),
+                                borderSide:
+                                    const BorderSide(color: black, width: 2)),
                             focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
-                                borderSide: const BorderSide(
-                                    color: Colors.black, width: 3)),
+                                borderSide:
+                                    const BorderSide(color: black, width: 3)),
                             hintText: "Malzeme Rafı giriniz",
-                            hintStyle: TextStyle(color: Colors.grey[700])),
+                            hintStyle: const TextStyle(color: grey700)),
                       ),
                       const SizedBox(
                         height: 10,
@@ -184,19 +180,19 @@ class _AddMaterialsPageState extends State<AddMaterialsPage> {
                           decoration: InputDecoration(
                               labelText:
                                   "Resim URL'si (URL YOK İSE BOŞ BIRAKIN !!!)",
-                              fillColor: Colors.white,
+                              fillColor: white,
                               filled: true,
                               enabledBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(7),
-                                  borderSide: const BorderSide(
-                                      color: Colors.black, width: 2)),
+                                  borderSide:
+                                      const BorderSide(color: black, width: 2)),
                               focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
-                                  borderSide: const BorderSide(
-                                      color: Colors.black, width: 3)),
+                                  borderSide:
+                                      const BorderSide(color: black, width: 3)),
                               hintText: "URL giriniz",
-                              hintStyle: TextStyle(color: Colors.grey[700])),
-                          style: const TextStyle(color: Colors.blue)),
+                              hintStyle: const TextStyle(color: grey700)),
+                          style: const TextStyle(color: blue)),
                       const SizedBox(
                         height: 10,
                       ),
@@ -205,18 +201,18 @@ class _AddMaterialsPageState extends State<AddMaterialsPage> {
                           controller: materialStockController,
                           decoration: InputDecoration(
                               labelText: "Stok",
-                              fillColor: Colors.white,
+                              fillColor: white,
                               filled: true,
                               enabledBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(7),
-                                  borderSide: const BorderSide(
-                                      color: Colors.black, width: 2)),
+                                  borderSide:
+                                      const BorderSide(color: black, width: 2)),
                               focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
-                                  borderSide: const BorderSide(
-                                      color: Colors.black, width: 3)),
+                                  borderSide:
+                                      const BorderSide(color: black, width: 3)),
                               hintText: "Malzeme Stoğu Giriniz",
-                              hintStyle: TextStyle(color: Colors.grey[700])),
+                              hintStyle: const TextStyle(color: grey700)),
                           keyboardType: TextInputType.number,
                           inputFormatters: [maskFormatter]),
                       const SizedBox(height: 10),
@@ -354,8 +350,8 @@ class _AddMaterialsPageState extends State<AddMaterialsPage> {
                                             Fluttertoast.showToast(
                                                 msg:
                                                     "Bu rafta bir ürün zaten mevcut",
-                                                backgroundColor: Colors.white,
-                                                textColor: Colors.black,
+                                                backgroundColor: white,
+                                                textColor: black,
                                                 gravity: ToastGravity.CENTER,
                                                 fontSize: 20);
                                           }
@@ -366,8 +362,8 @@ class _AddMaterialsPageState extends State<AddMaterialsPage> {
                                         Fluttertoast.showToast(
                                             msg:
                                                 "Bu Qr Koda Sahip Malzeme zaten mevcut",
-                                            backgroundColor: Colors.white,
-                                            textColor: Colors.black,
+                                            backgroundColor: white,
+                                            textColor: black,
                                             gravity: ToastGravity.CENTER,
                                             fontSize: 20);
                                       }
@@ -378,18 +374,15 @@ class _AddMaterialsPageState extends State<AddMaterialsPage> {
                                     Fluttertoast.showToast(
                                         msg:
                                             "Bu Ada Sahip Malzeme zaten mevcut",
-                                        backgroundColor: Colors.white,
-                                        textColor: Colors.black,
+                                        backgroundColor: white,
+                                        textColor: black,
                                         gravity: ToastGravity.CENTER,
                                         fontSize: 20);
                                   }
                                 });
                               } else if (widget.malzemeEkleGuncelleButtonText ==
                                   "Güncelle") {
-                                await _firestore
-                                    .collection("Users")
-                                    .doc(Auth.currentUser!.email)
-                                    .collection("Ürün")
+                                await urunCol
                                     .where("ID", isEqualTo: widget.ID)
                                     .where("durum", isEqualTo: 1)
                                     .get()
@@ -504,13 +497,12 @@ class _AddMaterialsPageState extends State<AddMaterialsPage> {
                                   fontSize: 20);
                             }
                           },
-                          color: const Color(0xffd41217),
+                          color: ikinciRenk,
                           padding: const EdgeInsets.symmetric(
                               vertical: 20, horizontal: 25),
                           child: Text(
                             'Malzemeyi ${widget.malzemeEkleGuncelleButtonText}',
-                            style: const TextStyle(
-                                fontSize: 13, color: Colors.white),
+                            style: const TextStyle(fontSize: 13, color: white),
                           ),
                         ),
                       ),

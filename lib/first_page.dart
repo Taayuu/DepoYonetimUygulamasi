@@ -1,8 +1,7 @@
 // ignore_for_file: non_constant_identifier_names
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'core/service/renk.dart';
 
 class FirstPage extends StatefulWidget {
   const FirstPage({Key? key}) : super(key: key);
@@ -12,14 +11,13 @@ class FirstPage extends StatefulWidget {
 }
 
 class _FirstPageState extends State<FirstPage> {
-  FirebaseAuth Auth = FirebaseAuth.instance;
   @override
   Widget build(BuildContext context) {
     CollectionReference usersRef =
         FirebaseFirestore.instance.collection('Users');
     return SafeArea(
       child: Scaffold(
-        backgroundColor: const Color(0xffFFEBC1),
+        backgroundColor: anaRenk,
         body: Column(
           children: [
             const SizedBox(
@@ -48,8 +46,8 @@ class _FirstPageState extends State<FirstPage> {
                                     shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(20),
                                         side: const BorderSide(
-                                            color: Colors.black, width: 2)),
-                                    color: Colors.white,
+                                            color: black, width: 2)),
+                                    color: white,
                                     child: ListTile(
                                       title: Text(
                                         '${malzemeler[index]['Kullanıcı Adı']}',

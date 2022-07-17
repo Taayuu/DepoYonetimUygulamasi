@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:login/core/model/my_app_user.dart';
-import 'package:login/home_page.dart';
-import 'package:login/sign_in_page.dart';
+import 'package:ihhdepom/core/model/my_app_user.dart';
+import 'package:ihhdepom/home_page.dart';
+import 'package:ihhdepom/sign_in_page.dart';
 
 import 'error_page.dart';
 

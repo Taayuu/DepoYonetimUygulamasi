@@ -1,13 +1,12 @@
 // ignore_for_file: unused_local_variable
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:login/forgot_password.dart';
-import 'package:login/register_page.dart';
+import 'package:ihhdepom/forgot_password.dart';
+import 'package:ihhdepom/register_page.dart';
 import 'package:provider/provider.dart';
-
 import 'core/service/i_auth_service.dart';
+import 'core/service/renk.dart';
 
 List<DocumentSnapshot>? malzemeler;
 String emailStr = "";
@@ -51,14 +50,13 @@ class SignInPage extends StatelessWidget {
                                     enabledBorder: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(7),
                                         borderSide: const BorderSide(
-                                            color: Colors.black, width: 2)),
+                                            color: black, width: 2)),
                                     focusedBorder: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(7),
                                         borderSide: const BorderSide(
-                                            color: Colors.black, width: 2)),
+                                            color: black, width: 2)),
                                     hintText: "E-Posta",
-                                    hintStyle:
-                                        TextStyle(color: Colors.grey[700])),
+                                    hintStyle: const TextStyle(color: grey700)),
                               ),
                             ),
                             Padding(
@@ -70,7 +68,7 @@ class SignInPage extends StatelessWidget {
                                 obscureText: true,
                                 decoration: InputDecoration(
                                     prefixIcon: const Icon(Icons.key),
-                                    fillColor: Colors.white,
+                                    fillColor: white,
                                     filled: true,
                                     enabledBorder: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(7),
@@ -81,8 +79,7 @@ class SignInPage extends StatelessWidget {
                                         borderSide: const BorderSide(
                                             color: Colors.black, width: 2)),
                                     hintText: "Şifre",
-                                    hintStyle:
-                                        TextStyle(color: Colors.grey[700])),
+                                    hintStyle: const TextStyle(color: grey700)),
                               ),
                             ),
                             Expanded(
@@ -99,7 +96,7 @@ class SignInPage extends StatelessWidget {
                                       },
                                       child: const Text(
                                         'Hesap\nOluştur',
-                                        style: TextStyle(color: Colors.black),
+                                        style: TextStyle(color: black),
                                       ),
                                     ),
                                   ),
@@ -134,14 +131,13 @@ class SignInPage extends StatelessWidget {
                                             }
                                           });
                                         },
-                                        color: const Color(0xffd41217),
+                                        color: ikinciRenk,
                                         padding: const EdgeInsets.symmetric(
                                             vertical: 16, horizontal: 20),
                                         child: const Text(
                                           'Giriş',
                                           style: TextStyle(
-                                              fontSize: 13,
-                                              color: Colors.white),
+                                              fontSize: 13, color: white),
                                         ),
                                       ),
                                     ),
@@ -150,7 +146,7 @@ class SignInPage extends StatelessWidget {
                                     child: MaterialButton(
                                         child: const Text(
                                           "Şifremi\nUnuttum",
-                                          style: TextStyle(color: Colors.black),
+                                          style: TextStyle(color: black),
                                         ),
                                         onPressed: () {
                                           Navigator.push(

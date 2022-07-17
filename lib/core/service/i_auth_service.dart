@@ -1,4 +1,4 @@
-import 'package:login/core/model/my_app_user.dart';
+import 'package:ihhdepom/core/model/my_app_user.dart';
 
 abstract class IAuthService {
   Future<MyAppUser> createUserWithEmailAndPassword(

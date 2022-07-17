@@ -6,7 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:login/add_materials_page.dart';
+import 'package:ihhdepom/add_materials_page.dart';
 
 class MaterialsPageAdmin extends StatefulWidget {
   const MaterialsPageAdmin({

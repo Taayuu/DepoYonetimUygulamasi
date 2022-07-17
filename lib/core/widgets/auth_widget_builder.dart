@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:login/core/service/i_auth_service.dart';
+import 'package:ihhdepom/core/service/i_auth_service.dart';
 import 'package:provider/provider.dart';
 
 import '../model/my_app_user.dart';

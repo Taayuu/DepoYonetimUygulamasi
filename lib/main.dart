@@ -3,15 +3,14 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:ihhdepom/core/model/my_app_user.dart';
+import 'package:ihhdepom/core/widgets/auth_widget.dart';
+import 'package:ihhdepom/scan_qr_add.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
-import 'package:login/core/model/my_app_user.dart';
-import 'package:login/core/service/firebase_service.dart';
-import 'package:login/core/service/i_auth_service.dart';
-import 'package:login/core/widgets/auth_widget.dart';
-import 'package:login/core/widgets/auth_widget_builder.dart';
-import 'package:login/scan_qr_add.dart';
 import 'package:provider/provider.dart';
-
+import 'core/service/firebase_service.dart';
+import 'core/service/i_auth_service.dart';
+import 'core/widgets/auth_widget_builder.dart';
 import 'firebase_options.dart';
 
 void main() async {

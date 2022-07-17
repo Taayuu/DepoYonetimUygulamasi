@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:login/core/model/my_app_user.dart';
-import 'package:login/core/service/i_auth_service.dart';
-import 'package:login/core/service/mixin_user.dart';
+import 'package:ihhdepom/core/model/my_app_user.dart';
+import 'package:ihhdepom/core/service/i_auth_service.dart';
+import 'package:ihhdepom/core/service/mixin_user.dart';
 
 class AuthService with ConvertUser implements IAuthService {
   final FirebaseAuth _authInstance = FirebaseAuth.instance;

@@ -1,8 +1,8 @@
 // ignore_for_file: non_constant_identifier_names
-
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:ihhdepom/core/service/firebaseKisayol.dart';
+import 'core/service/renk.dart';
 
 class ForgotPassword extends StatelessWidget {
   const ForgotPassword({Key? key}) : super(key: key);
@@ -10,9 +10,8 @@ class ForgotPassword extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String emailStr = "";
-    FirebaseAuth Auth = FirebaseAuth.instance;
     return Scaffold(
-      backgroundColor: const Color(0xffFFEBC1),
+      backgroundColor: anaRenk,
       body: Form(
           child: Column(
         children: <Widget>[
@@ -24,18 +23,16 @@ class ForgotPassword extends StatelessWidget {
             child: TextField(
               decoration: InputDecoration(
                   prefixIcon: const Icon(Icons.email),
-                  fillColor: Colors.white,
+                  fillColor: white,
                   filled: true,
                   enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(7),
-                      borderSide:
-                          const BorderSide(color: Colors.black, width: 2)),
+                      borderSide: const BorderSide(color: black, width: 2)),
                   focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
-                      borderSide:
-                          const BorderSide(color: Colors.black, width: 3)),
+                      borderSide: const BorderSide(color: black, width: 3)),
                   hintText: "E-Posta",
-                  hintStyle: TextStyle(color: Colors.grey[700])),
+                  hintStyle: const TextStyle(color: grey700)),
               onChanged: (emailMtn) {
                 emailStr = emailMtn;
               },
@@ -51,9 +48,9 @@ class ForgotPassword extends StatelessWidget {
                     child: MaterialButton(
                         child: const Text(
                           'İptal',
-                          style: TextStyle(fontSize: 20, color: Colors.white),
+                          style: TextStyle(fontSize: 20, color: white),
                         ),
-                        color: const Color(0xffd41217),
+                        color: ikinciRenk,
                         padding: const EdgeInsets.symmetric(
                             vertical: 10, horizontal: 25),
                         onPressed: () {
@@ -70,9 +67,9 @@ class ForgotPassword extends StatelessWidget {
                     child: MaterialButton(
                         child: const Text(
                           'Şifreyi Sıfırla',
-                          style: TextStyle(fontSize: 20, color: Colors.white),
+                          style: TextStyle(fontSize: 20, color: white),
                         ),
-                        color: const Color(0xffd41217),
+                        color: ikinciRenk,
                         padding: const EdgeInsets.symmetric(
                             vertical: 10, horizontal: 25),
                         onPressed: () {

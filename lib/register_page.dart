@@ -1,13 +1,12 @@
 // ignore_for_file: non_constant_identifier_names
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:login/sign_in_page.dart';
+import 'package:ihhdepom/core/service/firebaseKisayol.dart';
+import 'package:ihhdepom/sign_in_page.dart';
 import 'package:provider/provider.dart';
-
 import 'core/service/i_auth_service.dart';
+import 'core/service/renk.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
@@ -18,7 +17,6 @@ class RegisterPage extends StatefulWidget {
 
 class _RegisterPageState extends State<RegisterPage> {
   TextEditingController k_Adi = TextEditingController();
-  FirebaseAuth Auth = FirebaseAuth.instance;
   String passwordmtn2 = "";
   String verfyStr = "";
   @override
@@ -26,7 +24,7 @@ class _RegisterPageState extends State<RegisterPage> {
     final _authService = Provider.of<IAuthService>(context, listen: false);
     return SafeArea(
         child: Scaffold(
-      backgroundColor: const Color(0xffFFEBC1),
+      backgroundColor: anaRenk,
       body: Column(
         children: <Widget>[
           const SizedBox(
@@ -39,18 +37,16 @@ class _RegisterPageState extends State<RegisterPage> {
               controller: k_Adi,
               decoration: InputDecoration(
                   prefixIcon: const Icon(Icons.person),
-                  fillColor: Colors.white,
+                  fillColor: white,
                   filled: true,
                   enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(7),
-                      borderSide:
-                          const BorderSide(color: Colors.black, width: 2)),
+                      borderSide: const BorderSide(color: black, width: 2)),
                   focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
-                      borderSide:
-                          const BorderSide(color: Colors.black, width: 3)),
+                      borderSide: const BorderSide(color: black, width: 3)),
                   hintText: "Kullanıcı Adı",
-                  hintStyle: TextStyle(color: Colors.grey[700])),
+                  hintStyle: const TextStyle(color: grey700)),
             ),
           ),
           Padding(
@@ -61,18 +57,16 @@ class _RegisterPageState extends State<RegisterPage> {
               },
               decoration: InputDecoration(
                   prefixIcon: const Icon(Icons.mail),
-                  fillColor: Colors.white,
+                  fillColor: white,
                   filled: true,
                   enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(7),
-                      borderSide:
-                          const BorderSide(color: Colors.black, width: 2)),
+                      borderSide: const BorderSide(color: black, width: 2)),
                   focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
-                      borderSide:
-                          const BorderSide(color: Colors.black, width: 3)),
+                      borderSide: const BorderSide(color: black, width: 3)),
                   hintText: "E-Posta",
-                  hintStyle: TextStyle(color: Colors.grey[700])),
+                  hintStyle: const TextStyle(color: grey700)),
             ),
           ),
           Padding(
@@ -84,18 +78,16 @@ class _RegisterPageState extends State<RegisterPage> {
               obscureText: true,
               decoration: InputDecoration(
                   prefixIcon: const Icon(Icons.key),
-                  fillColor: Colors.white,
+                  fillColor: white,
                   filled: true,
                   enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(7),
-                      borderSide:
-                          const BorderSide(color: Colors.black, width: 2)),
+                      borderSide: const BorderSide(color: black, width: 2)),
                   focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
-                      borderSide:
-                          const BorderSide(color: Colors.black, width: 3)),
+                      borderSide: const BorderSide(color: black, width: 3)),
                   hintText: "Şifre",
-                  hintStyle: TextStyle(color: Colors.grey[700])),
+                  hintStyle: const TextStyle(color: grey700)),
             ),
           ),
           Padding(
@@ -107,18 +99,16 @@ class _RegisterPageState extends State<RegisterPage> {
               obscureText: true,
               decoration: InputDecoration(
                   prefixIcon: const Icon(Icons.key),
-                  fillColor: Colors.white,
+                  fillColor: white,
                   filled: true,
                   enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(7),
-                      borderSide:
-                          const BorderSide(color: Colors.black, width: 2)),
+                      borderSide: const BorderSide(color: black, width: 2)),
                   focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
-                      borderSide:
-                          const BorderSide(color: Colors.black, width: 3)),
+                      borderSide: const BorderSide(color: black, width: 3)),
                   hintText: "Şifre Tekrar",
-                  hintStyle: TextStyle(color: Colors.grey[700])),
+                  hintStyle: const TextStyle(color: grey700)),
             ),
           ),
           Padding(
@@ -129,18 +119,16 @@ class _RegisterPageState extends State<RegisterPage> {
               },
               decoration: InputDecoration(
                   prefixIcon: const Icon(Icons.verified_user),
-                  fillColor: Colors.white,
+                  fillColor: white,
                   filled: true,
                   enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(7),
-                      borderSide:
-                          const BorderSide(color: Colors.black, width: 2)),
+                      borderSide: const BorderSide(color: black, width: 2)),
                   focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
-                      borderSide:
-                          const BorderSide(color: Colors.black, width: 3)),
+                      borderSide: const BorderSide(color: black, width: 3)),
                   hintText: "Doğrulama Kodu",
-                  hintStyle: TextStyle(color: Colors.grey[700])),
+                  hintStyle: const TextStyle(color: grey700)),
             ),
           ),
           const SizedBox(
@@ -159,9 +147,9 @@ class _RegisterPageState extends State<RegisterPage> {
                     child: MaterialButton(
                         child: const Text(
                           'İptal',
-                          style: TextStyle(fontSize: 20, color: Colors.white),
+                          style: TextStyle(fontSize: 20, color: white),
                         ),
-                        color: const Color(0xffd41217),
+                        color: ikinciRenk,
                         padding: const EdgeInsets.symmetric(
                             vertical: 10, horizontal: 25),
                         onPressed: () {
@@ -204,8 +192,6 @@ class _RegisterPageState extends State<RegisterPage> {
                                               email: emailStr,
                                               password: passwordStr)
                                           .then((kullanici) {
-                                        FirebaseAuth Auth =
-                                            FirebaseAuth.instance;
                                         FirebaseFirestore.instance
                                             .collection('Users')
                                             .doc(emailStr)

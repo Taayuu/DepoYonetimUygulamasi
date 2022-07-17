@@ -1,18 +1,16 @@
 // ignore_for_file: unused_element, must_be_immutable, non_constant_identifier_names, avoid_print
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:login/admin/materials_page_admin.dart';
+import 'package:ihhdepom/core/service/firebaseKisayol.dart';
 import 'package:provider/provider.dart';
-
+import 'admin/materials_page_admin.dart';
 import 'core/service/i_auth_service.dart';
+import 'core/service/renk.dart';
 import 'first_page.dart';
 import 'get_materials_page.dart';
 import 'materials_page.dart';
 import 'profile_page.dart';
 
-//ANASAYFA
 const TextStyle _textStyle = TextStyle(
   fontSize: 20,
   color: Colors.white,
@@ -30,7 +28,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  FirebaseAuth Auth = FirebaseAuth.instance;
   TextEditingController k_adi = TextEditingController();
   int _currentIndexs = 0;
   void _onItemTapped(int index) {
@@ -41,12 +38,8 @@ class _HomePageState extends State<HomePage> {
 
   var durum = 0;
   List<Widget> pages = [];
-
   @override
   Widget build(BuildContext context) {
-    final userRef = FirebaseFirestore.instance
-        .collection("Users")
-        .doc(Auth.currentUser!.email);
     final _authService = Provider.of<IAuthService>(context, listen: true);
     FirebaseFirestore.instance
         .collection("Users")
@@ -64,7 +57,6 @@ class _HomePageState extends State<HomePage> {
         await _authService.signOut();
       }
     });
-
     if (durum == 0) {
       pages = [
         const FirstPage(),
@@ -103,7 +95,7 @@ class _HomePageState extends State<HomePage> {
         );
     return Scaffold(
       bottomNavigationBar: NavigationBar(
-        backgroundColor: const Color(0xffFFEBC1),
+        backgroundColor: anaRenk,
         height: 65,
         animationDuration: const Duration(seconds: 1),
         selectedIndex: _currentIndexs,
@@ -115,15 +107,15 @@ class _HomePageState extends State<HomePage> {
           NavigationDestination(icon: Icon(Icons.person), label: "Profil"),
         ],
       ),
-      backgroundColor: const Color(0xffFFEBC1),
+      backgroundColor: anaRenk,
       appBar: AppBar(
         title: TextField(
           enabled: false,
           controller: k_adi,
-          style: const TextStyle(color: Colors.white, fontSize: 20),
+          style: const TextStyle(color: white, fontSize: 20),
           decoration: const InputDecoration(border: InputBorder.none),
         ),
-        backgroundColor: const Color(0xffd41217),
+        backgroundColor: ikinciRenk,
         actions: [
           IconButton(
               onPressed: () async {

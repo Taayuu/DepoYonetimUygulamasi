@@ -1,15 +1,14 @@
 // ignore_for_file: prefer_typing_uninitialized_variables, avoid_print, unused_local_variable, non_constant_identifier_names, duplicate_ignore
-
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:ihhdepom/core/service/firebaseKisayol.dart';
 import 'package:intl/intl.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:syncfusion_flutter_xlsio/xlsio.dart' as xls;
+import 'core/service/renk.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key, required this.malzeme}) : super(key: key);
@@ -25,23 +24,11 @@ class _ProfilePageState extends State<ProfilePage> {
   TextEditingController k_tarihi = TextEditingController();
   TextEditingController emanetler = TextEditingController();
   final GlobalKey enabl = GlobalKey();
-  FirebaseAuth Auth = FirebaseAuth.instance;
   bool hasFocus = false;
   @override
   Widget build(BuildContext context) {
     int index;
-
-    final docRef = FirebaseFirestore.instance
-        .collection("Users")
-        .doc(Auth.currentUser!.email);
-
-    Query qmaterials = FirebaseFirestore.instance
-        .collection("Users")
-        .doc(Auth.currentUser!.email)
-        .collection("Ürün")
-        .where("durum", isEqualTo: 1);
-
-    docRef.snapshots().listen(
+    userRef.snapshots().listen(
           (event) =>
               print('''profil data: ${k_adi.text = event["Kullanıcı Adı"]}
               ${eposta.text = event["Eposta"]}'''),
@@ -69,18 +56,10 @@ class _ProfilePageState extends State<ProfilePage> {
     var tarihAlma;
     var zaman = "Günlük";
 
-    final depRef = FirebaseFirestore.instance
-        .collection("Users")
-        .doc(Auth.currentUser!.email)
-        .collection("Ürün");
-
     yaziGetir() async {
       try {
         if (zaman == "Günlük") {
-          await FirebaseFirestore.instance
-              .collection("Users")
-              .doc(Auth.currentUser!.email)
-              .collection("Ürün")
+          await urunCol
               .where("durum", isEqualTo: 0)
               .where("Emanet Alma Tarihi Saatsiz", isEqualTo: tarihAlma)
               .get()
@@ -103,11 +82,7 @@ ${'''Eksik Teslim: ${element.data()["Eksik"]}'''}
               genel0 = mgenel0.toList();
             }
           });
-          await FirebaseFirestore.instance
-              .collection("Users")
-              .doc(Auth.currentUser!.email)
-              .collection("Ürün")
-              .where("durum", isEqualTo: 1)
+          await urunColDurum1
               .where("Emanet Alma Tarihi Saatsiz", isEqualTo: tarihAlma)
               .get()
               .then((value1) {
@@ -118,19 +93,16 @@ ${'''Eksik Teslim: ${element.data()["Eksik"]}'''}
             for (var element in value1.docs) {
               mgenel1.add('''
 
-${'''Emanet Alınan Ürün: ${element.data()["Emanet"].toString().replaceAll('{', '').replaceAll('}', '')} adet mevcut ${element.data()["İlk Alınan"]} adet alındı'''}
+${'''Emanet Alınan Ürün: ${element["Emanet"].toString().replaceAll('{', '').replaceAll('}', '')} adet mevcut ${element["İlk Alınan"]} adet alındı'''}
 ${'''Emanet Alan Kişi: ${value1.docs[0]["Emanet Alan"]}'''}
 ${'''Emanet Alma Sebebi: ${value1.docs[0]["Emanet Alma Sebebi"]}'''}
-${'''Emanet Alma Tarihi: ${element.data()["Emanet Alma Tarihi"]}'''}
+${'''Emanet Alma Tarihi: ${element["Emanet Alma Tarihi"]}'''}
 ''');
               genel1 = mgenel1.toList();
             }
           });
         } else if (zaman == "Haftalık") {
-          await FirebaseFirestore.instance
-              .collection("Users")
-              .doc(Auth.currentUser!.email)
-              .collection("Ürün")
+          await urunCol
               .where("durum", isEqualTo: 0)
               .where("Emanet Alma Tarihi Saatsiz",
                   isGreaterThanOrEqualTo: tarihAlma)
@@ -154,11 +126,7 @@ ${'''Eksik Teslim: ${element.data()["Eksik"]}'''}
               genel0 = mgenel0.toList();
             }
           });
-          await FirebaseFirestore.instance
-              .collection("Users")
-              .doc(Auth.currentUser!.email)
-              .collection("Ürün")
-              .where("durum", isEqualTo: 1)
+          await urunColDurum1
               .where("Emanet Alma Tarihi Saatsiz",
                   isLessThanOrEqualTo: tarihAlma)
               .get()
@@ -170,19 +138,16 @@ ${'''Eksik Teslim: ${element.data()["Eksik"]}'''}
             for (var element in value1.docs) {
               mgenel1.add('''
 
-${'''Emanet Alınan Ürün: ${element.data()["Emanet"].toString().replaceAll('{', '').replaceAll('}', '')} adet mevcut ${element.data()["İlk Alınan"]} adet alındı'''}
+${'''Emanet Alınan Ürün: ${element["Emanet"].toString().replaceAll('{', '').replaceAll('}', '')} adet mevcut ${element["İlk Alınan"]} adet alındı'''}
 ${'''Emanet Alan Kişi: ${value1.docs[0]["Emanet Alan"]}'''}
 ${'''Emanet Alma Sebebi: ${value1.docs[0]["Emanet Alma Sebebi"]}'''}
-${'''Emanet Alma Tarihi: ${element.data()["Emanet Alma Tarihi"]}'''}
+${'''Emanet Alma Tarihi: ${element["Emanet Alma Tarihi"]}'''}
 ''');
               genel1 = mgenel1.toList();
             }
           });
         } else if (zaman == "Aylık") {
-          await FirebaseFirestore.instance
-              .collection("Users")
-              .doc(Auth.currentUser!.email)
-              .collection("Ürün")
+          await urunCol
               .where("durum", isEqualTo: 0)
               .where("Emanet Alma Tarihi Saatsiz", isEqualTo: tarihAlma)
               .get()
@@ -205,11 +170,7 @@ ${'''Eksik Teslim: ${element.data()["Eksik"]}'''}
               genel0 = mgenel0.toList();
             }
           });
-          await FirebaseFirestore.instance
-              .collection("Users")
-              .doc(Auth.currentUser!.email)
-              .collection("Ürün")
-              .where("durum", isEqualTo: 1)
+          await urunColDurum1
               .where("Emanet Alma Tarihi Saatsiz", isEqualTo: tarihAlma)
               .get()
               .then((value1) {
@@ -220,22 +181,16 @@ ${'''Eksik Teslim: ${element.data()["Eksik"]}'''}
             for (var element in value1.docs) {
               mgenel1.add('''
 
-${'''Emanet Alınan Ürün: ${element.data()["Emanet"].toString().replaceAll('{', '').replaceAll('}', '')} adet mevcut ${element.data()["İlk Alınan"]} adet alındı'''}
+${'''Emanet Alınan Ürün: ${element["Emanet"].toString().replaceAll('{', '').replaceAll('}', '')} adet mevcut ${element["İlk Alınan"]} adet alındı'''}
 ${'''Emanet Alan Kişi: ${value1.docs[0]["Emanet Alan"]}'''}
 ${'''Emanet Alma Sebebi: ${value1.docs[0]["Emanet Alma Sebebi"]}'''}
-${'''Emanet Alma Tarihi: ${element.data()["Emanet Alma Tarihi"]}'''}
+${'''Emanet Alma Tarihi: ${element["Emanet Alma Tarihi"]}'''}
 ''');
               genel1 = mgenel1.toList();
             }
           });
         } else if (zaman == "Genel") {
-          await FirebaseFirestore.instance
-              .collection("Users")
-              .doc(Auth.currentUser!.email)
-              .collection("Ürün")
-              .where("durum", isEqualTo: 0)
-              .get()
-              .then((value) {
+          await urunCol.where("durum", isEqualTo: 0).get().then((value) {
             List madi0 = [];
             List mAlmaTarihi0 = [];
             List mTeslimTarihi0 = [];
@@ -254,13 +209,7 @@ ${'''Eksik Teslim: ${element.data()["Eksik"]}'''}
               genel0 = mgenel0.toList();
             }
           });
-          await FirebaseFirestore.instance
-              .collection("Users")
-              .doc(Auth.currentUser!.email)
-              .collection("Ürün")
-              .where("durum", isEqualTo: 1)
-              .get()
-              .then((value1) {
+          await urunColDurum1.get().then((value1) {
             List madi1 = [];
             List mAlmaTarihi1 = [];
             List mTeslimTarihi1 = [];
@@ -268,10 +217,10 @@ ${'''Eksik Teslim: ${element.data()["Eksik"]}'''}
             for (var element in value1.docs) {
               mgenel1.add('''
 
-${'''Emanet Alınan Ürün: ${element.data()["Emanet"].toString().replaceAll('{', '').replaceAll('}', '')} adet mevcut ${element.data()["İlk Alınan"]} adet alındı'''}
+${'''Emanet Alınan Ürün: ${element["Emanet"].toString().replaceAll('{', '').replaceAll('}', '')} adet mevcut ${element["İlk Alınan"]} adet alındı'''}
 ${'''Emanet Alan Kişi: ${value1.docs[0]["Emanet Alan"]}'''}
 ${'''Emanet Alma Sebebi: ${value1.docs[0]["Emanet Alma Sebebi"]}'''}
-${'''Emanet Alma Tarihi: ${element.data()["Emanet Alma Tarihi"]}'''}
+${'''Emanet Alma Tarihi: ${element["Emanet Alma Tarihi"]}'''}
 ''');
               genel1 = mgenel1.toList();
             }
@@ -365,7 +314,7 @@ ${'''Emanet Alma Tarihi: ${element.data()["Emanet Alma Tarihi"]}'''}
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: const Color(0xffFFEBC1),
+        backgroundColor: anaRenk,
         body: Column(
           children: <Widget>[
             const SizedBox(
@@ -382,13 +331,12 @@ ${'''Emanet Alma Tarihi: ${element.data()["Emanet Alma Tarihi"]}'''}
                   controller: k_adi,
                   decoration: InputDecoration(
                     prefixIcon: const Icon(Icons.person),
-                    fillColor: Colors.white,
+                    fillColor: white,
                     filled: true,
                     hintText: "Kullanıcı Adı",
                     disabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
-                        borderSide:
-                            const BorderSide(color: Colors.black, width: 2)),
+                        borderSide: const BorderSide(color: black, width: 2)),
                   ),
                 ),
               ),
@@ -399,7 +347,7 @@ ${'''Emanet Alma Tarihi: ${element.data()["Emanet Alma Tarihi"]}'''}
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(12),
                   child: StreamBuilder<QuerySnapshot>(
-                    stream: qmaterials.snapshots(),
+                    stream: urunColDurum1.snapshots(),
                     builder: (context, snp) {
                       if (snp.hasError) {
                         return const Center(
@@ -422,7 +370,7 @@ ${'''Emanet Alma Tarihi: ${element.data()["Emanet Alma Tarihi"]}'''}
                                               BorderRadius.circular(20),
                                           side: const BorderSide(
                                               color: Colors.black, width: 2)),
-                                      color: Colors.white,
+                                      color: white,
                                       child: ListTile(
                                         title: Text(
                                           '${malzemeler[index]["Emanet"]}'
@@ -478,33 +426,6 @@ ${'''Emanet Alma Tarihi: ${element.data()["Emanet Alma Tarihi"]}'''}
                             });
                             createExcel();
                           }),
-                      /*SpeedDialChild(
-                          child: const Icon(Icons.date_range,
-                              size: 35, color: Colors.white),
-                          label: "Haftalık Rapor",
-                          backgroundColor:
-                              const Color.fromARGB(255, 94, 255, 0),
-                          onTap: () {
-                            setState(() {
-                              zaman = "Haftalık";
-                              tarihAlma = DateTime.parse(
-                                  DateFormat('dd-MM-yyyy').format(DateTime.now()
-                                      .subtract(const Duration(days: 7))));
-                            });
-                            createExcel();
-                          }),*/
-                      /*SpeedDialChild(
-                          child: const Icon(Icons.calendar_month,
-                              size: 35, color: Colors.white),
-                          label: "Aylık Rapor",
-                          backgroundColor:
-                              const Color.fromARGB(255, 18, 212, 212),
-                          onTap: () {
-                            setState(() {
-                              zaman = "Aylık";
-                            });
-                            createExcel();
-                          }),*/
                       SpeedDialChild(
                           child: const Icon(Icons.view_day,
                               size: 35, color: Colors.white),
@@ -518,14 +439,7 @@ ${'''Emanet Alma Tarihi: ${element.data()["Emanet Alma Tarihi"]}'''}
                             createExcel();
                           }),
                     ],
-                  )
-                  /*FloatingActionButton(
-                    child: const Icon(Icons.print, size: 35),
-                    backgroundColor: const Color(0xffd41217),
-                    onPressed: () {
-                      createExcel();
-                    }),*/
-                  ),
+                  )),
             ),
             const SizedBox(
               height: 15,

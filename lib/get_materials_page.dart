@@ -1,16 +1,15 @@
 // ignore_for_file: deprecated_member_use, unused_local_variable, prefer_typing_uninitialized_variables, duplicate_ignore, non_constant_identifier_names, unused_field, avoid_print
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:ihhdepom/core/service/firebaseKisayol.dart';
+import 'package:ihhdepom/core/service/renk.dart';
+import 'package:ihhdepom/scan_qr_get.dart';
 import 'package:intl/intl.dart';
-import 'package:login/core/service/google_signin.dart';
-import 'package:login/scan_qr_get.dart';
 import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
-
+import 'core/service/google_signin.dart';
 import 'home_page.dart';
 
 class GetMaterials extends StatefulWidget {
@@ -27,7 +26,6 @@ class GetMaterials extends StatefulWidget {
   final bool teslimal;
   final bool teslimet;
   final bool gerigel;
-
   @override
   State<GetMaterials> createState() => _GetMaterialsState();
 }
@@ -42,7 +40,6 @@ var adminMail4;
 var adminMail5;
 
 class _GetMaterialsState extends State<GetMaterials> {
-  final _firestore = FirebaseFirestore.instance;
   TextEditingController adetController = TextEditingController();
   var maskFormatter = MaskTextInputFormatter(
       mask: '####-####', filter: {"#": RegExp(r'[0-9]')});
@@ -55,20 +52,12 @@ class _GetMaterialsState extends State<GetMaterials> {
     "Eğitim(KAK)"
   ];
   String? value;
-  FirebaseAuth Auth = FirebaseAuth.instance;
+
   @override
   Widget build(BuildContext context) {
     adetController.value = maskFormatter.updateMask(mask: "###");
     int stok = 0;
     var malzemeAdi;
-    final DocumentReference<Map<String, dynamic>> userRef = FirebaseFirestore
-        .instance
-        .collection("Users")
-        .doc(Auth.currentUser!.email);
-    final CollectionReference<Map<String, dynamic>> urunCol =
-        userRef.collection("Ürün");
-    final CollectionReference materialsRef =
-        FirebaseFirestore.instance.collection("Materials");
     final Future<QuerySnapshot<Map<String, dynamic>>> urunQuery = urunCol
         .where("ID", isEqualTo: widget.ID)
         .where("Id", isEqualTo: Auth.currentUser!.uid)
@@ -79,11 +68,7 @@ class _GetMaterialsState extends State<GetMaterials> {
       kAdi = event.data()!["Kullanıcı Adı"];
     });
     QuerySnapshot queryMaterials;
-    FirebaseFirestore.instance
-        .collection("AppControl")
-        .doc("AdminMail")
-        .get()
-        .then((valueMail) {
+    userGet.then((valueMail) {
       adminMail1 = valueMail.data()!["Mail1"];
       adminMail2 = valueMail.data()!["Mail2"];
       adminMail3 = valueMail.data()!["Mail3"];
@@ -95,7 +80,7 @@ class _GetMaterialsState extends State<GetMaterials> {
         materialsRef.where("Qr Kod", isEqualTo: widget.Qr).get();
     List<DocumentSnapshot>? malzemeler;
     return Scaffold(
-      backgroundColor: const Color(0xffFFEBC1),
+      backgroundColor: anaRenk,
       body: SafeArea(
           child: Center(
         child: Column(
@@ -113,8 +98,8 @@ class _GetMaterialsState extends State<GetMaterials> {
                   child: RaisedButton(
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
-                        side: const BorderSide(color: Colors.black, width: 2)),
-                    color: Colors.white,
+                        side: const BorderSide(color: black, width: 2)),
+                    color: white,
                     elevation: 500,
                     onPressed: () {
                       Navigator.push(
@@ -129,12 +114,12 @@ class _GetMaterialsState extends State<GetMaterials> {
                         children: const [
                           Icon(
                             Icons.qr_code_scanner_sharp,
-                            color: Colors.black,
+                            color: black,
                             size: 50,
                           ),
                           Text(
                             "Qr İle Malzeme Seç",
-                            style: TextStyle(fontSize: 15, color: Colors.black),
+                            style: TextStyle(fontSize: 15, color: black),
                           )
                         ],
                       ),
@@ -160,9 +145,8 @@ class _GetMaterialsState extends State<GetMaterials> {
                           return Card(
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(20),
-                                side: const BorderSide(
-                                    color: Colors.black, width: 2)),
-                            color: Colors.white,
+                                side: const BorderSide(color: black, width: 2)),
+                            color: white,
                             child: ListTile(
                               leading: ClipOval(
                                 child: Image.network(
@@ -223,15 +207,15 @@ Stok: ${malzemeler![index]["Stok"]}''',
                                           borderRadius:
                                               BorderRadius.circular(7),
                                           borderSide: const BorderSide(
-                                              color: Colors.black, width: 2)),
+                                              color: black, width: 2)),
                                       focusedBorder: OutlineInputBorder(
                                           borderRadius:
                                               BorderRadius.circular(12),
                                           borderSide: const BorderSide(
-                                              color: Colors.black, width: 3)),
+                                              color: black, width: 3)),
                                       hintText: "Adet",
                                       hintStyle:
-                                          TextStyle(color: Colors.grey[700])),
+                                          const TextStyle(color: grey700)),
                                   keyboardType: TextInputType.number,
                                   inputFormatters: [maskFormatter]),
                             ),
@@ -242,10 +226,9 @@ Stok: ${malzemeler![index]["Stok"]}''',
                           Flexible(
                             child: Container(
                               decoration: BoxDecoration(
-                                  color: Colors.white,
+                                  color: white,
                                   borderRadius: BorderRadius.circular(12),
-                                  border: Border.all(
-                                      color: Colors.black, width: 2)),
+                                  border: Border.all(color: black, width: 2)),
                               child: Flexible(
                                 child: DropdownButton(
                                   dropdownColor: Colors.white,
@@ -407,13 +390,12 @@ Stok: ${malzemeler![index]["Stok"]}''',
                                     fontSize: 20);
                               }
                             },
-                            color: const Color(0xffd41217),
+                            color: ikinciRenk,
                             padding: const EdgeInsets.symmetric(
                                 vertical: 20, horizontal: 25),
                             child: const Text(
                               'Malzemeyi Teslim Al',
-                              style:
-                                  TextStyle(fontSize: 13, color: Colors.white),
+                              style: TextStyle(fontSize: 13, color: white),
                             ),
                           ),
                         ),
@@ -448,15 +430,15 @@ Stok: ${malzemeler![index]["Stok"]}''',
                                           borderRadius:
                                               BorderRadius.circular(7),
                                           borderSide: const BorderSide(
-                                              color: Colors.black, width: 2)),
+                                              color: black, width: 2)),
                                       focusedBorder: OutlineInputBorder(
                                           borderRadius:
                                               BorderRadius.circular(12),
                                           borderSide: const BorderSide(
-                                              color: Colors.black, width: 3)),
+                                              color: black, width: 3)),
                                       hintText: "Adet",
                                       hintStyle:
-                                          TextStyle(color: Colors.grey[700])),
+                                          const TextStyle(color: grey700)),
                                   keyboardType: TextInputType.number,
                                   inputFormatters: [maskFormatter]),
                             ),
@@ -609,9 +591,7 @@ Stok: ${malzemeler![index]["Stok"]}''',
                                                     (queryMaterials) async {
                                                   for (var docdd
                                                       in queryMaterials.docs) {
-                                                    await FirebaseFirestore
-                                                        .instance
-                                                        .collection('Materials')
+                                                    await materialsRef
                                                         .doc(docdd.id)
                                                         .update({
                                                       "Konum": FieldValue
@@ -773,12 +753,12 @@ Stok: ${malzemeler![index]["Stok"]}''',
                             Fluttertoast.showToast(msg: "Lütfen adet giriniz");
                           }
                         },
-                        color: const Color(0xffd41217),
+                        color: ikinciRenk,
                         padding: const EdgeInsets.symmetric(
                             vertical: 20, horizontal: 25),
                         child: const Text(
                           'Malzemeyi Teslim Et',
-                          style: TextStyle(fontSize: 13, color: Colors.white),
+                          style: TextStyle(fontSize: 13, color: white),
                         ),
                       ),
                     ],
@@ -795,7 +775,7 @@ Stok: ${malzemeler![index]["Stok"]}''',
                   child: FloatingActionButton(
                       heroTag: "btnGeri",
                       child: const Icon(Icons.arrow_back, size: 35),
-                      backgroundColor: const Color(0xffd41217),
+                      backgroundColor: ikinciRenk,
                       onPressed: () {
                         Navigator.push(
                             context,
@@ -818,10 +798,6 @@ Stok: ${malzemeler![index]["Stok"]}''',
 
 Future SendAlEmail() async {
   GoogleAuthApi.signOut();
-  FirebaseAuth Auth = FirebaseAuth.instance;
-  final userRef = FirebaseFirestore.instance
-      .collection("Users")
-      .doc(Auth.currentUser!.email);
   var kAdi;
   userRef.snapshots().listen((event) {
     kAdi = event.data()!["Kullanıcı Adı"];
@@ -863,10 +839,6 @@ Future SendAlEmail() async {
 
 Future SendTeslimEmail() async {
   GoogleAuthApi.signOut();
-  FirebaseAuth Auth = FirebaseAuth.instance;
-  final userRef = FirebaseFirestore.instance
-      .collection("Users")
-      .doc(Auth.currentUser!.email);
   var kAdi;
   userRef.snapshots().listen((event) {
     kAdi = event.data()!["Kullanıcı Adı"];
