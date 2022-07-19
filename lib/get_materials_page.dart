@@ -53,7 +53,11 @@ class _GetMaterialsState extends State<GetMaterials> {
     "Afet(Deprem)",
     "Afet(Sel)",
     "Afet(Yangın)",
-    "Emanet"
+    "Emanet",
+    "Kayıp Vaka",
+    "Çökme",
+    "Kaza",
+    "Çığ",
   ];
   String? value;
 
