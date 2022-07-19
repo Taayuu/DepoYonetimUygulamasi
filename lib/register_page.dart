@@ -27,11 +27,8 @@ class _RegisterPageState extends State<RegisterPage> {
       backgroundColor: anaRenk,
       body: Column(
         children: <Widget>[
-          const SizedBox(
-            height: 50,
-          ),
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(5.0),
             child: TextField(
               textCapitalization: TextCapitalization.words,
               controller: k_Adi,
@@ -50,7 +47,7 @@ class _RegisterPageState extends State<RegisterPage> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(5.0),
             child: TextFormField(
               onChanged: (emailMtn) {
                 emailStr = emailMtn;
@@ -70,7 +67,7 @@ class _RegisterPageState extends State<RegisterPage> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(5.0),
             child: TextField(
               onChanged: (passwordMtn) {
                 passwordStr = passwordMtn;
@@ -91,7 +88,7 @@ class _RegisterPageState extends State<RegisterPage> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(5.0),
             child: TextField(
               onChanged: (passwordMtn2) {
                 passwordmtn2 = passwordMtn2;
@@ -112,7 +109,7 @@ class _RegisterPageState extends State<RegisterPage> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(5.0),
             child: TextFormField(
               onChanged: (verfyMtn) {
                 verfyStr = verfyMtn;
@@ -130,9 +127,6 @@ class _RegisterPageState extends State<RegisterPage> {
                   hintText: "Doğrulama Kodu",
                   hintStyle: const TextStyle(color: grey700)),
             ),
-          ),
-          const SizedBox(
-            height: 35,
           ),
           Row(
             children: [
