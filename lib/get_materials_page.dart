@@ -49,11 +49,11 @@ class _GetMaterialsState extends State<GetMaterials> {
     "Özel",
     "Eğitim(DAK)",
     "Eğitim(SAK)",
-    "Eğitim(KAK)"
-        "Afet(Deprem)",
+    "Eğitim(KAK)",
+    "Afet(Deprem)",
     "Afet(Sel)",
-    "Afet(Yangın)"
-        "Emanet"
+    "Afet(Yangın)",
+    "Emanet"
   ];
   String? value;
 
